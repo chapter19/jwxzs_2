@@ -14,7 +14,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .filters import StudentScheduleFilter,TeacherScheduleFilter
 from scores.filters import ScoreFilter
 from scores.models import Score
-
+from rest_framework import filters
 
 # Create your views here.
 
@@ -27,7 +27,8 @@ class StudentScheduleViewSet(mixins.ListModelMixin,viewsets.GenericViewSet):
     queryset = Schedule.objects.all()
     permission_classes = (IsAuthenticated,StudentScheduleIsOwnerOrReadOnly,)
     serializer_class=ScheduleSerializers
-    filter_backends = (DjangoFilterBackend,)
+    filter_backends = (DjangoFilterBackend,filters.OrderingFilter,)
+    ordering_fields = ('counter',)
     filter_class = StudentScheduleFilter
     def get_queryset(self):
         return Schedule.objects.filter(schedule_lesson__score__student__id=self.request.user.username)
@@ -39,8 +40,9 @@ class TeacherScheduleViewSet(mixins.ListModelMixin,viewsets.GenericViewSet):
     '''
     queryset = Schedule.objects.all()
     serializer_class =ScheduleSerializers
-    filter_backends = (DjangoFilterBackend,)
+    filter_backends = (DjangoFilterBackend,filters.OrderingFilter,)
     filter_class=TeacherScheduleFilter
+    ordering_fields=('counter',)
     def get_queryset(self):
         return Schedule.objects.filter(schedule_lesson__teacher__id=self.request.user.username)
 

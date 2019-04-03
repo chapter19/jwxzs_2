@@ -7,7 +7,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .filters import ScoreFilter,ScoreStudentListFilter,TotalCreditFilter
 from utils.permissions import StudentScoreIsOwnerOrReadOnly
 from rest_framework.permissions import IsAuthenticated
-
+from rest_framework import filters
 
 class ScoreViewSet(mixins.ListModelMixin,viewsets.GenericViewSet):
     '''
@@ -19,7 +19,6 @@ class ScoreViewSet(mixins.ListModelMixin,viewsets.GenericViewSet):
     serializer_class=ScoreSerializer
     filter_backends = (DjangoFilterBackend,)
     filter_class=ScoreFilter
-
     def get_queryset(self):
         """
         This view should return a list of all the purchases
@@ -33,8 +32,9 @@ class ScoreStudentListViewSet(mixins.ListModelMixin,viewsets.GenericViewSet):
     queryset = Score.objects.all()
     permission_classes=(IsAuthenticated,)
     serializer_class = ScoreStudentListSerializer
-    filter_backends = (DjangoFilterBackend,)
+    filter_backends = (DjangoFilterBackend,filters.OrderingFilter,)
     filter_class = ScoreStudentListFilter
+    ordering_fields=['student__id',]
 
 
 class TotalCreditViewSet(mixins.ListModelMixin,viewsets.GenericViewSet):
