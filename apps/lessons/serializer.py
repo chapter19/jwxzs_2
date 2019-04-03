@@ -1,10 +1,7 @@
 #-*- coding:utf-8 -*-
-
 from rest_framework import serializers
 from .models import Schedule,ScheduleLesson,Lesson
 from users.serializer import TeacherSerializer
-
-
 
 
 class LessonSerializers(serializers.ModelSerializer):

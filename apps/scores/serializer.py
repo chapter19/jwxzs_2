@@ -7,7 +7,7 @@ from lessons.serializer import LessonSerializers,ScheduleLessonSerializers
 
 
 class ScoreSerializer(serializers.ModelSerializer):
-    student=StudentSerializer()
+    # student=StudentSerializer()
     schedule_lesson=ScheduleLessonSerializers()
     class Meta:
         model=Score
@@ -26,7 +26,7 @@ class TotalCreditSerializer(serializers.ModelSerializer):
     # student__id =serializers.SerializerMethodField(label='学号')
     class Meta:
         model=TotalCredit
-        fields=('student','credit','standard_score',)
+        fields=('credit','standard_score',)
 
     # def get_student__id(self,obj):
     #     return obj.username

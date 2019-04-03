@@ -29,22 +29,24 @@ from rest_framework.routers import DefaultRouter
 from lessons.views import StudentScheduleViewSet,TeacherScheduleViewSet
 from scores.views import ScoreViewSet,ScoreStudentListViewSet,TotalCreditViewSet
 
+
 router=DefaultRouter()
-router.register(r'student_schedule',StudentScheduleViewSet,basename='student_schedule')
-router.register(r'schedule_student_list',ScoreStudentListViewSet,basename='student_list')
-router.register(r'teacher_schedule',TeacherScheduleViewSet,basename='teahcer_schedule')
+router.register(r'student-schedule',StudentScheduleViewSet,basename='student-schedule')
+router.register(r'schedule-student-list',ScoreStudentListViewSet,basename='student-list')
+router.register(r'teacher-schedule',TeacherScheduleViewSet,basename='teahcer-schedule')
 router.register(r'score',ScoreViewSet,basename='score')
-router.register(r'total_credit',TotalCreditViewSet,basename='total_credit')
+router.register(r'total-credit',TotalCreditViewSet,basename='total_credit')
 
 urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),
     url(r'^media/(?P<path>.*)$',serve,{'document_root':MEDIA_ROOT}),
     # url(r'^api-token-auth/',views.obtain_auth_token),
-    url(r'^',include(router.urls)),
+    url(r'^api/v1/',include(router.urls)),
     # url(r'^api-auth/',include('rest_framework.urls',namespace='rest_framework')),
     #jwt认证接口
-    url(r'^login/', obtain_jwt_token),
+    url(r'^api/v1/login/', obtain_jwt_token),
     url(r'docs/',include_docs_urls(title=u'教务小助手')),
+    url(r'^api-auth/', include('rest_framework.urls',namespace='rest_framework')),
 ]
 
 

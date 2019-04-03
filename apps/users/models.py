@@ -5,8 +5,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 
-# Create your models here.
-
 class Major(models.Model):
     major_id=models.CharField(max_length=10,verbose_name=u'专业号',default='')
     post_code=models.CharField(max_length=20,verbose_name=u'表单码',default='')
@@ -42,6 +40,12 @@ class Colloge(models.Model):
     class Meta:
         verbose_name=u'学院'
         verbose_name_plural=verbose_name
+
+    def get_class_nums(self):
+        '''学院班级数'''
+        return self.class_set.all().count()
+    get_class_nums.short_description='班级数'
+
     def __str__(self):
         return self.name
 
@@ -57,13 +61,16 @@ class Class(models.Model):
     class Meta:
         verbose_name=u'班级'
         verbose_name_plural=verbose_name
+    def get_student_nums(self):
+        return self.student_set.all().count()
+    get_student_nums.short_description='学生数'
     def __str__(self):
         return self.name
 
 
 class Student(models.Model):
     id=models.CharField(max_length=12,verbose_name=u'学号',primary_key=True)
-    name=models.CharField(max_length=50,verbose_name=u'姓名',null=True,blank=True)
+    name=models.CharField(max_length=50,verbose_name=u'姓名',default='')
     cla=models.ForeignKey(Class,verbose_name=u'班级',null=True,blank=True)
     gender=models.CharField(choices=(('male',u'男'),('female',u'女')),max_length=6,default='female',verbose_name=u'性别')
     add_time = models.DateTimeField(default=datetime.now, verbose_name=u'添加时间')
@@ -114,6 +121,11 @@ class Department(models.Model):
     class Meta:
         verbose_name=u'教工单位'
         verbose_name_plural=verbose_name
+
+    def get_teacher_nums(self):
+        return self.teacher_set.all().count()
+    get_teacher_nums.short_description='教师数'
+
     def __str__(self):
         return self.name
 

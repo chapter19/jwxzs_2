@@ -1,14 +1,10 @@
 #-*- coding:utf-8 -*-
 from __future__ import unicode_literals
-
 from django.db import models
 from datetime import datetime
-
 from users.models import Student
 from lessons.models import Lesson,ScheduleLesson
 
-
-# Create your models here.
 
 class Score(models.Model):
     # student_id=models.CharField(max_length=12,verbose_name=u'学号',default='')
@@ -49,11 +45,12 @@ class TotalCredit(models.Model):
     student=models.OneToOneField(Student,verbose_name=u'学生')
     credit=models.IntegerField(verbose_name=u'已修学分',default=0)
     standard_score=models.FloatField(verbose_name='加权平均标准分')
+    add_time = models.DateTimeField(default=datetime.now, verbose_name=u'添加时间')
     class Meta:
         verbose_name=u'总学分'
         verbose_name_plural=verbose_name
     def __str__(self):
-        return self.student
+        return self.student.name
 
 
 

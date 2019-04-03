@@ -99,7 +99,8 @@ DATABASES = {
         'NAME': 'jwxzs_2',
         'USER':'root',
         'PASSWORD':'1',
-        'HOST':'127.0.0.1'
+        'HOST':'127.0.0.1',
+        'OPTIONS':{'init_command':'SET default_storage_engine=INNODB;'},
     }
 }
 
@@ -148,22 +149,57 @@ AUTHENTICATION_BACKENDS=(
 STATIC_URL = '/static/'
 
 
+# REST_FRAMEWORK = {
+#     # 'DEFAULT_PERMISSION_CLASSES': (
+#     #     'rest_framework.permissions.IsAuthenticated',
+#     # ),
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'rest_framework.authentication.BasicAuthentication',
+#         'rest_framework.authentication.SessionAuthentication',
+#         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+#         # 'rest_framework.authentication.TokenAuthentication',
+#     ),
+# }
+
+# REST_FRAMEWORK = {
+#     # 'DEFAULT_PAGINATION_CLASS':'rest_framework.pagination.PageNumberPagination',
+#     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+#     # 'PAGE_SIZE':100,
+#     # 'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
+#     # 'DEFAULT_PERMISSION_CLASSES': (
+#     #     'rest_framework.permissions.IsAuthenticated',
+#     # ),
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'rest_framework.authentication.BasicAuthentication',
+#         'rest_framework.authentication.SessionAuthentication',
+#         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+#         # 'rest_framework.authentication.TokenAuthentication',
+#     )
+# }
+
 REST_FRAMEWORK = {
+    # 'DEFAULT_PAGINATION_CLASS':'rest_framework.pagination.PageNumberPagination',
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    # 'PAGE_SIZE':100,
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
     # 'DEFAULT_PERMISSION_CLASSES': (
     #     'rest_framework.permissions.IsAuthenticated',
     # ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         # 'rest_framework.authentication.TokenAuthentication',
-    ),
+    )
 }
+
+
 
 
 import datetime
 JWT_AUTH={
     'JWT_EXPIRATION_DELTA':datetime.timedelta(days=7),
+    'JWT_AUTH_HEADER_PREFIX':'JWT',
 }
 
 

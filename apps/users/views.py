@@ -1,8 +1,4 @@
 #-*- coding:utf-8 -*-
-from django.shortcuts import render
-
-# Create your views here.
-
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth import get_user_model
 from django.db.models import Q
