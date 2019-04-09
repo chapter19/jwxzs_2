@@ -97,8 +97,8 @@ xadmin.site.register(Department,DepartmentAdmin)
 xadmin.site.register(Teacher,TeacherAdmin)
 xadmin.site.register(Major,MajorAdmin)
 
-xadmin.site.unregister(UserProfile)
-xadmin.site.register(UserProfile,UserProfileAdmin)
+# xadmin.site.unregister(UserProfile)
+# xadmin.site.register(UserProfile,UserProfileAdmin)
 xadmin.site.register(StudentDetail,StudentDetailAdmin)
 
 

@@ -21,11 +21,11 @@ class ScoreStudentListFilter(django_filters.rest_framework.FilterSet):
         fields=['id']
 
 
-class TotalCreditFilter(django_filters.rest_framework.FilterSet):
-    student_id=django_filters.CharFilter(field_name='student__id',help_text='学号')
-    class Meta:
-        model=TotalCredit
-        fields=['student_id']
+# class TotalCreditFilter(django_filters.rest_framework.FilterSet):
+#     student_id=django_filters.CharFilter(field_name='student__id',help_text='学号')
+#     class Meta:
+#         model=TotalCredit
+#         fields=['student_id']
 
 
 

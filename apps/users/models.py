@@ -53,10 +53,10 @@ class Colloge(models.Model):
 class Class(models.Model):
     id=models.CharField(max_length=20,verbose_name=u'班级号',primary_key=True)
     post_code = models.CharField(max_length=30, verbose_name=u'表单码', default='')
-    name=models.CharField(max_length=70,verbose_name=u'班级')
+    name=models.CharField(max_length=70,verbose_name=u'班级名')
     grade=models.IntegerField(verbose_name=u'年级',null=True,blank=True)
-    major=models.ForeignKey(Major,verbose_name=u'专业',null=True,blank=True)
-    colloge=models.ForeignKey(Colloge,verbose_name=u'学院')
+    major=models.ForeignKey(Major,verbose_name=u'专业',null=True,blank=True,on_delete=models.CASCADE)
+    colloge=models.ForeignKey(Colloge,verbose_name=u'学院',on_delete=models.CASCADE)
     add_time = models.DateTimeField(default=datetime.now, verbose_name=u'添加时间')
     class Meta:
         verbose_name=u'班级'
@@ -69,10 +69,10 @@ class Class(models.Model):
 
 
 class Student(models.Model):
-    id=models.CharField(max_length=12,verbose_name=u'学号',primary_key=True)
-    name=models.CharField(max_length=50,verbose_name=u'姓名',default='')
-    cla=models.ForeignKey(Class,verbose_name=u'班级',null=True,blank=True)
-    gender=models.CharField(choices=(('male',u'男'),('female',u'女')),max_length=6,default='female',verbose_name=u'性别')
+    id=models.CharField(max_length=12,verbose_name=u'学号',primary_key=True,help_text='学号')
+    name=models.CharField(max_length=50,verbose_name=u'姓名',default='',help_text='姓名')
+    cla=models.ForeignKey(Class,verbose_name=u'班级',null=True,blank=True,on_delete=models.CASCADE)
+    gender=models.CharField(choices=(('male',u'男'),('female',u'女')),max_length=6,default='female',verbose_name=u'性别',help_text='性别')
     add_time = models.DateTimeField(default=datetime.now, verbose_name=u'添加时间')
     class Meta:
         verbose_name=u'学生'
@@ -94,7 +94,7 @@ class UserProfile(AbstractUser):
 
 
 class StudentDetail(models.Model):
-    base_data=models.ForeignKey(Student,verbose_name=u'基本信息',null=True,blank=True)
+    base_data=models.ForeignKey(Student,verbose_name=u'基本信息',null=True,blank=True,on_delete=models.CASCADE)
     # cla = models.ForeignKey(Class, verbose_name=u'班级')
     candidate_id=models.CharField(max_length=25,verbose_name=u'考生号',null=True,blank=True)
     nationality=models.CharField(max_length=30,verbose_name=u'民族',default='汉族')
@@ -134,7 +134,7 @@ class Teacher(models.Model):
     id=models.CharField(max_length=10,verbose_name=u'教号',primary_key=True)
     name=models.CharField(max_length=50,verbose_name=u'姓名')
     gender = models.CharField(choices=(('male', u'男'), ('female', u'女')), verbose_name=u'性别' ,max_length=6, default='female')
-    department=models.ForeignKey(Department,verbose_name=u'部门',null=True,blank=True)
+    department=models.ForeignKey(Department,verbose_name=u'部门',null=True,blank=True,on_delete=models.CASCADE)
     add_time = models.DateTimeField(default=datetime.now, verbose_name=u'添加时间')
     class Meta:
         verbose_name=u'教师'

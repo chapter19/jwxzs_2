@@ -28,6 +28,7 @@ from rest_framework.routers import DefaultRouter
 
 from lessons.views import StudentScheduleViewSet,TeacherScheduleViewSet
 from scores.views import ScoreViewSet,ScoreStudentListViewSet,TotalCreditViewSet
+from users.views import StudentView,StudentDetailRetrieveView
 
 
 router=DefaultRouter()
@@ -35,7 +36,9 @@ router.register(r'student-schedule',StudentScheduleViewSet,basename='student-sch
 router.register(r'schedule-student-list',ScoreStudentListViewSet,basename='student-list')
 router.register(r'teacher-schedule',TeacherScheduleViewSet,basename='teahcer-schedule')
 router.register(r'score',ScoreViewSet,basename='score')
-router.register(r'total-credit',TotalCreditViewSet,basename='total_credit')
+router.register(r'total-credit',TotalCreditViewSet,basename='total-credit')
+router.register(r'student',StudentView,basename='student')
+router.register(r'student-detail-retrieve',StudentDetailRetrieveView,basename='student-detail-retrieve')
 
 urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),

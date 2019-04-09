@@ -4,7 +4,7 @@ from rest_framework import viewsets
 from .serializer import ScoreSerializer,ScoreStudentListSerializer,TotalCreditSerializer
 from .models import Score,TotalCredit
 from django_filters.rest_framework import DjangoFilterBackend
-from .filters import ScoreFilter,ScoreStudentListFilter,TotalCreditFilter
+from .filters import ScoreFilter,ScoreStudentListFilter
 from utils.permissions import StudentScoreIsOwnerOrReadOnly
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import filters
@@ -37,10 +37,11 @@ class ScoreStudentListViewSet(mixins.ListModelMixin,viewsets.GenericViewSet):
     ordering_fields=['student__id',]
 
 
-class TotalCreditViewSet(mixins.ListModelMixin,viewsets.GenericViewSet):
+class TotalCreditViewSet(mixins.RetrieveModelMixin,viewsets.GenericViewSet):
     # queryset = TotalCredit.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = TotalCreditSerializer
+    lookup_field = 'student'
     # filter_backends = (DjangoFilterBackend,)
     # filter_class=TotalCreditFilter
     def get_queryset(self):

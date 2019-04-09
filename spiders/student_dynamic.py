@@ -9,7 +9,8 @@ from jwxzs_2.settings import VERIFICATIONCODE_SRC
 import requests
 from bs4 import BeautifulSoup
 from PIL import Image
-import pytesseract
+from pytesseract import pytesseract
+# import tesserocr
 import uuid,os,time
 from users.models import Colloge,Class,Student,Major,StudentDetail,UserProfile
 from scores.models import TotalCredit,Score
@@ -71,6 +72,7 @@ class SpiderDynamicStudent:
             url1 = 'http://jwc.jxnu.edu.cn/Portal/LoginAccount.aspx?t=account'
             hid=self.__get_hid_data_and_vecode(url=url1)
             src=VERIFICATIONCODE_SRC+hid[2]
+            # print(src)
             # v=get_vectorCompare(src)
             # new_src='./VerificationCode/'+v+'.png'
             # os.rename(src,new_src)
@@ -105,6 +107,7 @@ class SpiderDynamicStudent:
             # iii=image.resize((w*2,h*2))
             # iii.show()
             result=str(pytesseract.image_to_string(pppp,lang='eng')).replace('.','').replace(',','').replace('(','').replace(')','').replace(':','').replace('/','').replace('[','').replace(']','').strip()
+            # result=pytesseract.image_to_string(pppp)
             os.remove(src)
             print(result)
             # new_src='./VerificationCode/'+result+'.png'
@@ -216,6 +219,7 @@ class SpiderDynamicStudent:
             url=r'http://jwc.jxnu.edu.cn/MyControl/All_Display.aspx?UserControl=xfz_cj.ascx&Action=Personal'
             wb_data=self.__s.get(url,timeout=timeout)
             soup=BeautifulSoup(wb_data.text,"html5lib")
+            print(soup)
             my_credit=soup.select('#_ctl11_lblMsg > u')[5]
             nu=soup.select('td[valign="middle"]')
             for n in nu:
@@ -225,7 +229,7 @@ class SpiderDynamicStudent:
                 }
                 # print(dat)
                 semsters.append(dat)
-            # print(semsters)
+            print(semsters)
             lessons = soup.select('tr[bgcolor="White"]')
             # print(lessons)
             for i in range(1,len(semsters)):
@@ -365,7 +369,7 @@ class SpiderDynamicStudent:
             error_time_limit -= 1
             if error_time_limit > 0:
                 print('get_my_studyPlan timeout, retrying。。')
-                return self.get_my_studyPlan(error_time_limit=error_time_limit)
+                return self.get_my_studyData(error_time_limit=error_time_limit)
             else:
                 return 0
 
@@ -579,6 +583,7 @@ class SpiderDynamicStudent:
 
 if __name__ == '__main__':
     me=SpiderDynamicStudent('201626703079','m19980220')
+    # me=SpiderDynamicStudent('1467005018','687196')
     me.sign_in()
     me.get_my_studyData()
     # me.get_all_data()

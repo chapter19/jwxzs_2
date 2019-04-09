@@ -25,7 +25,7 @@ class StudentScheduleViewSet(mixins.ListModelMixin,viewsets.GenericViewSet):
     '''
     # queryset=Schedule.objects.filter(schedule_lesson__score__student_id=request.user)
     queryset = Schedule.objects.all()
-    permission_classes = (IsAuthenticated,StudentScheduleIsOwnerOrReadOnly,)
+    permission_classes = (IsAuthenticated,)
     serializer_class=ScheduleSerializers
     filter_backends = (DjangoFilterBackend,filters.OrderingFilter,)
     ordering_fields = ('counter',)
@@ -38,13 +38,17 @@ class TeacherScheduleViewSet(mixins.ListModelMixin,viewsets.GenericViewSet):
     '''
         教师课表接口
     '''
-    queryset = Schedule.objects.all()
+    # queryset = Schedule.objects.all()
+    permission_classes = (IsAuthenticated,)
     serializer_class =ScheduleSerializers
     filter_backends = (DjangoFilterBackend,filters.OrderingFilter,)
     filter_class=TeacherScheduleFilter
     ordering_fields=('counter',)
     def get_queryset(self):
+        # if self.request.user.is_teacher:
         return Schedule.objects.filter(schedule_lesson__teacher__id=self.request.user.username)
+        # else:
+        #     return None
 
 
 # class ScheduleLessonStudentList(mixins.ListModelMixin,viewsets.GenericViewSet):
