@@ -1,6 +1,6 @@
 #-*- coding:utf-8 -*-
 import django_filters
-from .models import Student
+from .models import Student,Teacher
 
 class StudentFilters(django_filters.rest_framework.FilterSet):
     grade_min=django_filters.NumberFilter(field_name='cla__grade',lookup_expr='gte',help_text='年级大于等于')
@@ -17,3 +17,10 @@ class StudentFilters(django_filters.rest_framework.FilterSet):
         fields = ['id','name','gender','class_id','class_name','grade','major_id','colloge_id','colloge_name','grade_min','grade_max']
 
 
+class TeacherFilters(django_filters.rest_framework.FilterSet):
+    department=django_filters.CharFilter(field_name='department__name',lookup_expr='icontains',help_text='单位')
+    name=django_filters.CharFilter(field_name='name',lookup_expr='icontains',help_text='姓名')
+    id=django_filters.CharFilter(field_name='id',lookup_expr='icontains',help_text='教号')
+    class Meta:
+        model=Teacher
+        fields=['department','id','name','gender',]

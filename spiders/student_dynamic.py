@@ -219,7 +219,7 @@ class SpiderDynamicStudent:
             url=r'http://jwc.jxnu.edu.cn/MyControl/All_Display.aspx?UserControl=xfz_cj.ascx&Action=Personal'
             wb_data=self.__s.get(url,timeout=timeout)
             soup=BeautifulSoup(wb_data.text,"html5lib")
-            print(soup)
+            # print(soup)
             my_credit=soup.select('#_ctl11_lblMsg > u')[5]
             nu=soup.select('td[valign="middle"]')
             for n in nu:
@@ -229,7 +229,7 @@ class SpiderDynamicStudent:
                 }
                 # print(dat)
                 semsters.append(dat)
-            print(semsters)
+            # print(semsters)
             lessons = soup.select('tr[bgcolor="White"]')
             # print(lessons)
             for i in range(1,len(semsters)):
@@ -444,6 +444,7 @@ class SpiderDynamicStudent:
             student=Student.objects.get(id=data['student_id'])
             student_detail.base_data=student
         except:
+            student=None
             print('student get error')
 
         student_detail.candidate_id=data['candidate_id']
@@ -456,6 +457,9 @@ class SpiderDynamicStudent:
         student_detail.mobile=data['mobile']
         try:
             user_profile=UserProfile.objects.get(username=data['student_id'])
+            user_profile.name=student.name
+            user_profile.gender=student.gender
+            user_profile.save()
             student_detail.user_profile=user_profile
         except:
             print('user profile get error')

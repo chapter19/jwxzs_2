@@ -1,6 +1,7 @@
 #-*- coding:utf-8 -*-
-from .models import Major,Colloge,Class,Teacher,Student,StudentDetail
+from .models import Major,Colloge,Class,Teacher,Student,StudentDetail,UserProfile
 from rest_framework import serializers
+from rest_captcha.serializers import RestCaptchaSerializer
 
 
 class MajorSerializer(serializers.ModelSerializer):
@@ -53,3 +54,19 @@ class StudentDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model=StudentDetail
         fields='__all__'
+
+
+# class UserProfileSerializer(serializers.ModelSerializer):
+#     gender=serializers.SerializerMethodField()
+#     def get_gender(self, obj):
+#         return obj.get_gender_display()
+#     class Meta:
+#         model=UserProfile
+#         fields=['username','name','gender','is_student','is_teacher']
+#         # exclude=[]
+
+
+class CatptchaSerializer(RestCaptchaSerializer,serializers.Serializer):
+    pass
+
+

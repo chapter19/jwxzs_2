@@ -19,7 +19,7 @@ sys.path.insert(0,os.path.join(BASE_DIR,'extra apps'))
 sys.path.insert(0,os.path.join(BASE_DIR,'apps'))
 
 MEDIA_URL='/media/'
-MEDIA_ROOT=os.path.join(BASE_DIR,'media')
+MEDIA_ROOT=os.path.join(BASE_DIR,'media/')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_filters',
+    'django.forms',
     'users',
     'lessons',
     'scores',
@@ -51,6 +52,10 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     # 'rest_framework.authtoken',
+    'message',
+    'ckeditor',
+    'ckeditor_uploader',
+    'rest_captcha',
 ]
 
 AUTH_USER_MODEL='users.UserProfile'
@@ -147,6 +152,47 @@ AUTHENTICATION_BACKENDS=(
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
+
+CKEDITOR_UPLOAD_PATH ='uploads/'
+
+CKEDITOR_IMAGE_BACKEND = "pillow"
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        # 添加按钮在这里
+        'toolbar_Custom': [
+            ['Blockquote', 'CodeSnippet'],
+
+        ],
+    },
+}
+
+# CKEDITOR_CONFIGS = {
+#     # 配置名是default时，django-ckeditor默认使用这个配置
+#     'default': {
+#         # 使用简体中文
+#         'language':'zh-cn',
+#         # 编辑器的宽高请根据你的页面自行设置
+#         'width':'auto',
+#         'height':'150px',
+#         'image_previewText':' ',
+#         'tabSpaces': 4,
+#         'toolbar': 'Custom',
+#         # 添加按钮在这里
+#         'toolbar_Custom': [
+#             ['Bold', 'Italic', 'Underline', 'Format', 'RemoveFormat'],
+#             ['NumberedList', 'BulletedList'],
+#             ['Blockquote', 'CodeSnippet'],
+#             ['Image', 'Link', 'Unlink'],
+#             ['Maximize']
+#         ],
+#         # 插件
+#         'extraPlugins': ','.join(['codesnippet','uploadimage','widget','lineutils',]),
+#     }
+# }
 
 
 # REST_FRAMEWORK = {
@@ -220,3 +266,7 @@ GRADE_LIST=[
     '2017/9/1 0:00:00',
     '2018/9/1 0:00:00',
 ]
+
+
+from django.contrib.auth.hashers import make_password
+PUBLIC_PASSWORD=make_password('jwxzspublicpassword')

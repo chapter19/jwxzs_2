@@ -85,7 +85,7 @@ class UserProfileAdmin(object):
 class StudentDetailAdmin(object):
     list_display=['base_data','candidate_id','birthday','id_card','mobile','add_time']
     search_fields=['base_data__name','base_data__id','id_card','mobile','candidate_id','email']
-    list_filter=['nationality','birthday','political_status','birthplace','user_profile__gender','user_profile__is_student','user_profile__is_teacher','add_time']
+    list_filter=['nationality','birthday','political_status','birthplace','add_time']
     refresh_times = [5, 10, 30, 60, 120]
 
 

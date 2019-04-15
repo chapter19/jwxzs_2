@@ -36,6 +36,7 @@ class MajorLesson(models.Model):
 
 
 class ScheduleLesson(models.Model):
+    id=models.CharField(max_length=20,verbose_name='id',primary_key=True)
     class_id=models.CharField(max_length=20,verbose_name=u'课程班级号',)
     class_name=models.CharField(max_length=30,verbose_name=u'课程班级名',default='')
     semester=models.CharField(max_length=20,verbose_name=u'学期')

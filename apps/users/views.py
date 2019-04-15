@@ -17,13 +17,14 @@ from django.contrib import auth
 from spiders.student_dynamic import SpiderDynamicStudent
 from spiders.teacher_dynamic import SpiderDynamicTeacher
 
-from .models import Student,StudentDetail
-from .serializer import StudentSerializer,StudentDetailSerializer
-from .filters import StudentFilters
+from .models import Student,StudentDetail,Teacher
+from .serializer import StudentSerializer,StudentDetailSerializer,TeacherSerializer,CatptchaSerializer
+from .filters import StudentFilters,TeacherFilters
+from rest_framework.views import APIView
 
 User=get_user_model()
 
-class StudentPagination(PageNumberPagination):
+class DefaultPagination(PageNumberPagination):
     page_size = 20
     page_size_query_param = 'page_size'
     page_query_param = 'page'
@@ -73,12 +74,12 @@ class CustomBackend(ModelBackend):
 
 class StudentView(mixins.ListModelMixin,RetrieveModelMixin,viewsets.GenericViewSet):
     queryset=Student.objects.all()
-    pagination_class = StudentPagination
+    pagination_class = DefaultPagination
     permission_classes = (IsAuthenticated,)
     serializer_class=StudentSerializer
     filter_backends = (DjangoFilterBackend, filters.OrderingFilter,)
     filter_class = StudentFilters
-    ordering_fields = ['id','name','cla__grade','cla__name','cla__colloge__name']
+    ordering_fields = ['id','name','cla__grade','cla__name','cla__colloge__name','gender']
 
 
 
@@ -89,4 +90,16 @@ class StudentDetailRetrieveView(RetrieveModelMixin,viewsets.GenericViewSet):
     def get_queryset(self):
         return StudentDetail.objects.filter(base_data__id=self.request.user.username)
 
+
+class TeacherView(mixins.ListModelMixin,RetrieveModelMixin,viewsets.GenericViewSet):
+    queryset = Teacher.objects.all()
+    pagination_class = DefaultPagination
+    permission_classes = (IsAuthenticated,)
+    serializer_class = TeacherSerializer
+    filter_backends = (DjangoFilterBackend, filters.OrderingFilter,)
+    filter_class = TeacherFilters
+    ordering_fields = ['id', 'name','department__name','gender']
+
+class CaptchaView(APIView):
+    serializer_class =CatptchaSerializer
 

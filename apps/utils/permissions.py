@@ -12,11 +12,11 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         # Read permissions are allowed to any request,
         # so we'll always allow GET, HEAD or OPTIONS requests.
-        if request.method in permissions.SAFE_METHODS:
-            return True
+        # if request.method in permissions.SAFE_METHODS:
+        #     return True
 
         # Instance must have an attribute named `owner`.
-        return obj.user == request.user
+        return obj.sender == request.user
 
 
 
@@ -40,6 +40,28 @@ class StudentScoreIsOwnerOrReadOnly(permissions.BasePermission):
 
         # Instance must have an attribute named `owner`.
         return obj.student__id == request.user.username
+
+
+class MessageIsOwnerOrReadOnly(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        # Read permissions are allowed to any request,
+        # so we'll always allow GET, HEAD or OPTIONS requests.
+        # if request.method in permissions.SAFE_METHODS:
+        #     return True
+
+        # Instance must have an attribute named `owner`.
+        return obj.sender==request.user
+
+
+class OutboxMessageFileIsOwnerOrReadOnly(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        # Read permissions are allowed to any request,
+        # so we'll always allow GET, HEAD or OPTIONS requests.
+        # if request.method in permissions.SAFE_METHODS:
+        #     return True
+
+        # Instance must have an attribute named `owner`.
+        return obj.message.sender==request.user
 
 
 

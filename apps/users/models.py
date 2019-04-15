@@ -6,6 +6,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 class Major(models.Model):
+    id=models.CharField(max_length=20,verbose_name='id',default='',primary_key=True)
     major_id=models.CharField(max_length=10,verbose_name=u'专业号',default='')
     post_code=models.CharField(max_length=20,verbose_name=u'表单码',default='')
     grade = models.IntegerField(verbose_name=u'年级', null=True, blank=True)
@@ -68,22 +69,10 @@ class Class(models.Model):
         return self.name
 
 
-class Student(models.Model):
-    id=models.CharField(max_length=12,verbose_name=u'学号',primary_key=True,help_text='学号')
-    name=models.CharField(max_length=50,verbose_name=u'姓名',default='',help_text='姓名')
-    cla=models.ForeignKey(Class,verbose_name=u'班级',null=True,blank=True,on_delete=models.CASCADE)
-    gender=models.CharField(choices=(('male',u'男'),('female',u'女')),max_length=6,default='female',verbose_name=u'性别',help_text='性别')
-    add_time = models.DateTimeField(default=datetime.now, verbose_name=u'添加时间')
-    class Meta:
-        verbose_name=u'学生'
-        verbose_name_plural=verbose_name
-    def __str__(self):
-        return self.name
-
-
 class UserProfile(AbstractUser):
     name=models.CharField(max_length=50,verbose_name=u'姓名',default='')
-    gender = models.CharField(choices=(('male', u'男'), ('female', u'女')), max_length=6, default='female')
+    gender = models.CharField(choices=(('male', u'男'), ('female', u'女')), max_length=6, default='female',verbose_name='性别',help_text='性别')
+    # type=models.CharField(choices=(('student','学生'),('teacher','教师'),('admin','')))
     is_student=models.BooleanField(default=False,verbose_name=u'是否为学生')
     is_teacher=models.BooleanField(default=False,verbose_name=u'是否为教师')
     class Meta:
@@ -93,8 +82,23 @@ class UserProfile(AbstractUser):
         return self.username
 
 
+class Student(models.Model):
+    id=models.CharField(max_length=12,verbose_name=u'学号',primary_key=True,help_text='学号')
+    name=models.CharField(max_length=50,verbose_name=u'姓名',default='',help_text='姓名')
+    cla=models.ForeignKey(Class,verbose_name=u'班级',null=True,blank=True,on_delete=models.CASCADE)
+    gender=models.CharField(choices=(('male',u'男'),('female',u'女')),max_length=6,default='female',verbose_name=u'性别',help_text='性别')
+    user=models.OneToOneField(UserProfile,verbose_name='用户',null=True,blank=True)
+    add_time = models.DateTimeField(default=datetime.now, verbose_name=u'添加时间')
+    class Meta:
+        verbose_name=u'学生'
+        verbose_name_plural=verbose_name
+    def __str__(self):
+        return self.name
+
+
+
 class StudentDetail(models.Model):
-    base_data=models.ForeignKey(Student,verbose_name=u'基本信息',null=True,blank=True,on_delete=models.CASCADE)
+    base_data=models.OneToOneField(Student,verbose_name=u'基本信息',null=True,blank=True)
     # cla = models.ForeignKey(Class, verbose_name=u'班级')
     candidate_id=models.CharField(max_length=25,verbose_name=u'考生号',null=True,blank=True)
     nationality=models.CharField(max_length=30,verbose_name=u'民族',default='汉族')
@@ -104,7 +108,7 @@ class StudentDetail(models.Model):
     birthplace=models.CharField(max_length=30,verbose_name=u'籍贯',null=True,blank=True)
     email=models.EmailField(null=True,blank=True,verbose_name=u'电子邮箱')
     mobile=models.CharField(max_length=11,null=True,blank=True,verbose_name=u'通讯号码')
-    user_profile=models.OneToOneField(UserProfile,on_delete=models.CASCADE)
+    # user_profile=models.OneToOneField(UserProfile,on_delete=models.CASCADE)
     add_time = models.DateTimeField(default=datetime.now, verbose_name=u'添加时间')
     class Meta:
         verbose_name=u'学生详细信息'
@@ -135,6 +139,7 @@ class Teacher(models.Model):
     name=models.CharField(max_length=50,verbose_name=u'姓名')
     gender = models.CharField(choices=(('male', u'男'), ('female', u'女')), verbose_name=u'性别' ,max_length=6, default='female')
     department=models.ForeignKey(Department,verbose_name=u'部门',null=True,blank=True,on_delete=models.CASCADE)
+    user = models.OneToOneField(UserProfile, verbose_name='用户', null=True, blank=True)
     add_time = models.DateTimeField(default=datetime.now, verbose_name=u'添加时间')
     class Meta:
         verbose_name=u'教师'
