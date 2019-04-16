@@ -53,6 +53,8 @@ class MessageIsOwnerOrReadOnly(permissions.BasePermission):
         return obj.sender==request.user
 
 
+
+
 class OutboxMessageFileIsOwnerOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         # Read permissions are allowed to any request,

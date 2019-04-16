@@ -17,6 +17,7 @@ class ReceiverSerializer(serializers.ModelSerializer):
 
 class OutboxGroupReceiverSerializer(serializers.ModelSerializer):
     receiver = ReceiverSerializer()
+    read_time = serializers.DateTimeField(read_only=True, format='%Y-%m-%d %H:%M')
     class Meta:
         model=GroupReceiverMessage
         fields=['receiver','read_time',]
@@ -207,27 +208,28 @@ class OutboxGroupCreateSerializer(serializers.ModelSerializer):
             if mess[0].sender_id==user:
                 if group_type == 1:
                     sch_les = ScheduleLesson.objects.filter(id=group_id)
-                    if sch_les:
-                        group_receivers = UserProfile.objects.filter(student__score__schedule_lesson=sch_les[0])
-                        group_name = sch_les[0].class_name
-                        if group_receivers:
-                            group = ReceiverGroup.objects.create(group_id=group_id, group_type=group_type,
-                                                                 group_name=group_name, message=mess[0])
-                            # id = validated_data.get('id')
-                            for g_r in group_receivers:
-                                group_receiver = GroupReceiverMessage(receiver_group=group, receiver=g_r)
-                                group_receiver.save()
-                            return group
+                    us=UserProfile.objects.get(id=user)
+                    if us.teacher:
+                        if sch_les and sch_les[0].teacher==us.teacher:
+                            group_receivers = UserProfile.objects.filter(student__score__schedule_lesson=sch_les[0])
+                            group_name = sch_les[0].lesson.name+' '+sch_les[0].class_name
+                            if group_receivers:
+                                group = ReceiverGroup.objects.create(group_id=group_id, group_type=group_type,group_name=group_name, message=mess[0])
+                                for g_r in group_receivers:
+                                    group_receiver = GroupReceiverMessage(receiver_group=group, receiver=g_r)
+                                    group_receiver.save()
+                                return group
+                        else:
+                            raise serializers.ValidationError('课程表课程id不存在！')
                     else:
-                        raise serializers.ValidationError('课程表课程id不存在！')
+                        raise serializers.ValidationError('你不是该课程班级的老师，没有权力向该班发送消息！')
                 elif group_type == 2:
                     cla = Class.objects.filter(id=group_id)
                     if cla:
                         group_name = cla[0].name
-                        group_receivers = UserProfile.objects.filter(student__cla__id=cla[0])
+                        group_receivers = UserProfile.objects.filter(student__cla=cla[0])
                         if group_receivers:
-                            group = ReceiverGroup.objects.create(group_id=group_id, group_type=group_type,
-                                                                 group_name=group_name, message=mess[0])
+                            group = ReceiverGroup.objects.create(group_id=group_id, group_type=group_type,group_name=group_name, message=mess[0])
                             for g_r in group_receivers:
                                 group_receiver = GroupReceiverMessage(receiver_group=group, receiver=g_r)
                                 group_receiver.save()
@@ -240,8 +242,7 @@ class OutboxGroupCreateSerializer(serializers.ModelSerializer):
                         group_name = colloge[0].name
                         group_receivers = UserProfile.objects.filter(student__cla__colloge=colloge[0])
                         if group_receivers:
-                            group = ReceiverGroup.objects.create(group_id=group_id, group_type=group_type,
-                                                                 group_name=group_name, message=mess[0])
+                            group = ReceiverGroup.objects.create(group_id=group_id, group_type=group_type,group_name=group_name, message=mess[0])
                             for g_r in group_receivers:
                                 group_receiver = GroupReceiverMessage(receiver_group=group, receiver=g_r)
                                 group_receiver.save()
@@ -251,11 +252,10 @@ class OutboxGroupCreateSerializer(serializers.ModelSerializer):
                 else:
                     maj = Major.objects.filter(id=group_id)
                     if maj:
-                        group_name = maj[0].name
+                        group_name = str(maj[0].grade) + '级' + maj[0].name
                         group_receivers = UserProfile.objects.filter(student__cla__major=maj[0])
                         if group_receivers:
-                            group = ReceiverGroup.objects.create(group_id=group_id, group_type=group_type,
-                                                                 group_name=group_name, message=mess[0])
+                            group = ReceiverGroup.objects.create(group_id=group_id, group_type=group_type,group_name=group_name, message=mess[0])
                             for g_r in group_receivers:
                                 group_receiver = GroupReceiverMessage(receiver_group=group, receiver=g_r)
                                 group_receiver.save()
@@ -272,11 +272,12 @@ class OutboxGroupCreateSerializer(serializers.ModelSerializer):
 
 #收件箱
 #已读、收藏、删除
-class OutboxMessageReceiverUpdateSerializer(serializers.Serializer):
-    # id=serializers.IntegerField(read_only=True)
+class InboxMessageReceiverUpdateSerializer(serializers.Serializer):
+    id=serializers.IntegerField(read_only=True)
     if_read=serializers.BooleanField(required=False,help_text='标记是否已读')
     if_delete=serializers.BooleanField(required=False,help_text='是否回收')
     if_collect=serializers.BooleanField(required=False,help_text='是否收藏')
+    if_report=serializers.BooleanField(required=False,help_text='是否举报')
     # read_time = serializers.HiddenField()
     # user = serializers.HiddenField(
     #     default=serializers.CurrentUserDefault()
@@ -284,6 +285,7 @@ class OutboxMessageReceiverUpdateSerializer(serializers.Serializer):
     def update(self, instance, validated_data):
         instance.if_delete=validated_data.get('if_delete',instance.if_delete)
         instance.if_collect=validated_data.get('if_collect',instance.if_collect)
+        instance.if_report=validated_data.get('if_report',instance.if_report)
         if validated_data.get('if_read'):
             # ReceiverMessage
             if instance.read_time:
@@ -292,13 +294,66 @@ class OutboxMessageReceiverUpdateSerializer(serializers.Serializer):
                 instance.read_time=datetime.now()
         # instance.send_time = datetime.now()
         instance.save()
+        id = validated_data.get('id')
+        mess = Message.objects.get(receiver_message__id=id)
+        repo_time = ReceiverMessage.objects.filter(message=mess,if_report=True).count() + GroupReceiverMessage.objects.filter(receiver_group__message=mess, if_report=True).count()
+        if repo_time > 5:
+            mess.if_report_over = True
+            mess.save()
         return instance
     class Meta:
         model=ReceiverMessage
-        fields=['id','read_time','if_delete','if_collect','if_read']
+        fields=['id','read_time','if_delete','if_collect','if_read','if_report']
+
+
+#群组收件箱
+#已读、收藏、删除
+class InboxGroupReceiverUpdateSerializer(serializers.Serializer):
+    id=serializers.IntegerField(read_only=True)
+    if_read=serializers.BooleanField(required=False,help_text='标记是否已读')
+    if_delete=serializers.BooleanField(required=False,help_text='是否回收')
+    if_collect=serializers.BooleanField(required=False,help_text='是否收藏')
+    if_report=serializers.BooleanField(required=False,help_text='是否举报')
+    # read_time = serializers.HiddenField()
+    # user = serializers.HiddenField(
+    #     default=serializers.CurrentUserDefault()
+    # )
+    def update(self, instance, validated_data):
+        instance.if_delete=validated_data.get('if_delete',instance.if_delete)
+        instance.if_collect=validated_data.get('if_collect',instance.if_collect)
+        instance.if_report=validated_data.get('if_report',instance.if_report)
+        if validated_data.get('if_read'):
+            # ReceiverMessage
+            if instance.read_time:
+                pass
+            else:
+                instance.read_time=datetime.now()
+        # instance.send_time = datetime.now()
+        instance.save()
+        id = validated_data.get('id',instance.id)
+        mess = Message.objects.get(receiver_group__group_receiver_message__id=id)
+        repo_time=ReceiverMessage.objects.filter(message=mess,if_report=True).count()+GroupReceiverMessage.objects.filter(receiver_group__message=mess,if_report=True).count()
+        if repo_time>5:
+            mess.if_report_over=True
+            mess.save()
+        return instance
+    class Meta:
+        model=GroupReceiverMessage
+        fields=['id','read_time','if_delete','if_collect','if_read','if_report']
 
 
 
+#收件箱列表
+class InboxMessageSerializer(serializers.ModelSerializer):
+    receiver_message=OutboxReceiverMessageSerializer(many=True)
+    receiver_group=OutboxGroupSerializer(many=True)
+    sender=ReceiverSerializer()
+    reply_message=OutboxReplyMessageSerializer()
+    message_file=MessageFileSerializer(many=True)
+    send_time=serializers.DateTimeField(read_only=True,format='%Y-%m-%d %H:%M',help_text='发送时间')
+    class Meta:
+        model=Message
+        fields=['receiver_message','receiver_group','title','body','send_time','if_delete','if_collect','message_file','reply_message']
 
 
 

@@ -1,7 +1,7 @@
 #-*- coding:utf-8 -*-
 from .models import Major,Colloge,Class,Teacher,Student,StudentDetail,UserProfile
 from rest_framework import serializers
-from rest_captcha.serializers import RestCaptchaSerializer
+# from rest_captcha.serializers import RestCaptchaSerializer
 
 
 class MajorSerializer(serializers.ModelSerializer):
@@ -65,8 +65,8 @@ class StudentDetailSerializer(serializers.ModelSerializer):
 #         fields=['username','name','gender','is_student','is_teacher']
 #         # exclude=[]
 
-
-class CatptchaSerializer(RestCaptchaSerializer,serializers.Serializer):
-    pass
+#
+# class CatptchaSerializer(RestCaptchaSerializer,serializers.Serializer):
+#     pass
 
 

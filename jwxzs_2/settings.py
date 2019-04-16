@@ -55,7 +55,7 @@ INSTALLED_APPS = [
     'message',
     'ckeditor',
     'ckeditor_uploader',
-    'rest_captcha',
+    # 'rest_captcha',
 ]
 
 AUTH_USER_MODEL='users.UserProfile'

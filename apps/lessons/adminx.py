@@ -23,7 +23,7 @@ class MajorLessonAdmin(object):
 
 
 class ScheduleLessonAdmin(object):
-    list_display=['lesson','class_id','class_name','semester','teacher','add_time']
+    list_display=['lesson','class_id','class_name','semester','teacher','add_time','id']
     search_fields=['lesson__name','lesson__id','class_id','class_name','semester','teacher__name','teacher__id']
     list_filter=['semester','teacher__name','teacher__id','add_time']
     # 编辑页外键 搜索

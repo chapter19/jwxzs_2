@@ -28,11 +28,11 @@ from rest_framework.routers import DefaultRouter
 
 from lessons.views import StudentScheduleViewSet,TeacherScheduleViewSet
 from scores.views import ScoreViewSet,ScoreStudentListViewSet,TotalCreditViewSet
-from users.views import StudentView,StudentDetailRetrieveView,TeacherView,CaptchaView
-from message.views import OutboxView,OutboxMessageFileView,OutboxMessageReceiverView,OutboxMessageGroupCreateView
-    # OutboxReceiverView,OutboxMessageFileView,GroupList,GroupScheduleLessonTitle,GroupClassName,GroupCollogeName,OutboxReceiverGroupView,\
-    # OutboxReceiverGroupReceiverView
+from users.views import StudentView,StudentDetailRetrieveView,TeacherView\
+    # ,CaptchaView
 
+from message.views import OutboxView,OutboxMessageFileView,MessageReceiverView,OutboxMessageGroupCreateView,\
+    MessageGroupReceiverView,InboxReceiverMessageView,InboxGroupReceiverView
 
 router=DefaultRouter()
 router.register(r'student-schedule',StudentScheduleViewSet,basename='student-schedule')
@@ -46,24 +46,13 @@ router.register(r'teacher',TeacherView,basename='teacher')
 # router.register(r'login',obtain_jwt_token,basename='login')
 # router.register(r'captcha-check',CaptchaView,basename='captcha-check')
 
-
 router.register(r'outbox',OutboxView,basename='outbox')
 router.register(r'outbox-message-file',OutboxMessageFileView,basename='outbox-message-file')
-router.register(r'outbox-message-receiver',OutboxMessageReceiverView,basename='outbox-message-receiver')
+router.register(r'message-receiver',MessageReceiverView,basename='message-receiver')
 router.register(r'outbox-message-group',OutboxMessageGroupCreateView,basename='outbox-message-group')
-
-# router.register(r'receiver-message',ReceiverMessageView,basename='receiver-message')
-
-# router.register(r'outbox-receiver-list',OutboxReceiverView,basename='outbox-receiver-list')
-# router.register(r'outbox-message-file',OutboxMessageFileView,basename='outbox-message-file')
-# # router.register(r'outbox-receiver-class-list',OutboxReceiverClassListView,basename='outbox-receiver-class-list')
-# # router.register(r'out')
-# router.register(r'group-list',GroupList,basename='group-list')
-# router.register(r'group-class-name',GroupClassName,basename='group-class-name')
-# router.register(r'group-colloge-name',GroupCollogeName,basename='group-colloge-name')
-# router.register(r'group-schedule-lesson-title',GroupScheduleLessonTitle,basename='group-schedule-lesson-title')
-# router.register(r'outbox-receive-group',OutboxReceiverGroupView,basename='outbox-receive-group')
-# router.register(r'outbox-receiver-group-receiver',OutboxReceiverGroupReceiverView,basename='outbox-receiver-group-receiver')
+router.register(r'inbox-group-message-update',MessageGroupReceiverView,basename='inbox-group-message-update')
+router.register(r'inbox-receiver-message',InboxReceiverMessageView,basename='inbox-receiver-message')
+router.register(r'inbox-group-receiver-message',InboxGroupReceiverView,basename='inbox-group-receiver-message')
 
 urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),
@@ -76,8 +65,8 @@ urlpatterns = [
     url(r'docs/',include_docs_urls(title=u'教务小助手')),
     url(r'^api-auth/', include('rest_framework.urls',namespace='rest_framework')),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
-    url(r'api/v1/captcha/', include('rest_captcha.urls')),
-    url(r'^api/v1/captcha-check/',CaptchaView.as_view(),name='captcha-check')
+    # url(r'api/v1/captcha/', include('rest_captcha.urls')),
+    # url(r'^api/v1/captcha-check/',CaptchaView.as_view(),name='captcha-check')
     # url(r'api/v1/group-list/',GroupList.as_view(),name='group-list')
     # url(r'^media/(?P<path>.*)$',serve,{'document_root':MEDIA_ROOT}),
 ]

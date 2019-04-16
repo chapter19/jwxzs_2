@@ -1,12 +1,12 @@
 from django.shortcuts import render
 # from django.contrib import V
-from .models import Message,ReceiverMessage,MessageFile,ReceiverGroup
+from .models import Message,ReceiverMessage,MessageFile,ReceiverGroup,GroupReceiverMessage
 from rest_framework import mixins,viewsets
 
 
 from .serializers import OutboxMessageSerializer,OutboxMessageCreateSerializer,OutboxMessageUpdateSerializer,\
-    OutboxMessageFileCreateSerializer,OutboxMessageReceiverCreateSerializer,OutboxMessageReceiverUpdateSerializer,\
-    OutboxMessageFileUpdateSerializer,OutboxGroupCreateSerializer
+    OutboxMessageFileCreateSerializer,OutboxMessageReceiverCreateSerializer,InboxMessageReceiverUpdateSerializer,\
+    OutboxMessageFileUpdateSerializer,OutboxGroupCreateSerializer,InboxGroupReceiverUpdateSerializer
 
 
 from rest_framework.permissions import IsAuthenticated
@@ -21,6 +21,7 @@ from users.models import Class,Colloge,Major
 from lessons.models import ScheduleLesson
 
 # from .filters import OutboxReceiverFilter,OutboxMessageFileFilter,OutboxMessageFilter,OutboxReceiveGroupFilter,OutboxReceiverGroupReceiverFilter
+from .filters import OutboxMessageFilter,InboxGroupMessageFilter,InboxMessageFilter
 
 from utils.permissions import MessageIsOwnerOrReadOnly,OutboxMessageFileIsOwnerOrReadOnly
 
@@ -43,6 +44,8 @@ class OutboxView(mixins.ListModelMixin,mixins.RetrieveModelMixin,mixins.CreateMo
     permission_classes = (IsAuthenticated,MessageIsOwnerOrReadOnly,)
     # serializer_class = OutboxMessageSerializer
     ordering_fields=['send_time','id','if_collect','type']
+    filter_backends = (DjangoFilterBackend, filters.OrderingFilter,)
+    filter_class=OutboxMessageFilter
     def get_serializer_class(self):
         if self.action=='list':
             return OutboxMessageSerializer
@@ -73,7 +76,7 @@ class OutboxMessageFileView(mixins.CreateModelMixin,mixins.UpdateModelMixin,view
 
 
 #创建、修改收件人，做了权限
-class OutboxMessageReceiverView(mixins.CreateModelMixin,mixins.UpdateModelMixin,viewsets.GenericViewSet):
+class MessageReceiverView(mixins.CreateModelMixin,mixins.UpdateModelMixin,viewsets.GenericViewSet):
     '''
     create:
         发件人为消息创建收件人
@@ -83,7 +86,7 @@ class OutboxMessageReceiverView(mixins.CreateModelMixin,mixins.UpdateModelMixin,
     permission_classes = (IsAuthenticated,)
     def get_serializer_class(self):
         if self.action=='update':
-            return OutboxMessageReceiverUpdateSerializer
+            return InboxMessageReceiverUpdateSerializer
         else:
             return OutboxMessageReceiverCreateSerializer
     def get_queryset(self):
@@ -93,8 +96,12 @@ class OutboxMessageReceiverView(mixins.CreateModelMixin,mixins.UpdateModelMixin,
             return ReceiverMessage.objects.filter(receiver=self.request.user)
 
 
-
+#发件人创建接收组 没做完权限 做了课程班级的
 class OutboxMessageGroupCreateView(mixins.CreateModelMixin,viewsets.GenericViewSet):
+    '''
+    create:
+        发件人创建接收组
+    '''
     permission_classes = (IsAuthenticated,)
     serializer_class = OutboxGroupCreateSerializer
     def get_queryset(self):
@@ -102,5 +109,52 @@ class OutboxMessageGroupCreateView(mixins.CreateModelMixin,viewsets.GenericViewS
 
 
 
+#群组收件箱修改
+class MessageGroupReceiverView(mixins.UpdateModelMixin,viewsets.GenericViewSet):
+    '''
+    update:
+        收件人标记群组收件为已读、收藏、删除、举报
+    '''
+    permission_classes = (IsAuthenticated,)
+    serializer_class=InboxGroupReceiverUpdateSerializer
+    def get_queryset(self):
+        return GroupReceiverMessage.objects.filter(receiver=self.request.user)
+
+
+
+#收件箱
+class InboxReceiverMessageView(mixins.ListModelMixin,viewsets.GenericViewSet):
+    '''
+    list:
+        收件人收件列表
+    '''
+    pagination_class = DefaultPagination
+    permission_classes = (IsAuthenticated,)
+    # serializer_class = OutboxMessageSerializer
+    ordering_fields = ['send_time', 'id', 'receiver_message__if_collect','receiver_message__read_time','type']
+    filter_backends = (DjangoFilterBackend, filters.OrderingFilter,)
+    filter_class=InboxMessageFilter
+    def get_serializer_class(self):
+        return OutboxMessageSerializer
+    def get_queryset(self):
+        return Message.objects.filter(receiver_message__receiver=self.request.user)
+
+
+#收件箱群组邮件
+class InboxGroupReceiverView(mixins.ListModelMixin,viewsets.GenericViewSet):
+    '''
+    list:
+        收件人收群组邮件列表
+    '''
+    pagination_class = DefaultPagination
+    permission_classes = (IsAuthenticated,)
+    # serializer_class = OutboxMessageSerializer
+    ordering_fields = ['send_time', 'id','receiver_group__group_receiver_message__read_time','receiver_group__group_receiver_message__if_collect','type']
+    filter_backends = (DjangoFilterBackend, filters.OrderingFilter,)
+    filter_class=InboxGroupMessageFilter
+    def get_serializer_class(self):
+        return OutboxMessageSerializer
+    def get_queryset(self):
+        return Message.objects.filter(receiver_group__group_receiver_message__receiver=self.request.user)
 
 

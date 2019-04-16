@@ -13,12 +13,14 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from rest_framework.pagination import PageNumberPagination
 from django.contrib import auth
+from datetime import datetime
 
 from spiders.student_dynamic import SpiderDynamicStudent
 from spiders.teacher_dynamic import SpiderDynamicTeacher
 
 from .models import Student,StudentDetail,Teacher
-from .serializer import StudentSerializer,StudentDetailSerializer,TeacherSerializer,CatptchaSerializer
+from .serializer import StudentSerializer,StudentDetailSerializer,TeacherSerializer\
+    # ,CatptchaSerializer
 from .filters import StudentFilters,TeacherFilters
 from rest_framework.views import APIView
 
@@ -38,38 +40,42 @@ class CustomBackend(ModelBackend):
     def authenticate(self, request, username=None, password=None, **kwargs):
         try:
             user=User.objects.get(username=username)
-            if user.check_password(password):
-                return user
+            if user.is_active:
+                if user.check_password(password):
+                    return user
+                else:
+                    return None
             else:
-                return None
+                lenth = len(username)
+                if lenth == 10 or lenth == 12:
+                    dynamic_student = SpiderDynamicStudent(id=str(username), password=str(password))
+                    sign_in = dynamic_student.sign_in()
+                    if sign_in:
+                        pw = make_password(password=password)
+                        user.date_joined = datetime.now()
+                        user.password=pw
+                        user.is_active=True
+                        user.save()
+                        dynamic_student.get_all_data()
+                        return user
+                    else:
+                        return None
+                elif lenth == 5 or lenth == 6:
+                    dynamic_teacher = SpiderDynamicTeacher(id=str(username), password=str(password))
+                    sign_in = dynamic_teacher.sign_in()
+                    if sign_in:
+                        pw = make_password(password=password)
+                        user.date_joined=datetime.now()
+                        user.password = pw
+                        user.is_active = True
+                        user.save()
+                        return user
+                    else:
+                        return None
+                else:
+                    return None
         except:
-            lenth=len(username)
-            if lenth==10 or lenth==12:
-                dynamic_student=SpiderDynamicStudent(id=str(username),password=str(password))
-                # dynamic_student.test()
-                sign_in=dynamic_student.sign_in()
-                if sign_in:
-                    User.objects.create_user(username=username, password=password,is_student=True)
-                    student_user=auth.authenticate(username=username, password=password)
-                    # pw=make_password(password=password)
-                    # studnet_user=User(username=username,password=pw,is_student=True)
-                    # studnet_user.save()
-                    dynamic_student.get_all_data()
-                    return student_user
-                else:
-                    return None
-            elif lenth==5 or lenth==6:
-                dynamic_teacher=SpiderDynamicTeacher(id=str(username),password=str(password))
-                sign_in=dynamic_teacher.sign_in()
-                if sign_in:
-                    User.objects.create_user(username=username, password=password, is_teacher=True)
-                    teacher_user = auth.authenticate(username=username, password=password)
-                    return teacher_user
-                else:
-                    return None
-            else:
-                return None
-            # return None
+            return None
 
 
 class StudentView(mixins.ListModelMixin,RetrieveModelMixin,viewsets.GenericViewSet):
@@ -85,6 +91,7 @@ class StudentView(mixins.ListModelMixin,RetrieveModelMixin,viewsets.GenericViewS
 
 class StudentDetailRetrieveView(RetrieveModelMixin,viewsets.GenericViewSet):
     # queryset = StudentDetail.objects.all()
+    permission_classes = (IsAuthenticated,)
     serializer_class = StudentDetailSerializer
     lookup_field ='base_data'
     def get_queryset(self):
@@ -100,6 +107,6 @@ class TeacherView(mixins.ListModelMixin,RetrieveModelMixin,viewsets.GenericViewS
     filter_class = TeacherFilters
     ordering_fields = ['id', 'name','department__name','gender']
 
-class CaptchaView(APIView):
-    serializer_class =CatptchaSerializer
+# class CaptchaView(APIView):
+#     serializer_class =CatptchaSerializer
 
