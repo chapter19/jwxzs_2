@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'rest_framework',
     # 'rest_framework.authtoken',
     'message',
+    'semesters',
     'ckeditor',
     'ckeditor_uploader',
     # 'rest_captcha',
@@ -195,33 +196,7 @@ CKEDITOR_CONFIGS = {
 # }
 
 
-# REST_FRAMEWORK = {
-#     # 'DEFAULT_PERMISSION_CLASSES': (
-#     #     'rest_framework.permissions.IsAuthenticated',
-#     # ),
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'rest_framework.authentication.BasicAuthentication',
-#         'rest_framework.authentication.SessionAuthentication',
-#         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-#         # 'rest_framework.authentication.TokenAuthentication',
-#     ),
-# }
 
-# REST_FRAMEWORK = {
-#     # 'DEFAULT_PAGINATION_CLASS':'rest_framework.pagination.PageNumberPagination',
-#     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-#     # 'PAGE_SIZE':100,
-#     # 'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
-#     # 'DEFAULT_PERMISSION_CLASSES': (
-#     #     'rest_framework.permissions.IsAuthenticated',
-#     # ),
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'rest_framework.authentication.BasicAuthentication',
-#         'rest_framework.authentication.SessionAuthentication',
-#         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-#         # 'rest_framework.authentication.TokenAuthentication',
-#     )
-# }
 
 REST_FRAMEWORK = {
     # 'DEFAULT_PAGINATION_CLASS':'rest_framework.pagination.PageNumberPagination',
@@ -251,21 +226,22 @@ JWT_AUTH={
 }
 
 
-VERIFICATIONCODE_SRC='/Users/vccccccc/PycharmProjects/jwxzs_2/spiders/VerificationCode/'
+# VERIFICATIONCODE_SRC='/Users/vccccccc/PycharmProjects/jwxzs_2/spiders/VerificationCode/'
+VERIFICATIONCODE_SRC='./VerificationCode/'
 
 
-SEMESTER_LIST=[
-    '2019/3/1 0:00:00',
-    '2018/9/1 0:00:00',
-    '2018/3/1 0:00:00',
-]
-
-GRADE_LIST=[
-    '2015/9/1 0:00:00',
-    '2016/9/1 0:00:00',
-    '2017/9/1 0:00:00',
-    '2018/9/1 0:00:00',
-]
+# SEMESTER_LIST=[
+#     '2019/3/1 0:00:00',
+#     '2018/9/1 0:00:00',
+#     '2018/3/1 0:00:00',
+# ]
+#
+# GRADE_LIST=[
+#     '2015/9/1 0:00:00',
+#     '2016/9/1 0:00:00',
+#     '2017/9/1 0:00:00',
+#     '2018/9/1 0:00:00',
+# ]
 
 
 from django.contrib.auth.hashers import make_password

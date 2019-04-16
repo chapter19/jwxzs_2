@@ -8,6 +8,7 @@ from .filters import ScoreFilter,ScoreStudentListFilter
 from utils.permissions import StudentScoreIsOwnerOrReadOnly
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import filters
+from users.views import DefaultPagination
 
 class ScoreViewSet(mixins.ListModelMixin,viewsets.GenericViewSet):
     '''
@@ -29,6 +30,7 @@ class ScoreViewSet(mixins.ListModelMixin,viewsets.GenericViewSet):
 
 
 class ScoreStudentListViewSet(mixins.ListModelMixin,viewsets.GenericViewSet):
+    pagination_class = DefaultPagination
     queryset = Score.objects.all()
     permission_classes=(IsAuthenticated,)
     serializer_class = ScoreStudentListSerializer

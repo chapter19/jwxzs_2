@@ -4,7 +4,8 @@ import os,django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "jwxzs_2.settings")# project_name 项目名称
 django.setup()
 
-from jwxzs_2.settings import VERIFICATIONCODE_SRC,GRADE_LIST
+from jwxzs_2.settings import VERIFICATIONCODE_SRC\
+    # ,GRADE_LIST
 
 import requests
 from bs4 import BeautifulSoup
@@ -13,12 +14,20 @@ import pytesseract
 import uuid,os,time
 from users.models import Colloge,Class,Student,Major
 from lessons.models import MajorLesson,Lesson
+from semesters.models import Semester
+
+
+def get_spider_grade():
+    grade = Semester.objects.filter(if_spider_grade=True).values('post_code').distinct()
+    # print(grade)
+    return grade
 
 class SpiderStaticStudent:
     def __init__(self,id,password):
         self.id=id
         self.password=password
         self.__s=requests.Session()
+        self.grade_list=get_spider_grade()
 
     # get方法请求，获得隐藏参数 viewstate、eventvalidation
     def __get_hid_data(self, url, error_time_limit=7,timeout=4):
@@ -738,10 +747,10 @@ class SpiderStaticStudent:
                 'post_code':post_code,
                 'major_name':maj,
             }
-            grade_list = GRADE_LIST
+            grade_list = self.grade_list
             # print(major_id)
             for grade in grade_list:
-                self.get_one_grade_one_major(grade=grade,major=major)
+                self.get_one_grade_one_major(grade=grade['post_code'],major=major)
 
 
 if __name__ == '__main__':
@@ -753,8 +762,9 @@ if __name__ == '__main__':
     # spd.get_one_class_students(colloge_post_code='49000   ',class_post_code='24982425A           ')
     # spd.get_student()
     # spd.get_one_grade_one_major('2018/9/1 0:00:00',{'post_code':'130101W ','major_name':'表演（戏剧影视）'})
-    spd.get_major()
-
+    # spd.get_major()
+    # for i in spd.grade_list:
+    #     print(i['post_code'])
 
 
 

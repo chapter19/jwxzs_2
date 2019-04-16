@@ -1,26 +1,10 @@
 # -*- coding:utf-8 -*-
 
 import xadmin
-from xadmin.plugins.auth import UserAdmin
 
-from django import forms
 from django.contrib.auth.forms import (UserCreationForm, UserChangeForm,AdminPasswordChangeForm, PasswordChangeForm)
-from django.contrib.auth.models import Group, Permission
-from django.core.exceptions import PermissionDenied
-from django.conf import settings
-from django.template.response import TemplateResponse
-from django.utils.decorators import method_decorator
-from django.http import HttpResponseRedirect
-from django.utils.html import escape
-from django.utils.encoding import smart_text
 from django.utils.translation import ugettext as _
-from django.views.decorators.debug import sensitive_post_parameters
-from django.forms import ModelMultipleChoiceField
-from django.contrib.auth import get_user_model
 from xadmin.layout import Fieldset, Main, Side, Row, FormHelper
-from xadmin.sites import site
-from xadmin.util import unquote
-from xadmin.views import BaseAdminPlugin, ModelFormAdminView, ModelAdminView, CommAdminView, csrf_protect_m
 
 from xadmin.plugins.auth import PermissionModelMultipleChoiceField
 
@@ -103,12 +87,6 @@ class TeacherAdmin(object):
     ordering = ['id']
     refresh_times = [5, 10, 30, 60, 120]
 
-
-# class UserProfileAdmin(object):
-#     list_display=['username','name','id','gender','is_student','is_teacher','last_login','date_joined']
-#     search_fields=['username','name']
-#     list_filter=['gender','is_student','is_teacher','name','last_login','date_joined']
-#     refresh_times = [5, 10, 30, 60, 120]
 
 class UserProfileAdmin(object):
     change_user_password_template = None

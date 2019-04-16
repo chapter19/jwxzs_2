@@ -14,7 +14,11 @@ import uuid,os,time
 from users.models import Teacher,Department,Student
 from scores.models import Score
 from lessons.models import ScheduleLesson,Schedule,Lesson,ErrorSchedule
-from jwxzs_2.settings import SEMESTER_LIST
+from semesters.models import Semester
+
+# from jwxzs_2.settings import SEMESTER_LIST
+
+
 # from multiprocessing.pool import ThreadPool as Pool
 from multiprocessing.pool import Pool
 import multiprocessing
@@ -34,11 +38,18 @@ def _pickle_method(m):
 copyreg.pickle(types.MethodType, _pickle_method)
 
 
+def get_spider_semester():
+    grade = Semester.objects.filter(if_spider_semester=True).values('post_code').distinct()
+    # print(list(grade))
+    return grade
+
+
 class SpiderStaticTeacher:
     def __init__(self,id,password):
         self.id=id
         self.password=password
         self.__s=requests.Session()
+        self.semester_list=get_spider_semester()
 
     # get方法请求，获得隐藏参数 viewstate、eventvalidation
     def __get_hid_data(self, url, error_time_limit=5,timeout=2):
@@ -626,9 +637,9 @@ class SpiderStaticTeacher:
 
 
     def get_one_teacher_all_semester_schedule(self,teacher_id):
-        semester_list=SEMESTER_LIST
+        semester_list=self.semester_list
         for semester in semester_list:
-            self.get_one_teacher_one_semester_schedule(semester=semester,teacher_id=teacher_id)
+            self.get_one_teacher_one_semester_schedule(semester=semester['post_code'],teacher_id=teacher_id)
 
     def get_schedule(self):
         teachers=Teacher.objects.all()
@@ -746,7 +757,7 @@ if __name__ == '__main__':
     # tea.get_one_teacher_one_semester_schedule('004954','2019/3/1 0:00:00')
     # tea.get_schedule_student(lesson_id='267155',class_id='003550$1',semester='2019/3/1')
     # tea.test()
-    tea.get_schedule()
+    # tea.get_schedule()
     # tea.multiprocessing_get_schedule()
     # tea.get_all_teacher()
     # tea.get_one_teacher_one_semester_schedule('003550','2018/3/1 0:00:00')
@@ -756,5 +767,6 @@ if __name__ == '__main__':
     # tea.get_all_teacher()
     # main()
     # tea.insert_lesson_from_mongo()
-
+    # for i in tea.semester_list:
+    #     print(i['post_code'])
 

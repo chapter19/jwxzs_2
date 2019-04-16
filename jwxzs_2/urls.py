@@ -33,6 +33,7 @@ from users.views import StudentView,StudentDetailRetrieveView,TeacherView\
 
 from message.views import OutboxView,OutboxMessageFileView,MessageReceiverView,OutboxMessageGroupCreateView,\
     MessageGroupReceiverView,InboxReceiverMessageView,InboxGroupReceiverView
+from semesters.views import SemesterView,CurrentSemesterView
 
 router=DefaultRouter()
 router.register(r'student-schedule',StudentScheduleViewSet,basename='student-schedule')
@@ -53,6 +54,8 @@ router.register(r'outbox-message-group',OutboxMessageGroupCreateView,basename='o
 router.register(r'inbox-group-message-update',MessageGroupReceiverView,basename='inbox-group-message-update')
 router.register(r'inbox-receiver-message',InboxReceiverMessageView,basename='inbox-receiver-message')
 router.register(r'inbox-group-receiver-message',InboxGroupReceiverView,basename='inbox-group-receiver-message')
+router.register(r'semester',SemesterView,basename='semester')
+router.register(r'current-semester',CurrentSemesterView,basename='current-semester')
 
 urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),
