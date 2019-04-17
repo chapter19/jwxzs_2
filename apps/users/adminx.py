@@ -13,12 +13,6 @@ from .models import Colloge,Class,Student,Teacher,Department,Major,UserProfile,S
 from xadmin import views
 
 
-
-
-
-
-
-
 class BaseSetting(object):
     enable_themes=True
     use_bootswatch=True
@@ -36,6 +30,7 @@ class MajorAdmin(object):
     list_filter=['name','grade','major_id','add_time']
     readonly_fields = ['id']
     refresh_times = [5, 10, 30, 60, 120]
+    model_icon = 'fa fa-users'
 
 
 class CollogeAdmin(object):
@@ -44,6 +39,7 @@ class CollogeAdmin(object):
     list_filter=['id','name','post_code','add_time']
     readonly_fields = ['id', 'post_code']
     refresh_times = [5, 10, 30, 60, 120]
+    model_icon = 'fa fa-users'
 
 
 class ClassAdmin(object):
@@ -55,6 +51,7 @@ class ClassAdmin(object):
     readonly_fields = ['id','post_code']
     ordering = ['-name']
     refresh_times = [5, 10, 30, 60, 120]
+    model_icon = 'fa fa-users'
 
 
 class StudentAdmin(object):
@@ -69,6 +66,7 @@ class StudentAdmin(object):
     exclude=['']
     # model_icon="fal fa-female"
     refresh_times = [5, 10, 30, 60, 120]
+    model_icon = 'fa fa-user'
 
 
 class DepartmentAdmin(object):
@@ -77,6 +75,7 @@ class DepartmentAdmin(object):
     list_filter = ['name','add_time']
     readonly_fields = ['id','post_code']
     refresh_times = [5, 10, 30, 60, 120]
+    model_icon = 'fa fa-users'
 
 
 class TeacherAdmin(object):
@@ -86,6 +85,7 @@ class TeacherAdmin(object):
     readonly_fields = ['id']
     ordering = ['id']
     refresh_times = [5, 10, 30, 60, 120]
+    model_icon = 'fa fa-user'
 
 
 class UserProfileAdmin(object):
@@ -144,6 +144,7 @@ class StudentDetailAdmin(object):
     search_fields=['base_data__name','base_data__id','id_card','mobile','candidate_id','email']
     list_filter=['nationality','birthday','political_status','birthplace','add_time']
     refresh_times = [5, 10, 30, 60, 120]
+    model_icon = 'fa fa-user'
 
 
 

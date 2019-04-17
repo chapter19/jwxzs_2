@@ -14,6 +14,7 @@ class ScoreAdmin(object):
     list_filter=['score','standard_score','rescore','if_major','add_time','student__name','schedule_lesson__teacher__name','schedule_lesson__semester']
     list_editable=['score','standard_score','if_major','rescore']
     refresh_times = [5, 10, 30, 60, 120]
+    model_icon='fa fa-star'
 
 
 class NewScoreAdmin(object):
@@ -21,7 +22,7 @@ class NewScoreAdmin(object):
     seacher_fields=['student__name','student__id']
     list_filter=['score','if_major','student__name','schedule_lesson__teacher__name','schedule_lesson__semester','add_time']
     refresh_times = [5, 10, 30, 60, 120]
-
+    model_icon = 'fa fa-star-half-o'
 
 class TotalCreditAdmin(object):
     list_display=['student','credit','standard_score']
@@ -31,6 +32,8 @@ class TotalCreditAdmin(object):
     # 外键搜索
     raw_id_fields = ('student',)
     refresh_times = [5, 10, 30, 60, 120]
+    model_icon = 'fa fa-thumbs-o-up'
+
 
 xadmin.site.register(Score,ScoreAdmin)
 xadmin.site.register(NewScore,NewScoreAdmin)

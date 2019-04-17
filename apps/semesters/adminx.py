@@ -6,6 +6,7 @@ from .models import Semester,CurrentSemester
 
 class SemesterAdmin(object):
     list_display=['verbose_name','post_code','id',]
+    model_icon='fa fa-list'
     def save_models(self):
         obj=self.new_obj
         # 15-16第1学期
@@ -20,6 +21,7 @@ class SemesterAdmin(object):
 
 
 class CurrentSemesterAdmin(object):
+    model_icon = 'fa fa-list'
     display_list=['current_semester']
 
 

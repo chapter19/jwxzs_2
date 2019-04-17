@@ -23,6 +23,7 @@ class MessageAdmin(object):
     search_fields=['title','sender__username','sender__studentdetail__base_data__name','body','reply_message__title','reply_message__body','reply_message__sender__username','reply_message__sender__studentdetail__base_data__name']
     list_filter=['type','sender__name','send_time','send_state','reply_message__title']
     inlines=[ReceiverMessageInline,MessageFileInline]
+    model_icon='fa fa-bell-o'
     # relfield_style = 'fk_ajax'
 
 # class ReceiverClassAdmin(object):
@@ -32,6 +33,7 @@ class ReceiverGroupAdmin(object):
     list_display=['group_name','group_id','group_type','id']
     search_fields=['group_name','group_id','message__title','id','group_receiver_message__receiver__name','group_receiver_message__receiver__username']
     list_filter=['group_type','message__title','group_name','group_receiver_message__receiver__name','group_receiver_message__receiver__username']
+    model_icon = 'fa fa-bullhorn'
     def save_models(self):
         obj=self.new_obj
         obj.save()
@@ -108,6 +110,7 @@ class GroupReceiverMessageAdmin(object):
     search_fields =['receiver__username','receiver__name','receiver_group__id','receiver_group__group_name','receiver_group__group_id','receiver_group__message__title','receiver_group__message__id']
     list_filter=['read_time','if_delete','if_collect','receiver__name','receiver_group__group_name','receiver_group__group_id','receiver_group__group_type','receiver_group__message__title','receiver_group__message__id','receiver_group__message__type','receiver_group__message__send_time','receiver_group__message__send_state']
     list_editable=['if_delete','if_collect','if_report']
+    model_icon = 'fa fa-comments-o'
 
 
 class ReceiverMessageAdmin(object):
@@ -115,6 +118,7 @@ class ReceiverMessageAdmin(object):
     search_fields=['message__title','message__body','message__sender__username','receiver__username']
     list_filter=['read_time','if_delete','if_collect']
     list_editable = ['if_delete', 'if_collect', 'if_report']
+    model_icon = 'fa fa-comment-o'
     # relfield_style = 'fk_ajax'
 
 
@@ -122,7 +126,7 @@ class MessageFileAdmin(object):
     list_display=['message','file_name','file','id','get_sender']
     search_fields=['file_name','message__title','message__body','message__sender__username','message__sender__name','message__receiver_message__receiver__username','message__receiver_message__receiver__name']
     list_filter=['message__title','file_name','message__body','message__type','message__send_time','message__send_state','message__reply_message__type','message__reply_message__send_time']
-
+    model_icon = 'fa fa-file'
 
 
 

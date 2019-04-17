@@ -11,6 +11,7 @@ class LessonAdmin(object):
     list_editable=['name','credit','if_public_elective']
     # readonly_fields=['id',]
     refresh_times=[5,10,30,60,120]
+    model_icon='fa fa-book'
 
 
 class MajorLessonAdmin(object):
@@ -20,6 +21,7 @@ class MajorLessonAdmin(object):
     list_editable=['lesson_type','if_degree',]
     raw_id_fields = ('lesson',)
     refresh_times = [5, 10, 30, 60, 120]
+    model_icon = 'fa fa-book'
 
 
 class ScheduleLessonAdmin(object):
@@ -31,6 +33,7 @@ class ScheduleLessonAdmin(object):
     #在列表显示页可编辑
     list_editable = ['lesson_type', 'if_degree', ]
     refresh_times = [5, 10, 30, 60, 120]
+    model_icon='fa fa-bars'
 
 
 class ScheduleAdmin(object):
@@ -38,6 +41,7 @@ class ScheduleAdmin(object):
     search_fields=['schedule_lesson__lesson__name','counter','class_room']
     list_filter=['schedule_lesson','counter','class_room','add_time','schedule_lesson__semester']
     refresh_times = [5, 10, 30, 60, 120]
+    model_icon = 'fa fa-calendar'
 
 
 xadmin.site.register(Lesson,LessonAdmin)
