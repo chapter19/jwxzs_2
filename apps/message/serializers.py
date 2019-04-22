@@ -1,5 +1,4 @@
 #-*- coding:utf-8 -*-
-
 from rest_framework import serializers
 from .models import Message,ReceiverMessage,MessageFile,ReceiverGroup,GroupReceiverMessage
 from rest_framework_recursive.fields import RecursiveField
@@ -7,6 +6,11 @@ from rest_framework_recursive.fields import RecursiveField
 from users.models import UserProfile,Class,Colloge,Major
 from lessons.models import ScheduleLesson,Lesson
 from datetime import datetime
+from groups.models import Group,GroupAdministrator,DefGroup,DefGroupMember
+from groups.models import Group
+from friends.models import RecentContact
+from django.db.models import Q
+
 
 #发件箱
 class ReceiverSerializer(serializers.ModelSerializer):
@@ -23,11 +27,18 @@ class OutboxGroupReceiverSerializer(serializers.ModelSerializer):
         fields=['receiver','read_time',]
 
 
+class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Group
+        fields=['group_type','group_name','group_id']
+
+
 class OutboxGroupSerializer(serializers.ModelSerializer):
     group_receiver_message=OutboxGroupReceiverSerializer(many=True)
+    group=GroupSerializer()
     class Meta:
         model=ReceiverGroup
-        fields=['group_receiver_message','group_type','group_id','group_name']
+        fields=['group_receiver_message','group']
 
 
 class OutboxReceiverMessageSerializer(serializers.ModelSerializer):
@@ -68,27 +79,35 @@ class OutboxMessageSerializer(serializers.ModelSerializer):
     send_time=serializers.DateTimeField(read_only=True,format='%Y-%m-%d %H:%M',help_text='发送时间')
     class Meta:
         model=Message
-        fields=['receiver_message','receiver_group','title','body','send_time','if_delete','if_collect','message_file','reply_message']
+        fields=['receiver_message','receiver_group','title','body','send_time','if_delete','if_collect','message_file','reply_message','id']
 
 
-#发件 初始化空邮件
+#发件
 class OutboxMessageCreateSerializer(serializers.ModelSerializer):
     id=serializers.IntegerField(read_only=True)
     sender=serializers.HiddenField(
         default=serializers.CurrentUserDefault()
     )
-    reply_message=serializers.IntegerField(required=False,help_text='回复的父消息')
+    reply_message_id=serializers.IntegerField(required=False,help_text='回复的父消息')
     def create(self, validated_data):
         title='未命名'
         # body=''
         sender=validated_data.get('sender')
         send_state=0
-        reply_message=validated_data.get('reply_message')
-        obj=Message.objects.create(title=title,sender=sender,send_state=send_state,reply_message=reply_message)
-        return obj
+        reply_message_id=validated_data.get('reply_message_id')
+        if reply_message_id:
+            message=Message.objects.filter(Q(id=reply_message_id,receiver_message__receiver_id=sender)|Q(id=reply_message_id,receiver_group__group_receiver_message__receiver=sender))
+            if message:
+                obj = Message.objects.create(title=title, sender_id=sender, send_state=send_state,reply_message_id=reply_message_id)
+                return obj
+            else:
+                raise serializers.ValidationError('你并未接收到该消息，没有权限回复该消息！')
+        else:
+            obj = Message.objects.create(title=title, sender_id=sender, send_state=send_state)
+            return obj
     class Meta:
         model=Message
-        fields=['id','sender','reply_message']
+        fields=['id','sender','reply_message_id','title','body','send_state','type']
 
 
 #改件
@@ -101,21 +120,36 @@ class OutboxMessageUpdateSerializer(serializers.ModelSerializer):
     body=serializers.CharField(required=True,help_text='内容')
     # type=serializers.IntegerField(required=True,help_text='类型')
     # send_state=serializers.IntegerField(required=True,help_text='发送状态')
-    reply_message_id=serializers.IntegerField(required=False)
+    reply_message_id=serializers.IntegerField(required=False,help_text='父消息id')
     def update(self, instance, validated_data):
-        instance.title = validated_data.get('title', instance.title)
-        instance.body = validated_data.get('body', instance.body)
-        instance.send_state = validated_data.get('send_state', instance.send_state)
-        instance.type=validated_data.get('type',instance.type)
-        a=validated_data.get('reply_message_id', instance.reply_message_id)
-        if a:
-            instance.reply_message_id=a
-        instance.send_time=datetime.now()
-        instance.save()
-        return instance
+        # instance.title = validated_data.get('title', instance.title)
+        # instance.body = validated_data.get('body', instance.body)
+        # send_state=instance.send_state
+        # if send_state==1:
+        #     pass
+        # elif send_state==0:
+        #     instance.send_state = validated_data.get('send_state', instance.send_state)
+        # instance.type=validated_data.get('type',instance.type)
+        # a=validated_data.get('reply_message_id', instance.reply_message_id)
+        # if a:
+        #     instance.reply_message_id=a
+        # instance.update_time=datetime.now()
+        # instance.save()
+        # return instance
+        if instance.send_state==0:
+            instance.title = validated_data.get('title', instance.title)
+            instance.body = validated_data.get('body', instance.body)
+            instance.send_state = validated_data.get('send_state', instance.send_state)
+            instance.type = validated_data.get('type', instance.type)
+            instance.reply_message_id = validated_data.get('reply_message_id', instance.reply_message_id)
+            instance.send_time = datetime.now()
+            instance.save()
+            return instance
+        else:
+            raise serializers.ValidationError('已发送信息不能修改！')
     class Meta:
         model=Message
-        fields=['title','body','sender','id','type','send_state','reply_message_id']
+        fields=['title','body','sender','id','type','send_state','reply_message_id','update_time','send_time']
 
 
 #上传文件
@@ -173,14 +207,24 @@ class OutboxMessageReceiverCreateSerializer(serializers.Serializer):
         if message:
             u = validated_data.get('user')
             if message[0].sender_id==u:
-                try:
-                    mes_receiver = ReceiverMessage(message_id=validated_data.get('message_id'),receiver_id=validated_data.get('receiver_id'))
-                    mes_receiver.save()
+                receiver_id=validated_data.get('receiver_id')
+                rece=UserProfile.objects.filter(id=receiver_id)
+                if rece:
+                    mes_receiver = ReceiverMessage(message_id=validated_data.get('message_id'),receiver_id=receiver_id)
+                    try:
+                        mes_receiver.save()
+                    except:
+                        raise serializers.ValidationError('已向该用户发送消息，勿重复发送！')
+                    contact=RecentContact.objects.filter(user_id=u,contact_id=receiver_id)
+                    if contact:
+                        contact[0].add_time=datetime.now
+                    else:
+                        RecentContact.objects.create(user_id=u,contact_id=receiver_id)
                     return mes_receiver
-                except:
+                else:
                     raise serializers.ValidationError("接收用户不存在！")
             else:
-                raise serializers.ValidationError("当前用户不是发件人，没有权限上传文件！")
+                raise serializers.ValidationError("当前用户不是发件人，没有权限发送该消息给他人！")
         else:
             raise serializers.ValidationError('消息不存在！')
     class Meta:
@@ -193,82 +237,71 @@ class OutboxMessageReceiverCreateSerializer(serializers.Serializer):
 class OutboxGroupCreateSerializer(serializers.ModelSerializer):
     # id=serializers.IntegerField(read_only=True)
     message_id=serializers.IntegerField(required=True,help_text='消息id')
-    group_name=serializers.CharField(read_only=True,help_text='组织名称')
+    # group_name=serializers.CharField(read_only=True,help_text='组织名称')
     user = serializers.HiddenField(
         default=serializers.CurrentUserDefault()
     )
+    gro_id=serializers.CharField(required=True,help_text='组织的id')
     def create(self, validated_data):
         message_id=validated_data.get('message_id')
-        group_type=validated_data.get('group_type')
-        group_id=validated_data.get('group_id')
+        # group_type=validated_data.get('group_type')
+        # group_id=validated_data.get('group_id')
         # group_name=validated_data.get('group_name')
         user=validated_data.get('user')
         mess=Message.objects.filter(id=message_id)
         if mess:
             if mess[0].sender_id==user:
-                if group_type == 1:
-                    sch_les = ScheduleLesson.objects.filter(id=group_id)
-                    us=UserProfile.objects.get(id=user)
-                    if us.teacher:
-                        if sch_les and sch_les[0].teacher==us.teacher:
-                            group_receivers = UserProfile.objects.filter(student__score__schedule_lesson=sch_les[0])
-                            group_name = sch_les[0].lesson.name+' '+sch_les[0].class_name
-                            if group_receivers:
-                                group = ReceiverGroup.objects.create(group_id=group_id, group_type=group_type,group_name=group_name, message=mess[0])
-                                for g_r in group_receivers:
-                                    group_receiver = GroupReceiverMessage(receiver_group=group, receiver=g_r)
-                                    group_receiver.save()
-                                return group
+                gro_id=validated_data.get('gro_id')
+                group=Group.objects.filter(id=gro_id)
+                if group:
+                    ad=GroupAdministrator.objects.filter(admin=user,group_id=gro_id)
+                    if ad:
+                        group_rece=ReceiverGroup.objects.create(group=group[0],message=mess[0])
+                        if group[0].group_type==1:
+                            group_receivers = UserProfile.objects.filter(student__score__schedule_lesson_id=group[0].id)
+                            for i in group_receivers:
+                                GroupReceiverMessage.objects.create(receiver_group=group_rece,receiver=i)
+                        elif group[0].group_type==2:
+                            group_receivers=UserProfile.objects.filter(student__cla_id=group[0].id)
+                            for i in group_receivers:
+                                GroupReceiverMessage.objects.create(receiver_group=group_rece,receiver=i)
+                        elif group[0].group_type==3:
+                            group_receivers=UserProfile.objects.filter(student__cla__colloge_id=group[0].id)
+                            for i in group_receivers:
+                                GroupReceiverMessage.objects.create(receiver_group=group_rece,receiver=i)
+                        elif group[0].group_type==4:
+                            group_receivers=UserProfile.objects.filter(student__cla__major_id=group[0].id)
+                            for i in group_receivers:
+                                GroupReceiverMessage.objects.create(receiver_group=group_rece,receiver=i)
+                        # elif group[0].group_type==5:
+                        #     pass
                         else:
-                            raise serializers.ValidationError('课程表课程id不存在！')
+                            raise serializers.ValidationError('找不到组织类型！')
+                        return group_rece
                     else:
-                        raise serializers.ValidationError('你不是该课程班级的老师，没有权力向该班发送消息！')
-                elif group_type == 2:
-                    cla = Class.objects.filter(id=group_id)
-                    if cla:
-                        group_name = cla[0].name
-                        group_receivers = UserProfile.objects.filter(student__cla=cla[0])
-                        if group_receivers:
-                            group = ReceiverGroup.objects.create(group_id=group_id, group_type=group_type,group_name=group_name, message=mess[0])
-                            for g_r in group_receivers:
-                                group_receiver = GroupReceiverMessage(receiver_group=group, receiver=g_r)
-                                group_receiver.save()
-                            return group
-                    else:
-                        raise serializers.ValidationError('班级id不存在！')
-                elif group_type == 3:
-                    colloge = Colloge.objects.filter(id=group_id)
-                    if colloge:
-                        group_name = colloge[0].name
-                        group_receivers = UserProfile.objects.filter(student__cla__colloge=colloge[0])
-                        if group_receivers:
-                            group = ReceiverGroup.objects.create(group_id=group_id, group_type=group_type,group_name=group_name, message=mess[0])
-                            for g_r in group_receivers:
-                                group_receiver = GroupReceiverMessage(receiver_group=group, receiver=g_r)
-                                group_receiver.save()
-                            return group
-                    else:
-                        raise serializers.ValidationError('学院id不存在！')
+                        if group[0].group_type==5:
+                            def_g=DefGroup.objects.filter(def_group_member=user,id=gro_id)
+                            if def_g:
+                                group_rece=ReceiverGroup.objects.create(group=def_g[0],message=mess[0])
+                                group_receivers=UserProfile.objects.filter(def_group_member__def_group=def_g[0])
+                                for i in group_receivers:
+                                    if i.id!=user:
+                                        GroupReceiverMessage.objects.create(receiver_group=group_rece,receiver=i)
+                                return group_rece
+                            else:
+                                raise serializers.ValidationError('自定义组织不存在！')
+                                # group_receivers=UserProfile.objects.filter()
+                        else:
+                            raise serializers.ValidationError('你不是该组织管理员，没有权限群发消息！')
                 else:
-                    maj = Major.objects.filter(id=group_id)
-                    if maj:
-                        group_name = str(maj[0].grade) + '级' + maj[0].name
-                        group_receivers = UserProfile.objects.filter(student__cla__major=maj[0])
-                        if group_receivers:
-                            group = ReceiverGroup.objects.create(group_id=group_id, group_type=group_type,group_name=group_name, message=mess[0])
-                            for g_r in group_receivers:
-                                group_receiver = GroupReceiverMessage(receiver_group=group, receiver=g_r)
-                                group_receiver.save()
-                            return group
-                    else:
-                        raise serializers.ValidationError('专业id不存在！')
+                    raise serializers.ValidationError('组织不存在！')
             else:
-                raise serializers.ValidationError('你没有权力发送当前消息！')
+                raise serializers.ValidationError('你不是该消息发送者，没有权限发送当前消息！')
         else:
             raise serializers.ValidationError('消息不存在！')
     class Meta:
         model=ReceiverGroup
-        fields=['message_id','group_id','group_type','group_name','user']
+        fields=['message_id','user','gro_id']
 
 #收件箱
 #已读、收藏、删除
@@ -342,7 +375,6 @@ class InboxGroupReceiverUpdateSerializer(serializers.Serializer):
         fields=['id','read_time','if_delete','if_collect','if_read','if_report']
 
 
-
 #收件箱列表
 class InboxMessageSerializer(serializers.ModelSerializer):
     receiver_message=OutboxReceiverMessageSerializer(many=True)
@@ -354,8 +386,3 @@ class InboxMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model=Message
         fields=['receiver_message','receiver_group','title','body','send_time','if_delete','if_collect','message_file','reply_message']
-
-
-
-
-

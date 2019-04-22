@@ -90,13 +90,14 @@ class TeacherAdmin(object):
 
 class UserProfileAdmin(object):
     change_user_password_template = None
-    list_display = ('username', 'name', 'gender','is_active','is_student','is_teacher','last_login','date_joined','is_staff','is_superuser',)
+    list_display = ('username', 'name', 'gender','is_active','is_student','is_teacher','last_login','date_joined','is_staff','is_superuser','id')
     list_filter = ('is_staff', 'is_superuser', 'is_active','gender','is_student','is_teacher','date_joined','last_login','name',)
     search_fields = ('username', 'name',)
-    # ordering = ('username',)
+    ordering = ('id',)
     style_fields = {'user_permissions': 'm2m_transfer'}
     model_icon = 'fa fa-user'
     relfield_style = 'fk-ajax'
+    list_editable=['is_active']
 
     def get_field_attrs(self, db_field, **kwargs):
         attrs = super(UserProfileAdmin, self).get_field_attrs(db_field, **kwargs)

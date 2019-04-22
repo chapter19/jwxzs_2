@@ -18,13 +18,12 @@ from datetime import datetime
 from spiders.student_dynamic import SpiderDynamicStudent
 from spiders.teacher_dynamic import SpiderDynamicTeacher
 
-from .models import Student,StudentDetail,Teacher
+from .models import Student,StudentDetail,Teacher,UserProfile
 from .serializer import StudentSerializer,StudentDetailSerializer,TeacherSerializer\
     # ,CatptchaSerializer
 from .filters import StudentFilters,TeacherFilters
 from rest_framework.views import APIView
-
-User=get_user_model()
+# User=get_user_model()
 
 class DefaultPagination(PageNumberPagination):
     page_size = 20
@@ -39,11 +38,12 @@ class CustomBackend(ModelBackend):
     '''
     def authenticate(self, request, username=None, password=None, **kwargs):
         try:
-            user=User.objects.get(username=username)
+            user=UserProfile.objects.get(username=username)
             if user.is_active:
                 if user.check_password(password):
                     return user
                 else:
+                    # return Response({'detail':'密码不正确！'},status=401)
                     return None
             else:
                 lenth = len(username)

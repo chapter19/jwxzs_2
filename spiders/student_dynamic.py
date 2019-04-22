@@ -175,7 +175,7 @@ class SpiderDynamicStudent:
             # else:  # 如果current和i 的值不一样
             current_code = chr(random.randint(65, 90))  # 生成一个随机的字母，这里一定要主义chr（）转换一下。
             auth += str(current_code)  # 将每次随机生成的值赋值给auth
-        return '@'+auth
+        return '|'+auth
 
     def __update_score(self,data):
         try:
@@ -188,15 +188,17 @@ class SpiderDynamicStudent:
         except:
             score=Score()
             score.student=data['student']
-
-            schedule_lesson=ScheduleLesson()
-            class_id=self.__create_class_id()
-            schedule_lesson.class_id=class_id
-            schedule_lesson.class_name=class_id
-            schedule_lesson.semester=data['semester']
-            schedule_lesson.lesson_id=data['lesson_id']
-            schedule_lesson.save()
-
+            schedule_lesson=ScheduleLesson.objects.filter(lesson_id=data['lesson_id'],class_name__startswith='|',semester=data['semester'])
+            if schedule_lesson:
+                schedule_lesson=schedule_lesson[0]
+            else:
+                schedule_lesson=ScheduleLesson()
+                class_id=self.__create_class_id()
+                schedule_lesson.class_id=class_id
+                schedule_lesson.class_name=class_id
+                schedule_lesson.semester=data['semester']
+                schedule_lesson.lesson_id=data['lesson_id']
+                schedule_lesson.save()
             score.schedule_lesson=schedule_lesson
             score.score = data['score']
             score.standard_score = data['standard_score']
@@ -589,7 +591,7 @@ if __name__ == '__main__':
     me=SpiderDynamicStudent('201626703079','m19980220')
     # me=SpiderDynamicStudent('1467005018','687196')
     me.sign_in()
-    me.get_my_studyData()
+    # me.get_my_studyData()
     # me.get_all_data()
     # me.test()
     # a=me.create_class_id()

@@ -15,6 +15,12 @@ from .filters import SemesterFilter
 from users.views import DefaultPagination
 
 class SemesterView(mixins.ListModelMixin,mixins.RetrieveModelMixin,viewsets.GenericViewSet):
+    '''
+    list:
+        学期列表
+    read:
+        学期详情
+    '''
     queryset = Semester.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = SemesterSerializer
@@ -25,6 +31,10 @@ class SemesterView(mixins.ListModelMixin,mixins.RetrieveModelMixin,viewsets.Gene
 
 
 class CurrentSemesterView(mixins.RetrieveModelMixin,viewsets.GenericViewSet):
+    '''
+    read:
+        当前学期
+    '''
     queryset = CurrentSemester.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = CurrentSemesterSerializer

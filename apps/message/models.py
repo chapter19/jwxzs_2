@@ -5,6 +5,7 @@ from datetime import datetime
 
 from users.models import UserProfile,Class
 from lessons.models import ScheduleLesson
+from groups.models import Group
 
 
 
@@ -20,6 +21,7 @@ class Message(models.Model):
     if_report_over=models.BooleanField(verbose_name='是否被举报过度',default=False)
     if_delete = models.BooleanField(verbose_name='是否回收', default=False)
     if_collect = models.BooleanField(verbose_name='是否收藏', default=False)
+    update_time=models.DateTimeField(verbose_name='更新时间',blank=True,null=True)
     add_time = models.DateTimeField(default=datetime.now, verbose_name=u'添加时间')
     # message_receiver=models.ManyToManyField(ReceiverMessage,related_name='message',verbose_name='接收人',help_text='接收人')
     # message_receiver_group=models.ManyToManyField(ReceiverGroup,related_name='message',verbose_name='接收组',help_text='接收组')
@@ -71,16 +73,17 @@ class MessageFile(models.Model):
 #接受组织
 class ReceiverGroup(models.Model):
     message = models.ForeignKey(Message, related_name='receiver_group', verbose_name='消息',default=1)
-    group_type = models.IntegerField(choices=((1, '课程班级'), (2, '班级'), (3, '学院'), (4, '专业')), verbose_name='组织类型',default=1)
-    group_id = models.CharField(max_length=20, verbose_name='组织id',default='')
-    group_name=models.CharField(max_length=60,verbose_name='组织名',null=True,blank=True)
+    # group_type = models.IntegerField(choices=((1, '课程班级'), (2, '班级'), (3, '学院'), (4, '专业')), verbose_name='组织类型',default=1)
+    # group_id = models.CharField(max_length=20, verbose_name='组织id',default='')
+    # group_name=models.CharField(max_length=60,verbose_name='组织名',null=True,blank=True)
+    group=models.ForeignKey(Group,related_name='receiver_group',verbose_name='组织',default=1)
     add_time = models.DateTimeField(default=datetime.now, verbose_name=u'添加时间')
     class Meta:
         verbose_name='消息接收组'
         verbose_name_plural=verbose_name
-        unique_together=('message','group_type','group_id',)
+        unique_together=('message','group',)
     def __str__(self):
-        return self.group_id
+        return self.group.group_name
 
 
 #接收组织接收人消息

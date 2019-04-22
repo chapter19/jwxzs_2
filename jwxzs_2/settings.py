@@ -54,6 +54,8 @@ INSTALLED_APPS = [
     # 'rest_framework.authtoken',
     'message',
     'semesters',
+    'groups',
+    'friends',
     'ckeditor',
     'ckeditor_uploader',
     # 'rest_captcha',
@@ -227,7 +229,7 @@ JWT_AUTH={
 
 
 # VERIFICATIONCODE_SRC='/Users/vccccccc/PycharmProjects/jwxzs_2/spiders/VerificationCode/'
-VERIFICATIONCODE_SRC='./VerificationCode/'
+VERIFICATIONCODE_SRC='/Users/vccccccc/PycharmProjects/jwxzs_2/spiders/VerificationCode/'
 
 
 # SEMESTER_LIST=[

@@ -15,6 +15,7 @@ from users.models import Teacher,Department,Student
 from scores.models import Score
 from lessons.models import ScheduleLesson,Schedule,Lesson,ErrorSchedule
 from semesters.models import Semester
+from groups.models import GroupAdministrator,Group
 
 # from jwxzs_2.settings import SEMESTER_LIST
 
@@ -426,6 +427,22 @@ class SpiderStaticTeacher:
         schlesson.teacher=teacher
         try:
             schlesson.save()
+            try:
+                group=Group()
+                group.group_type=1
+                group.group_name=schlesson.lesson.name+' '+schlesson.class_name
+                group.group_id=str(schlesson.id)
+                group.save()
+                try:
+                    admin=GroupAdministrator()
+                    admin.if_super=True
+                    admin.group=group
+                    admin.admin=teacher.user
+                    admin.save()
+                except:
+                    print('课表课程组插入老师管理员失败')
+            except:
+                print('课表课程插入组失败')
             return schlesson
         except:
             print('schedule lesson 保存失败')

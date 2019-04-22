@@ -34,6 +34,9 @@ from users.views import StudentView,StudentDetailRetrieveView,TeacherView\
 from message.views import OutboxView,OutboxMessageFileView,MessageReceiverView,OutboxMessageGroupCreateView,\
     MessageGroupReceiverView,InboxReceiverMessageView,InboxGroupReceiverView
 from semesters.views import SemesterView,CurrentSemesterView
+from groups.views import DefGroupView,GroupView,DefGroupMemberView
+from friends.views import CollectFriendsView,RecentContactView
+
 
 router=DefaultRouter()
 router.register(r'student-schedule',StudentScheduleViewSet,basename='student-schedule')
@@ -51,11 +54,16 @@ router.register(r'outbox',OutboxView,basename='outbox')
 router.register(r'outbox-message-file',OutboxMessageFileView,basename='outbox-message-file')
 router.register(r'message-receiver',MessageReceiverView,basename='message-receiver')
 router.register(r'outbox-message-group',OutboxMessageGroupCreateView,basename='outbox-message-group')
-router.register(r'inbox-group-message-update',MessageGroupReceiverView,basename='inbox-group-message-update')
+router.register(r'inbox-group-update',MessageGroupReceiverView,basename='inbox-group-update')
 router.register(r'inbox-receiver-message',InboxReceiverMessageView,basename='inbox-receiver-message')
-router.register(r'inbox-group-receiver-message',InboxGroupReceiverView,basename='inbox-group-receiver-message')
+router.register(r'inbox-group-receiver',InboxGroupReceiverView,basename='inbox-group-receiver')
 router.register(r'semester',SemesterView,basename='semester')
 router.register(r'current-semester',CurrentSemesterView,basename='current-semester')
+router.register(r'def-group',DefGroupView,basename='def-group')
+router.register(r'def-group-member',DefGroupMemberView,basename='def-group-member')
+router.register(r'group',GroupView,basename='group')
+router.register(r'friend',CollectFriendsView,basename='friend')
+router.register(r'recent-contact',RecentContactView,basename='recent-contact')
 
 urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),
