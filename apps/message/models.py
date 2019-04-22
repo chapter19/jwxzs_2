@@ -21,7 +21,7 @@ class Message(models.Model):
     if_report_over=models.BooleanField(verbose_name='是否被举报过度',default=False)
     if_delete = models.BooleanField(verbose_name='是否回收', default=False)
     if_collect = models.BooleanField(verbose_name='是否收藏', default=False)
-    update_time=models.DateTimeField(verbose_name='更新时间',blank=True,null=True)
+    # update_time=models.DateTimeField(verbose_name='更新时间',blank=True,null=True)
     add_time = models.DateTimeField(default=datetime.now, verbose_name=u'添加时间')
     # message_receiver=models.ManyToManyField(ReceiverMessage,related_name='message',verbose_name='接收人',help_text='接收人')
     # message_receiver_group=models.ManyToManyField(ReceiverGroup,related_name='message',verbose_name='接收组',help_text='接收组')
