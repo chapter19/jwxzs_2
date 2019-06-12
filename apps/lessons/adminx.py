@@ -5,9 +5,9 @@ from .models import Lesson,Schedule,ScheduleLesson,MajorLesson
 from xadmin import views
 
 class LessonAdmin(object):
-    list_display=['name','id','credit','if_public_elective','add_time']
-    search_fields=['name','id']
-    list_filter=['name','id','credit','if_public_elective','add_time']
+    list_display=['name','id','credit','if_public_elective','add_time','profile','admin_department','open_semester','before_learning_text']
+    search_fields=['name','id','schedulelesson__teacher__name']
+    list_filter=['name','id','credit','if_public_elective','add_time','schedulelesson__semester','open_semester','admin_department']
     list_editable=['name','credit','if_public_elective']
     # readonly_fields=['id',]
     refresh_times=[5,10,30,60,120]
@@ -15,7 +15,7 @@ class LessonAdmin(object):
 
 
 class MajorLessonAdmin(object):
-    list_display=['lesson','major','lesson_type','if_degree','add_time']
+    list_display=['lesson','major','lesson_type','if_degree','add_time','open_semester','id','limit_lesson_minimum_credit']
     search_fields=['lesson__name','major__name','lesson_type','if_degree']
     list_filter=['major__grade','lesson_type','if_degree','add_time']
     list_editable=['lesson_type','if_degree',]
@@ -26,7 +26,7 @@ class MajorLessonAdmin(object):
 
 class ScheduleLessonAdmin(object):
     list_display=['lesson','class_id','class_name','semester','teacher','add_time','id']
-    search_fields=['lesson__name','lesson__id','class_id','class_name','semester','teacher__name','teacher__id']
+    search_fields=['lesson__name','lesson__id','class_id','class_name','semester','teacher__name','teacher__id','id']
     list_filter=['semester','teacher__name','teacher__id','add_time']
     # 编辑页外键 搜索
     raw_id_fields = ('lesson',)

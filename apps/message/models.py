@@ -6,6 +6,7 @@ from datetime import datetime
 from users.models import UserProfile,Class
 from lessons.models import ScheduleLesson
 from groups.models import Group
+from disks.models import File
 
 
 
@@ -53,8 +54,9 @@ class Message(models.Model):
 # 消息文件
 class MessageFile(models.Model):
     message=models.ForeignKey(Message,related_name='message_file',verbose_name='消息',null=True,blank=True)
-    file_name=models.CharField(max_length=70,verbose_name='文件名',default='')
-    file = models.FileField(verbose_name='文件', upload_to="uploads_file/%Y/%m/%d")
+    # file_name=models.CharField(max_length=70,verbose_name='文件名',default='')
+    # file = models.FileField(verbose_name='文件', upload_to="uploads_file/%Y/%m/%d")
+    disk_file=models.ForeignKey(File,verbose_name='硬盘文件',related_name='message_file')
     add_time = models.DateTimeField(default=datetime.now, verbose_name=u'添加时间')
     def get_sender(self):
         return self.message.sender.name
@@ -65,9 +67,8 @@ class MessageFile(models.Model):
     class Meta:
         verbose_name='消息文件'
         verbose_name_plural=verbose_name
-        unique_together=('file','message',)
     def __str__(self):
-        return self.file_name
+        return self.disk_file.name
 
 
 #接受组织
@@ -88,7 +89,7 @@ class ReceiverGroup(models.Model):
 
 #接收组织接收人消息
 class GroupReceiverMessage(models.Model):
-    receiver_group=models.ForeignKey(ReceiverGroup,verbose_name='接收组',help_text='接收组',related_name='group_receiver_message',blank=True,null=True)
+    receiver_group=models.ForeignKey(ReceiverGroup,verbose_name='接收组',help_text='接收组',related_name='group_receiver_message',blank=True,null=True,on_delete=models.CASCADE)
     receiver = models.ForeignKey(UserProfile, verbose_name='接收人', help_text='接收人')
     read_time = models.DateTimeField(verbose_name='阅读时间', null=True, blank=True, default=None)
     if_delete = models.BooleanField(verbose_name='是否回收', default=False)

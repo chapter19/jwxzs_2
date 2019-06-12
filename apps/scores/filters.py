@@ -10,15 +10,15 @@ class ScoreFilter(django_filters.rest_framework.FilterSet):
         model=Score
         fields=['semester',
                 'if_major',
-                # 'student__id',
+                'student_id',
                 ]
 
 
 class ScoreStudentListFilter(django_filters.rest_framework.FilterSet):
-    id = django_filters.CharFilter(field_name='schedule_lesson__id', help_text='课程表课程id')
+    schedule_lesson_id = django_filters.CharFilter(field_name='schedule_lesson__id', help_text='课程表课程id')
     class Meta:
         model=Score
-        fields=['id']
+        fields=['schedule_lesson_id']
 
 
 # class TotalCreditFilter(django_filters.rest_framework.FilterSet):

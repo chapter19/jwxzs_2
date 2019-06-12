@@ -9,8 +9,9 @@ from xadmin.layout import Fieldset, Main, Side, Row, FormHelper
 from xadmin.plugins.auth import PermissionModelMultipleChoiceField
 
 
-from .models import Colloge,Class,Student,Teacher,Department,Major,UserProfile,StudentDetail
+from .models import Colloge,Class,Student,Teacher,Department,Major,UserProfile,StudentDetail,MyPassword
 from xadmin import views
+from utils.aes import make_my_password
 
 
 class BaseSetting(object):
@@ -43,7 +44,7 @@ class CollogeAdmin(object):
 
 
 class ClassAdmin(object):
-    list_display = ['name', 'id', 'post_code','grade','colloge','add_time','major','get_student_nums']
+    list_display = ['name','major', 'id', 'post_code','grade','colloge','add_time','get_student_nums']
     search_fields = ['id', 'name', 'post_code','grade','colloge__name','major__name']
     list_filter = ['id', 'name', 'post_code','grade','colloge','add_time','major']
     #下拉框变成可搜索
@@ -52,6 +53,7 @@ class ClassAdmin(object):
     ordering = ['-name']
     refresh_times = [5, 10, 30, 60, 120]
     model_icon = 'fa fa-users'
+    list_editable=['major']
 
 
 class StudentAdmin(object):
@@ -147,6 +149,13 @@ class StudentDetailAdmin(object):
     refresh_times = [5, 10, 30, 60, 120]
     model_icon = 'fa fa-user'
 
+class MyPasswordAdmin(object):
+    list_display=['user','password','add_time']
+    def save_models(self):
+        obj=self.new_obj
+        obj.password=make_my_password(obj.password)
+        obj.save()
+
 
 
 xadmin.site.register(Colloge,CollogeAdmin)
@@ -156,10 +165,15 @@ xadmin.site.register(Department,DepartmentAdmin)
 xadmin.site.register(Teacher,TeacherAdmin)
 xadmin.site.register(Major,MajorAdmin)
 
-# xadmin.site.unregister(UserProfile)
 xadmin.site.register(UserProfile,UserProfileAdmin)
 xadmin.site.register(StudentDetail,StudentDetailAdmin)
+xadmin.site.register(MyPassword,MyPasswordAdmin)
 
 
 xadmin.site.register(views.BaseAdminView,BaseSetting)
 xadmin.site.register(views.CommAdminView,GlobalSettings)
+
+
+
+
+

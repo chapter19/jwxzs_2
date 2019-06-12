@@ -6,6 +6,8 @@ django.setup()
 
 from jwxzs_2.settings import VERIFICATIONCODE_SRC
 
+from utils.settings import MY_USERNAME,MY_WORD
+
 import requests
 from bs4 import BeautifulSoup
 from PIL import Image
@@ -13,7 +15,7 @@ from pytesseract import pytesseract
 # import tesserocr
 import uuid,os,time
 from users.models import Colloge,Class,Student,Major,StudentDetail,UserProfile
-from scores.models import TotalCredit,Score
+from scores.models import TotalCredit,Score,NewScore
 from lessons.models import MajorLesson,ScheduleLesson
 import random
 
@@ -40,7 +42,7 @@ class SpiderDynamicStudent:
                 return 0
 
     #获取隐藏值和验证码
-    def __get_hid_data_and_vecode(self,url,error_time_limit=3,timeout=2):
+    def __get_hid_data_and_vecode(self,url,ve_src,error_time_limit=3,timeout=2):
         try:
             b=self.__s.get(url,timeout=timeout)
             soup=BeautifulSoup(b.text,'html5lib')
@@ -51,7 +53,7 @@ class SpiderDynamicStudent:
             # print(photo_url)
             d=self.__s.get(photo_url)
             vecode_name=str(uuid.uuid1())+'.png'
-            src=VERIFICATIONCODE_SRC+vecode_name
+            src=ve_src+vecode_name
             # print(__VIEWSTATE[0].get('value'),__EVENTVALIDATION[0].get('value'),vecode_name)
             with open(src,'wb') as vecode:
                 vecode.write(d.content)
@@ -66,12 +68,12 @@ class SpiderDynamicStudent:
                 return None
 
     #验证码识别
-    def verification_code(self):
+    def verification_code(self,ve_src):
         try:
             print('verification_code is working。。')
             url1 = 'http://jwc.jxnu.edu.cn/Portal/LoginAccount.aspx?t=account'
-            hid=self.__get_hid_data_and_vecode(url=url1)
-            src=VERIFICATIONCODE_SRC+hid[2]
+            hid=self.__get_hid_data_and_vecode(url=url1,ve_src=ve_src)
+            src=ve_src+hid[2]
             # print(src)
             # v=get_vectorCompare(src)
             # new_src='./VerificationCode/'+v+'.png'
@@ -119,47 +121,90 @@ class SpiderDynamicStudent:
             return None
 
     # 登录
+    # def sign_in(self,ve_src=VERIFICATIONCODE_SRC,limit_time=10,timeout=4):
+    #     try:
+    #         print(ve_src)
+    #         url1 = 'http://jwc.jxnu.edu.cn/Portal/LoginAccount.aspx?t=account'
+    #         hid= self.verification_code(ve_src=ve_src)
+    #         #登录表单
+    #         data1={
+    #             '__VIEWSTATE':hid[0],
+    #             '__EVENTVALIDATION':hid[1],
+    #             '_ctl0:cphContent:ddlUserType':'Student',
+    #             '_ctl0:cphContent:txtUserNum':self.id,
+    #             '_ctl0:cphContent:txtPassword':self.password,
+    #             '_ctl0:cphContent:btnLogin':'登录',
+    #             '_ctl0:cphContent:txtCheckCode':hid[2],
+    #         }
+    #         b=self.__s.post(url1,data=data1,timeout=timeout)
+    #         soup=BeautifulSoup(b.text,'html5lib')
+    #         # print(soup)
+    #         jwtz=soup.select('#jwtz')
+    #         # print(jwtz)
+    #         if jwtz!=[]:
+    #             print('sign in successfluly!')
+    #
+    #             return True
+    #         else:
+    #             limit_t=limit_time-1
+    #             print('sign in fail')
+    #             if limit_t>0:
+    #                 time.sleep(1)
+    #                 print('sign_in failed, retrying。。')
+    #                 return self.sign_in(limit_time=limit_t,timeout=timeout)
+    #             else:
+    #                 return None
+    #             # print(b.text)
+    #     except:
+    #         limit_ti=limit_time-1
+    #         if limit_ti > 0:
+    #             print('sign_in timeout, retrying。。')
+    #             return self.sign_in(limit_time=limit_ti,timeout=timeout)
+    #         else:
+    #             print(self.id)
+    #             print(self.password)
+    #             return None
+
     def sign_in(self,limit_time=10,timeout=4):
         try:
-            url1 = 'http://jwc.jxnu.edu.cn/Portal/LoginAccount.aspx?t=account'
-            hid= self.verification_code()
-            #登录表单
-            data1={
-                '__VIEWSTATE':hid[0],
-                '__EVENTVALIDATION':hid[1],
+            url='http://jwc.jxnu.edu.cn/Portal/LoginAccount.aspx?t=account'
+            data={
+                '__EVENTTARGET':'',
+                '__EVENTARGUMENT':'',
+                '__LASTFOCUS':'',
+                '__VIEWSTATE':'/wEPDwUJNjA5MzAzMTcwD2QWAmYPZBYCAgMPZBYGZg8WAh4EVGV4dAUgMjAxOeW5tDTmnIgxM+aXpSDmmJ/mnJ/lha0mbmJzcDtkAgIPZBYCAgEPFgIfAAUS6LSm5Y+35a+G56CB55m75b2VZAIDD2QWBAIBDw8WAh4HVmlzaWJsZWdkFgoCAQ8QZGQWAWZkAgMPZBYCAgEPFgIfAAUG5a2m5Y+3ZAIFDw8WAh8BaGQWAgIBDxAPFgYeDURhdGFUZXh0RmllbGQFDOWNleS9jeWQjeensB4ORGF0YVZhbHVlRmllbGQFCeWNleS9jeWPtx4LXyFEYXRhQm91bmRnZBAVGxLotKLmlL/ph5Hono3lrabpmaIS5Z+O5biC5bu66K6+5a2m6ZmiEuWIneetieaVmeiCsuWtpumZohXlnLDnkIbkuI7njq/looPlrabpmaIS5YWs6LS55biI6IyD55Sf6ZmiEuWbvemZheaVmeiCsuWtpumZohLljJblrabljJblt6XlrabpmaIb6K6h566X5py65L+h5oGv5bel56iL5a2m6ZmiEue7p+e7reaVmeiCsuWtpumZogzmlZnogrLlrabpmaIe5Yab5LqL5pWZ56CU6YOo77yI5q2m6KOF6YOo77yJEuenkeWtpuaKgOacr+WtpumZohvljoblj7LmlofljJbkuI7ml4XmuLjlrabpmaIV6ams5YWL5oCd5Li75LmJ5a2m6ZmiDOe+juacr+WtpumZogzova/ku7blrabpmaIJ5ZWG5a2m6ZmiEueUn+WRveenkeWtpuWtpumZohvmlbDlrabkuI7kv6Hmga/np5HlrablrabpmaIM5L2T6IKy5a2m6ZmiD+WkluWbveivreWtpumZognmloflrabpmaIb54mp55CG5LiO6YCa5L+h55S15a2Q5a2m6ZmiDOW/g+eQhuWtpumZohXmlrDpl7vkuI7kvKDmkq3lrabpmaIM6Z+z5LmQ5a2m6ZmiDOaUv+azleWtpumZohUbCDY4MDAwICAgCDYzMDAwICAgCDgyMDAwICAgCDQ4MDAwICAgCDU3MDAwICAgCDY5MDAwICAgCDYxMDAwICAgCDYyMDAwICAgCDQ1MCAgICAgCDUwMDAwICAgCDM3MDAwICAgCDgxMDAwICAgCDU4MDAwICAgCDQ2MDAwICAgCDY1MDAwICAgCDY3MDAwICAgCDU0MDAwICAgCDY2MDAwICAgCDU1MDAwICAgCDU2MDAwICAgCDUyMDAwICAgCDUxMDAwICAgCDYwMDAwICAgCDQ5MDAwICAgCDY0MDAwICAgCDUzMDAwICAgCDU5MDAwICAgFCsDG2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZxYBZmQCCw8PFgIeCEltYWdlVXJsBSRjaGVja2NvZGUuYXNweD9jb2RlPUEwRDM0OTkyRTY0QTA4QTlkZAINDxYCHwAFEEEwRDM0OTkyRTY0QTA4QTlkAgMPDxYCHwFoZGRkVKkChFZpdlQPdlHy2JNRlch/myJywKCzK0eOTM5tgKI=',
+                '__EVENTVALIDATION':'/wEWCgL+uuD+AgKFsp/HCgL+44ewDwKiwZ6GAgKWuv6KDwLj3Z22BgL6up5fAv/WopgDAqbyykwC68zH9gaIVcuoN2ppvvS2+yQJvvk3Fl/uM/vu9jcD1EIn80deUg==',
                 '_ctl0:cphContent:ddlUserType':'Student',
                 '_ctl0:cphContent:txtUserNum':self.id,
                 '_ctl0:cphContent:txtPassword':self.password,
-                '_ctl0:cphContent:btnLogin':'登录',
-                '_ctl0:cphContent:txtCheckCode':hid[2],
+                '_ctl0:cphContent:txtCheckCode':'YUN3',
+                '_ctl0:cphContent:btnLogin':'登录'
             }
-            b=self.__s.post(url1,data=data1,timeout=timeout)
-            soup=BeautifulSoup(b.text,'html5lib')
-            # print(soup)
-            jwtz=soup.select('#jwtz')
-            # print(jwtz)
-            if jwtz!=[]:
+            wb_data=self.__s.post(url=url,data=data,timeout=timeout)
+            soup=BeautifulSoup(wb_data.text,'html5lib')
+            jwtz = soup.select('#jwtz')
+            if jwtz != []:
                 print('sign in successfluly!')
-                return 1
+                return True
             else:
-                limit_t=limit_time-1
+                limit_t = limit_time - 1
                 print('sign in fail')
-                if limit_t>0:
+                if limit_t > 0:
                     time.sleep(1)
                     print('sign_in failed, retrying。。')
-                    return self.sign_in(limit_time=limit_t,timeout=timeout)
+                    return self.sign_in(limit_time=limit_t, timeout=timeout)
                 else:
                     return None
-                # print(b.text)
         except:
-            limit_ti=limit_time-1
+            limit_ti = limit_time - 1
             if limit_ti > 0:
                 print('sign_in timeout, retrying。。')
-                return self.sign_in(limit_time=limit_ti,timeout=timeout)
+                return self.sign_in(limit_time=limit_ti, timeout=timeout)
             else:
                 print(self.id)
                 print(self.password)
                 return None
+
 
     def test(self):
         url='http://jwc.jxnu.edu.cn/Portal/Index.aspx'
@@ -204,7 +249,14 @@ class SpiderDynamicStudent:
             score.standard_score = data['standard_score']
             score.if_major = data['if_major']
             score.rescore = data['rescore']
-            score.save()
+            try:
+                score.save()
+            except:
+                class_id = self.__create_class_id()
+                schedule_lesson.class_id = class_id
+                schedule_lesson.save()
+                score.schedule_lesson = schedule_lesson
+                score.save()
 
 
 
@@ -587,10 +639,80 @@ class SpiderDynamicStudent:
         self.get_my_studyData()
         self.get_student_detail_data()
 
+    def get_new_score(self,error_time_limit=10,timeout=4):
+        try:
+            url='http://jwc.jxnu.edu.cn/MyControl/All_Display.aspx?UserControl=xfz_Test_cj.ascx'
+            wb_data=self.__s.get(url=url,timeout=timeout)
+            soup=BeautifulSoup(wb_data.text,'html5lib')
+            trs=soup.select('#_ctl11_dgContent > tbody > tr')[1:]
+            major = Major.objects.filter(cla__stu__id=self.id)
+            no_major=False
+            if major:
+                major=major[0]
+            else:
+                no_major=True
+            for tr in trs:
+                tds=tr.select('td')
+                semester=tds[2].get_text().strip()
+                lesson_id=tds[4].get_text().strip()
+                schedule_lesson=ScheduleLesson.objects.filter(score__student_id=self.id,lesson_id=lesson_id,semester=semester)
+                if schedule_lesson:
+                    schedule_lesson = schedule_lesson[0]
+                    new_score = NewScore.objects.filter(student_id=self.id, schedule_lesson=schedule_lesson)
+                    if not new_score:
+                        algorithm=tds[5].get_text().strip()
+                        try:
+                            daily_score=float(tds[6].get_text().strip())
+                        except:
+                            daily_score=0.0
+                        try:
+                            practical_score=float(tds[7].get_text().strip())
+                        except:
+                            practical_score=0.0
+                        try:
+                            theoretical_score=float(tds[8].get_text().strip())
+                        except:
+                            theoretical_score=0.0
+                        try:
+                            score=float(tds[9].get_text().strip())
+                        except:
+                            score=0.0
+                        if not no_major:
+                            major_lesson = MajorLesson.objects.filter(major=major, lesson_id=lesson_id)
+                            if major_lesson:
+                                major_lesson=major_lesson[0]
+                                is_major_lesson = False
+                                if major_lesson.lesson_type in [3, 4, 5]:
+                                    is_major_lesson = True
+                                elif major_lesson.lesson_type == 2:
+                                    naaaa = major_lesson.lesson.name
+                                    if '公共必修' or '高等数学' not in naaaa:
+                                        is_major_lesson = True
+                                else:
+                                    pass
+                            else:
+                                is_major_lesson=False
+                            new_score=NewScore.objects.create(student_id=self.id, schedule_lesson=schedule_lesson,algorithm=algorithm,daily_score=daily_score, practical_score=practical_score,theoretical_score=theoretical_score, score=score, if_major=is_major_lesson)
+                        else:
+                            new_score=NewScore.objects.create(student_id=self.id,schedule_lesson=schedule_lesson,algorithm=algorithm,daily_score=daily_score,practical_score=practical_score,theoretical_score=theoretical_score,score=score,if_major=True)
+                        print(new_score.__dict__)
+
+                else:
+                    print('已插入')
+        except:
+            error_time_limit -= 1
+            if error_time_limit > 0:
+                print('get_new_score timeout, retrying。。')
+                return self.get_new_score(error_time_limit=error_time_limit)
+            else:
+                return None
+
 if __name__ == '__main__':
-    me=SpiderDynamicStudent('201626703079','m19980220')
-    # me=SpiderDynamicStudent('1467005018','687196')
+    me=SpiderDynamicStudent(MY_USERNAME,MY_WORD)
+    # me.sign_in()
+    # me.get_all_data()
     me.sign_in()
+    me.get_new_score()
     # me.get_my_studyData()
     # me.get_all_data()
     # me.test()

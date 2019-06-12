@@ -5,13 +5,16 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "jwxzs_2.settings")# project_nam
 django.setup()
 
 from jwxzs_2.settings import VERIFICATIONCODE_SRC
+from jwxzs_2.settings import PUBLIC_PASSWORD
+
+from utils.settings import MY_USERNAME,MY_WORD
 
 import requests
 from bs4 import BeautifulSoup
 from PIL import Image
 import pytesseract
 import uuid,os,time
-from users.models import Teacher,Department,Student
+from users.models import Teacher,Department,Student,UserProfile
 from scores.models import Score
 from lessons.models import ScheduleLesson,Schedule,Lesson,ErrorSchedule
 from semesters.models import Semester
@@ -26,7 +29,7 @@ import multiprocessing
 import types
 import copyreg
 
-import pymongo
+# import pymongo
 
 
 def _pickle_method(m):
@@ -146,44 +149,84 @@ class SpiderStaticTeacher:
             return None
 
     # 登录
+    # def sign_in(self,limit_time=10,timeout=5):
+    #     try:
+    #         url1 = 'http://jwc.jxnu.edu.cn/Portal/LoginAccount.aspx?t=account'
+    #         hid= self.verification_code()
+    #         #登录表单
+    #         data1={
+    #             '__VIEWSTATE':hid[0],
+    #             '__EVENTVALIDATION':hid[1],
+    #             '_ctl0:cphContent:ddlUserType':'Student',
+    #             '_ctl0:cphContent:txtUserNum':self.id,
+    #             '_ctl0:cphContent:txtPassword':self.password,
+    #             '_ctl0:cphContent:btnLogin':'登录',
+    #             '_ctl0:cphContent:txtCheckCode':hid[2],
+    #         }
+    #         b=self.__s.post(url1,data=data1,timeout=timeout)
+    #         soup=BeautifulSoup(b.text,'html5lib')
+    #         # print(soup)
+    #         jwtz=soup.select('#jwtz')
+    #         # print(jwtz)
+    #         if jwtz!=[]:
+    #             print('sign in successfluly!')
+    #             return 1
+    #         else:
+    #             limit_t=limit_time-1
+    #             print('sign in fail')
+    #             if limit_t>0:
+    #                 time.sleep(1)
+    #                 print('sign_in failed, retrying。。')
+    #                 return self.sign_in(limit_time=limit_t,timeout=timeout)
+    #             else:
+    #                 return None
+    #             # print(b.text)
+    #     except:
+    #         limit_ti=limit_time-1
+    #         if limit_ti > 0:
+    #             print('sign_in timeout, retrying。。')
+    #             return self.sign_in(limit_time=limit_ti,timeout=timeout)
+    #         else:
+    #             return None
+
     def sign_in(self,limit_time=10,timeout=5):
         try:
-            url1 = 'http://jwc.jxnu.edu.cn/Portal/LoginAccount.aspx?t=account'
-            hid= self.verification_code()
-            #登录表单
-            data1={
-                '__VIEWSTATE':hid[0],
-                '__EVENTVALIDATION':hid[1],
-                '_ctl0:cphContent:ddlUserType':'Student',
-                '_ctl0:cphContent:txtUserNum':self.id,
-                '_ctl0:cphContent:txtPassword':self.password,
-                '_ctl0:cphContent:btnLogin':'登录',
-                '_ctl0:cphContent:txtCheckCode':hid[2],
+            url = 'http://jwc.jxnu.edu.cn/Portal/LoginAccount.aspx?t=account'
+            data = {
+                '__EVENTTARGET': '',
+                '__EVENTARGUMENT': '',
+                '__LASTFOCUS': '',
+                '__VIEWSTATE': '/wEPDwUJNjA5MzAzMTcwD2QWAmYPZBYCAgMPZBYGZg8WAh4EVGV4dAUgMjAxOeW5tDTmnIgxM+aXpSDmmJ/mnJ/lha0mbmJzcDtkAgIPZBYCAgEPFgIfAAUS6LSm5Y+35a+G56CB55m75b2VZAIDD2QWBAIBDw8WAh4HVmlzaWJsZWdkFgoCAQ8QZGQWAWZkAgMPZBYCAgEPFgIfAAUG5a2m5Y+3ZAIFDw8WAh8BaGQWAgIBDxAPFgYeDURhdGFUZXh0RmllbGQFDOWNleS9jeWQjeensB4ORGF0YVZhbHVlRmllbGQFCeWNleS9jeWPtx4LXyFEYXRhQm91bmRnZBAVGxLotKLmlL/ph5Hono3lrabpmaIS5Z+O5biC5bu66K6+5a2m6ZmiEuWIneetieaVmeiCsuWtpumZohXlnLDnkIbkuI7njq/looPlrabpmaIS5YWs6LS55biI6IyD55Sf6ZmiEuWbvemZheaVmeiCsuWtpumZohLljJblrabljJblt6XlrabpmaIb6K6h566X5py65L+h5oGv5bel56iL5a2m6ZmiEue7p+e7reaVmeiCsuWtpumZogzmlZnogrLlrabpmaIe5Yab5LqL5pWZ56CU6YOo77yI5q2m6KOF6YOo77yJEuenkeWtpuaKgOacr+WtpumZohvljoblj7LmlofljJbkuI7ml4XmuLjlrabpmaIV6ams5YWL5oCd5Li75LmJ5a2m6ZmiDOe+juacr+WtpumZogzova/ku7blrabpmaIJ5ZWG5a2m6ZmiEueUn+WRveenkeWtpuWtpumZohvmlbDlrabkuI7kv6Hmga/np5HlrablrabpmaIM5L2T6IKy5a2m6ZmiD+WkluWbveivreWtpumZognmloflrabpmaIb54mp55CG5LiO6YCa5L+h55S15a2Q5a2m6ZmiDOW/g+eQhuWtpumZohXmlrDpl7vkuI7kvKDmkq3lrabpmaIM6Z+z5LmQ5a2m6ZmiDOaUv+azleWtpumZohUbCDY4MDAwICAgCDYzMDAwICAgCDgyMDAwICAgCDQ4MDAwICAgCDU3MDAwICAgCDY5MDAwICAgCDYxMDAwICAgCDYyMDAwICAgCDQ1MCAgICAgCDUwMDAwICAgCDM3MDAwICAgCDgxMDAwICAgCDU4MDAwICAgCDQ2MDAwICAgCDY1MDAwICAgCDY3MDAwICAgCDU0MDAwICAgCDY2MDAwICAgCDU1MDAwICAgCDU2MDAwICAgCDUyMDAwICAgCDUxMDAwICAgCDYwMDAwICAgCDQ5MDAwICAgCDY0MDAwICAgCDUzMDAwICAgCDU5MDAwICAgFCsDG2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZxYBZmQCCw8PFgIeCEltYWdlVXJsBSRjaGVja2NvZGUuYXNweD9jb2RlPUEwRDM0OTkyRTY0QTA4QTlkZAINDxYCHwAFEEEwRDM0OTkyRTY0QTA4QTlkAgMPDxYCHwFoZGRkVKkChFZpdlQPdlHy2JNRlch/myJywKCzK0eOTM5tgKI=',
+                '__EVENTVALIDATION': '/wEWCgL+uuD+AgKFsp/HCgL+44ewDwKiwZ6GAgKWuv6KDwLj3Z22BgL6up5fAv/WopgDAqbyykwC68zH9gaIVcuoN2ppvvS2+yQJvvk3Fl/uM/vu9jcD1EIn80deUg==',
+                '_ctl0:cphContent:ddlUserType': 'Student',
+                '_ctl0:cphContent:txtUserNum': self.id,
+                '_ctl0:cphContent:txtPassword': self.password,
+                '_ctl0:cphContent:txtCheckCode': 'YUN3',
+                '_ctl0:cphContent:btnLogin': '登录'
             }
-            b=self.__s.post(url1,data=data1,timeout=timeout)
-            soup=BeautifulSoup(b.text,'html5lib')
-            # print(soup)
-            jwtz=soup.select('#jwtz')
-            # print(jwtz)
-            if jwtz!=[]:
+            wb_data = self.__s.post(url=url, data=data, timeout=timeout)
+            soup = BeautifulSoup(wb_data.text, 'html5lib')
+            jwtz = soup.select('#jwtz')
+            if jwtz != []:
                 print('sign in successfluly!')
-                return 1
+                return True
             else:
-                limit_t=limit_time-1
+                limit_t = limit_time - 1
                 print('sign in fail')
-                if limit_t>0:
+                if limit_t > 0:
                     time.sleep(1)
                     print('sign_in failed, retrying。。')
-                    return self.sign_in(limit_time=limit_t,timeout=timeout)
+                    return self.sign_in(limit_time=limit_t, timeout=timeout)
                 else:
                     return None
-                # print(b.text)
         except:
-            limit_ti=limit_time-1
+            limit_ti = limit_time - 1
             if limit_ti > 0:
                 print('sign_in timeout, retrying。。')
-                return self.sign_in(limit_time=limit_ti,timeout=timeout)
+                return self.sign_in(limit_time=limit_ti, timeout=timeout)
             else:
+                print(self.id)
+                print(self.password)
                 return None
 
     def __DepartmentToObject(self,data):
@@ -292,10 +335,18 @@ class SpiderStaticTeacher:
             te.department=data['department']
         try:
             te.save()
+            if not te.user:
+                user=self.__teacher_create_user(te)
+                self.get_teacher_photo(user)
             print(data['id']+'教师插入成功')
         except:
             print(data['id']+'教师已存在')
 
+
+    def __teacher_create_user(self,tea):
+        if not tea.user:
+            user=UserProfile.objects.create(username=tea.id,name=tea.name,gender=tea.gender,is_teahcer=True,is_active=False,password=PUBLIC_PASSWORD)
+            return user
 
 
     def get_one_colloge_teachers(self,post_code,limit_time=5,timeout=4):
@@ -653,19 +704,19 @@ class SpiderStaticTeacher:
                 return None
 
 
-    def get_one_teacher_all_semester_schedule(self,teacher_id):
-        semester_list=self.semester_list
+    def get_one_teacher_all_semester_schedule(self,teacher_id,semester_list=get_spider_semester()):
+        # semester_list=self.semester_list
         for semester in semester_list:
             self.get_one_teacher_one_semester_schedule(semester=semester['post_code'],teacher_id=teacher_id)
 
-    def get_schedule(self):
-        teachers=Teacher.objects.all()
+    def get_schedule(self,semester_list=get_spider_semester()):
+        teachers=Teacher.objects.all().order_by('name')
         for tea in teachers:
-            self.get_one_teacher_all_semester_schedule(tea.id)
+            self.get_one_teacher_all_semester_schedule(teacher_id=tea.id,semester_list=semester_list)
 
 
     def multiprocessing_get_schedule(self):
-        pool = multiprocessing.Pool(processes=50)
+        pool = multiprocessing.Pool(processes=5)
         teachers=Teacher.objects.values_list('id',flat=True)
         teachers=list(teachers)
         pool.map(self.get_one_teacher_all_semester_schedule,teachers)
@@ -682,20 +733,21 @@ class SpiderStaticTeacher:
         'http://jwc.jxnu.edu.cn/MyControl/All_Display.aspx?UserControl=Xfz_Class_student.ascx&bjh=24982661&kch=248206&xq=2018/9/1'
 
 
-    def insert_lesson_from_mongo(self):
-        client = pymongo.MongoClient(host='localhost', port=27017, connect=False)
-        subject_system=client['subject_system']
-        sebject_system_lesson=subject_system['sebject_system_lesson']
-        for i in sebject_system_lesson.find():
-            lesson=Lesson()
-            lesson.id=i['uk_lesson_id']
-            lesson.name=i['lesson_name']
-            lesson.credit=i['lesson_credit']
-            lesson.if_public_elective=i['if_public_elective']
-            try:
-                lesson.save()
-            except:
-                print(i['uk_lesson_id']+' lesson exsit')
+    # def insert_lesson_from_mongo(self):
+    #     client = pymongo.MongoClient(host='localhost', port=27017, connect=False)
+    #     subject_system=client['subject_system']
+    #     subject_system.authenticate(name='subject_system_user',password='ssum2567076458')
+    #     sebject_system_lesson=subject_system['sebject_system_lesson']
+    #     for i in sebject_system_lesson.find():
+    #         lesson=Lesson()
+    #         lesson.id=i['uk_lesson_id']
+    #         lesson.name=i['lesson_name']
+    #         lesson.credit=i['lesson_credit']
+    #         lesson.if_public_elective=i['if_public_elective']
+    #         try:
+    #             lesson.save()
+    #         except:
+    #             print(i['uk_lesson_id']+' lesson exsit')
 
 
     def get_lesson_credit(self,lesson_id,limit_time=5,timeout=3):
@@ -758,12 +810,51 @@ class SpiderStaticTeacher:
             else:
                 return None
 
+    def get_teacher_photo(self,user,timeout=4,limit_time=5):
+        try:
+            if not user.image:
+                url=r'http://jwc.jxnu.edu.cn/TeacherPhotos/{0}.jpg'.format(user.username)
+                img_data = self.__s.get(url,timeout=timeout)
+                if img_data.status_code==requests.codes.ok:
+                    with open('../media/imgs/teacher/'+user.username+'.jpg','wb') as photo:
+                        photo.write(img_data.content)
+                        photo.close()
+                    img='imgs/'+user.username+'.jpg'
+                    user.image=img
+                    user.save()
+                    return
+                else:
+                    print('获取教师照片失败，url: ',url)
+                    return
+            else:
+                print('已存在头像')
+                return
+        except:
+            limit_ti = limit_time - 1
+            if limit_ti > 0:
+                print('get_teacher_photo timeout, retrying。。')
+                return self.get_teacher_photo(user=user, limit_time=limit_ti)
+            else:
+                return None
+
 
 
 
 if __name__ == '__main__':
-    tea=SpiderStaticTeacher('201626703079','m19980220')
+    tea=SpiderStaticTeacher(MY_USERNAME,MY_WORD)
     tea.sign_in(limit_time=20)
+    # tea.get_schedule()
+
+
+    # tea.get_schedule([{'post_code':'2017/9/1 0:00:00'}])
+    # tea.get_schedule([{'post_code':'2017/3/1 0:00:00'}])
+    # tea.get_schedule([{'post_code':'2016/9/1 0:00:00'}])
+    # tea.get_schedule([{'post_code':'2016/3/1 0:00:00'}])
+    # tea.get_schedule([{'post_code':'2015/9/1 0:00:00'}])
+
+
+
+    # tea.multiprocessing_get_schedule()
     # tea.get_lesson_credit('002094')
     # tea.test()
     # tea.sign_in(limit_time=20)

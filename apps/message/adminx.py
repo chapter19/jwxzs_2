@@ -38,6 +38,7 @@ class ReceiverGroupAdmin(object):
     search_fields=['group__group_name','group__group_id','message__title','id','group_receiver_message__receiver__name','group_receiver_message__receiver__username']
     list_filter=['group__group_type','message__title','group__group_name','group_receiver_message__receiver__name','group_receiver_message__receiver__username']
     model_icon = 'fa fa-bullhorn'
+    relfield_style = 'fk_ajax'
     def save_models(self):
         obj=self.new_obj
         obj.save()
@@ -96,6 +97,7 @@ class GroupReceiverMessageAdmin(object):
     list_filter=['read_time','if_delete','if_collect','receiver__name','receiver_group__group__group_name','receiver_group__group__group_id','receiver_group__group__group_type','receiver_group__message__title','receiver_group__message__id','receiver_group__message__type','receiver_group__message__send_time','receiver_group__message__send_state']
     list_editable=['if_delete','if_collect','if_report']
     model_icon = 'fa fa-comments-o'
+    relfield_style = 'fk_ajax'
 
 
 class ReceiverMessageAdmin(object):
@@ -108,9 +110,9 @@ class ReceiverMessageAdmin(object):
 
 
 class MessageFileAdmin(object):
-    list_display=['message','file_name','file','id','get_sender']
-    search_fields=['file_name','message__title','message__body','message__sender__username','message__sender__name','message__receiver_message__receiver__username','message__receiver_message__receiver__name']
-    list_filter=['message__title','file_name','message__body','message__type','message__send_time','message__send_state','message__reply_message__type','message__reply_message__send_time']
+    list_display=['message','disk_file','id','get_sender']
+    search_fields=['message__title','message__body','message__sender__username','message__sender__name','message__receiver_message__receiver__username','message__receiver_message__receiver__name']
+    list_filter=['message__title','message__body','message__type','message__send_time','message__send_state','message__reply_message__type','message__reply_message__send_time']
     model_icon = 'fa fa-file'
 
 

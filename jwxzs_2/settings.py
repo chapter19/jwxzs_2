@@ -15,11 +15,13 @@ import os,sys
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-sys.path.insert(0,os.path.join(BASE_DIR,'extra apps'))
+sys.path.insert(0,os.path.join(BASE_DIR,'extra_apps'))
 sys.path.insert(0,os.path.join(BASE_DIR,'apps'))
 
 MEDIA_URL='/media/'
 MEDIA_ROOT=os.path.join(BASE_DIR,'media/')
+
+VERIFICATIONCODE_SRC=os.path.join(BASE_DIR,'spiders/VerificationCode/')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
@@ -52,13 +54,25 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     # 'rest_framework.authtoken',
+    'channels',
+    'channels_api',
     'message',
     'semesters',
     'groups',
     'friends',
+    'graph',
+    'checkstudent',
+    'logs',
+    'redio',
+    'subject',
+    'homeworks',
+    'disks',
     'ckeditor',
     'ckeditor_uploader',
+    'haystack',
+    'django_celery_results',
     # 'rest_captcha',
+    # 'djcelery',
 ]
 
 AUTH_USER_MODEL='users.UserProfile'
@@ -112,7 +126,6 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
 
@@ -144,6 +157,7 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = False
+
 
 
 AUTHENTICATION_BACKENDS=(
@@ -216,6 +230,15 @@ REST_FRAMEWORK = {
     ),
     # 'DEFAULT_PAGINATION_CLASS':'rest_framework.pagination.PageNumberPagination',
     # 'PAGE_SIZE': 10,
+    #限速
+    'DEFAULT_THROTTLE_CLASSES': (
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ),
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/day',
+        'user': '60/minite'
+    }
 }
 
 
@@ -225,11 +248,21 @@ import datetime
 JWT_AUTH={
     'JWT_EXPIRATION_DELTA':datetime.timedelta(days=7),
     'JWT_AUTH_HEADER_PREFIX':'JWT',
+    'JWT_RESPONSE_PAYLOAD_HANDLER':'users.views.jwt_response_payload_handler'
 }
 
 
 # VERIFICATIONCODE_SRC='/Users/vccccccc/PycharmProjects/jwxzs_2/spiders/VerificationCode/'
-VERIFICATIONCODE_SRC='/Users/vccccccc/PycharmProjects/jwxzs_2/spiders/VerificationCode/'
+
+
+
+NEO4J_HOST='bolt://localhost:7687'
+
+NEO4J_USERNAME='neo4j'
+
+NEO4J_PASSWORD='1'
+
+
 
 
 # SEMESTER_LIST=[
@@ -248,3 +281,62 @@ VERIFICATIONCODE_SRC='/Users/vccccccc/PycharmProjects/jwxzs_2/spiders/Verificati
 
 from django.contrib.auth.hashers import make_password
 PUBLIC_PASSWORD=make_password('jwxzspublicpassword')
+
+
+
+
+HAYSTACK_CONNECTIONS={
+    'default':{
+        # 'ENGINE':'haystack.backends.whoosh_cn_backend.WhooshEngine',
+        'ENGINE':'extra_apps.whoosh_cn_backend.WhooshEngine',
+        # 'ENGINE':'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH':os.path.join(BASE_DIR,'whoosh_index')
+    }
+}
+
+#自动生成索引
+HAYSTACK_SIGNAL_PROCESSOR='haystack.signals.RealtimeSignalProcessor'
+
+
+
+# import djcelery
+# djcelery.setup_loader()
+# BROKER_URL='redis://:1@127.0.0.1:6379/1'
+# CELERY_IMPORTS=('users.task',)
+
+
+#drf缓存配置
+REST_FRAMEWORK_EXTENSIONS={
+    #失效时间
+    'DEFAULT_CACHE_RESPONSE_TIMEOUT':30,
+}
+
+
+#配置redis缓存
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://:1@127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+#高德key
+AMAP_KEY='b0e54c69dd35bfeb5bc1910f1625a273'
+
+
+
+# CELERY_RESULT_BACKEND = 'django-db'
+#
+# CELERY_CACHE_BACKEND = 'django-cache'
+
+# CELERY_BROKER_URL = 'redis://:1@127.0.0.1:6379/1' # Broker配置，使用Redis作为消息中间件
+
+# CELERY_RESULT_BACKEND = 'redis://:1@127.0.0.1:6379/0' # BACKEND配置，这里使用redis
+
+# CELERY_RESULT_SERIALIZER = 'json' # 结果序列化方案
+
+AES_KEY="awsl"
+

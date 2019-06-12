@@ -9,7 +9,7 @@ from lessons.models import Lesson,ScheduleLesson
 class Score(models.Model):
     # student_id=models.CharField(max_length=12,verbose_name=u'学号',default='')
     student=models.ForeignKey(Student,verbose_name=u'学生',on_delete=models.CASCADE,related_name='score')
-    schedule_lesson = models.ForeignKey(ScheduleLesson, verbose_name=u'课表课程', default='',on_delete=models.CASCADE)
+    schedule_lesson = models.ForeignKey(ScheduleLesson, verbose_name=u'课表课程', default='',on_delete=models.CASCADE,related_name='score')
     score=models.FloatField(verbose_name=u'成绩',default=0.0,null=True,blank=True)
     standard_score=models.FloatField(verbose_name=u'标准分',default=-20.0,null=True,blank=True)
     rescore=models.FloatField(verbose_name=u'补考成绩',null=True,blank=True)
@@ -38,7 +38,7 @@ class NewScore(models.Model):
         verbose_name_plural=verbose_name
         unique_together = ('schedule_lesson', 'student')
     def __str__(self):
-        return self.schedule_lesson
+        return self.schedule_lesson.lesson.name
 
 
 class TotalCredit(models.Model):

@@ -10,7 +10,7 @@ from xadmin import views
 class ScoreAdmin(object):
     list_display=['schedule_lesson','student','score','standard_score','if_major','rescore','add_time']
     # search_fields=['schedule_lesson__lesson__name','schedule_lesson__lesson__id','student__name','student__id','schedule_lesson__teacher__name','schedule_lesson__teacher__id']
-    search_fields=['student__name','student__id','schedule_lesson__teacher__id']
+    search_fields=['student__name','student__id','schedule_lesson__teacher__id','schedule_lesson__id']
     list_filter=['score','standard_score','rescore','if_major','add_time','student__name','schedule_lesson__teacher__name','schedule_lesson__semester']
     list_editable=['score','standard_score','if_major','rescore']
     refresh_times = [5, 10, 30, 60, 120]

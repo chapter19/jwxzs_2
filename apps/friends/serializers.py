@@ -7,17 +7,21 @@ from users.models import UserProfile
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    gender = serializers.SerializerMethodField()
+    def get_gender(self, obj):
+        return obj.get_gender_display()
     class Meta:
         model=UserProfile
-        fields=['id','username','name','gender','is_student']
+        fields=['id','username','name','gender','is_student','is_teacher','image']
 
 
 class CollectFriendsSerializer(serializers.ModelSerializer):
     friend=UserProfileSerializer()
+    user=UserProfileSerializer()
     # last_talk=serializers.DateTimeField(read_only=True, format='%Y-%m-%d %H:%M')
     class Meta:
         model=CollectFriends
-        fields=['friend',]
+        fields=['friend','id','user']
 
 
 class CreateCollectFriendsSerializer(serializers.Serializer):
@@ -25,23 +29,31 @@ class CreateCollectFriendsSerializer(serializers.Serializer):
         default=serializers.CurrentUserDefault()
     )
     friend_id=serializers.IntegerField(required=True,help_text='好友用户id')
+    id=serializers.IntegerField(read_only=True)
     def create(self, validated_data):
         user_id=validated_data.get('user_id')
         friend_id=validated_data.get('friend_id')
-        collect_friend=CollectFriends.objects.create(user_id=user_id,friend_id=friend_id)
-        user=UserProfile.objects.get(id=user_id)
-        title='关注了你'.format(user.name)
-        body='我是{0}，我刚关注了你，为了方便联系快来关注我吧~'.format(user.name)
-        message=Message.objects.create(title=title,body=body,sender=user,type=3)
-        ReceiverMessage.objects.create(message=message,receiver_id=friend_id)
-        return collect_friend
+        if user_id!=friend_id:
+            friend=CollectFriends.objects.filter(user_id=user_id,friend_id=friend_id)
+            if not friend:
+                user=UserProfile.objects.filter(id=user_id)
+                if user:
+                    user=user[0]
+                    collect_friend=CollectFriends.objects.create(user=user,friend_id=friend_id)
+                else:
+                    raise serializers.ValidationError({'detail':'用户不存在！请检查并重新输入'})
+                return collect_friend
+            else:
+                raise serializers.ValidationError({'detail':'你已关注了该好友，请不要重复关注'})
+        else:
+            raise serializers.ValidationError({'detail':'你不能关注你自己！'})
     class Meta:
         model=CollectFriends
-        fields=['user_id','friend_id']
+        fields=['user_id','friend_id','id']
 
 
 class RecentContactSerializer(serializers.Serializer):
     friend = UserProfileSerializer()
     class Meta:
         model=RecentContact
-        dields=['friend','add_time']
+        dields=['friend','add_time','id']

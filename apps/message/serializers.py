@@ -11,12 +11,15 @@ from groups.models import Group
 from friends.models import RecentContact
 from django.db.models import Q
 
+from disks.serializers import FileListSerializer
+from disks.models import File
+
 
 #发件箱
 class ReceiverSerializer(serializers.ModelSerializer):
     class Meta:
         model=UserProfile
-        fields=['username','name',]
+        fields=['username','name','id']
 
 
 class OutboxGroupReceiverSerializer(serializers.ModelSerializer):
@@ -24,13 +27,13 @@ class OutboxGroupReceiverSerializer(serializers.ModelSerializer):
     read_time = serializers.DateTimeField(read_only=True, format='%Y-%m-%d %H:%M')
     class Meta:
         model=GroupReceiverMessage
-        fields=['receiver','read_time',]
+        fields=['receiver','read_time','id']
 
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model=Group
-        fields=['group_type','group_name','group_id']
+        fields=['group_type','group_name','group_id','id']
 
 
 class OutboxGroupSerializer(serializers.ModelSerializer):
@@ -38,7 +41,7 @@ class OutboxGroupSerializer(serializers.ModelSerializer):
     group=GroupSerializer()
     class Meta:
         model=ReceiverGroup
-        fields=['group_receiver_message','group']
+        fields=['group_receiver_message','group','id']
 
 
 class OutboxReceiverMessageSerializer(serializers.ModelSerializer):
@@ -46,13 +49,14 @@ class OutboxReceiverMessageSerializer(serializers.ModelSerializer):
     read_time=serializers.DateTimeField(read_only=True,format='%Y-%m-%d %H:%M')
     class Meta:
         model=ReceiverMessage
-        fields=['read_time','receiver',]
+        fields=['read_time','receiver','id']
 
 
 class MessageFileSerializer(serializers.ModelSerializer):
+    disk_file=FileListSerializer()
     class Meta:
         model=MessageFile
-        fields=['file_name','file']
+        fields='__all__'
 
 
 class OutboxReplyMessageSerializer(serializers.ModelSerializer):
@@ -65,7 +69,7 @@ class OutboxReplyMessageSerializer(serializers.ModelSerializer):
     send_time=serializers.DateTimeField(read_only=True,format='%Y-%m-%d %H:%M')
     class Meta:
         model=Message
-        fields=['receiver_message','receiver_group','title','body','send_time','if_delete','if_collect','message_file']
+        fields=['receiver_message','receiver_group','title','body','send_time','if_delete','if_collect','message_file','id']
 
 
 class OutboxMessageSerializer(serializers.ModelSerializer):
@@ -85,229 +89,243 @@ class OutboxMessageSerializer(serializers.ModelSerializer):
 #发件
 class OutboxMessageCreateSerializer(serializers.ModelSerializer):
     id=serializers.IntegerField(read_only=True)
-    sender=serializers.HiddenField(
+    user_id=serializers.HiddenField(
         default=serializers.CurrentUserDefault()
     )
-    reply_message_id=serializers.IntegerField(required=False,help_text='回复的父消息')
-    def create(self, validated_data):
-        title='未命名'
-        # body=''
-        sender=validated_data.get('sender')
-        send_state=0
-        reply_message_id=validated_data.get('reply_message_id')
-        if reply_message_id:
-            message=Message.objects.filter(Q(id=reply_message_id,receiver_message__receiver_id=sender)|Q(id=reply_message_id,receiver_group__group_receiver_message__receiver=sender))
-            if message:
-                obj = Message.objects.create(title=title, sender_id=sender, send_state=send_state,reply_message_id=reply_message_id)
-                return obj
-            else:
-                raise serializers.ValidationError('你并未接收到该消息，没有权限回复该消息！')
-        else:
-            obj = Message.objects.create(title=title, sender_id=sender, send_state=send_state)
-            return obj
+    # reply_message_id=serializers.IntegerField(required=False,help_text='回复的父消息')
+    title=serializers.CharField(required=False,help_text='标题',label='标题')
+    type=serializers.ChoiceField(choices=((1,'系统通知'),(2,'作业通知'),(3,'普通消息'),(4,'教务通知'),(5,'通知回复')),required=False,default=3,label='消息类型',help_text='消息类型')
     class Meta:
         model=Message
-        fields=['id','sender','reply_message_id','title','body','send_state','type']
+        fields=['id','user_id','reply_message','title','body','send_state','type']
+    def create(self, validated_data):
+        title=validated_data.get('title')
+        user_id=validated_data.get('user_id')
+        send_state=0
+        reply_message=validated_data.get('reply_message')
+        body=validated_data.get('body')
+        type=validated_data.get('type')
+        if reply_message:
+            re_me=ReceiverMessage.objects.filter(message=reply_message,receiver_id=user_id)
+            if not re_me:
+                gr_re_me=GroupReceiverMessage.objects.filter(receiver_group__message=reply_message,receiver_id=user_id)
+                if not gr_re_me:
+                    raise serializers.ValidationError({'detail':'你没有收到该消息！不能回复该消息'})
+            if reply_message.title[:3]=='回复：':
+                t=reply_message.title
+            else:
+                t='回复：'+reply_message.title
+            if title:
+                title=t+'    ' + title
+            else:
+                title=t
+            if reply_message.type in [1,2,4]:
+                type=5
+            else:
+                type=3
+            obj = Message.objects.create(title=title, sender_id=user_id, send_state=send_state,reply_message=reply_message,body=body,type=type)
+            ReceiverMessage.objects.create(message=obj, receiver=reply_message.sender)
+            return obj
+        if title:
+            user=UserProfile.objects.get(id=user_id)
+            if user.is_student:
+                if type in [1,2,4]:
+                    raise serializers.ValidationError({'detail':'你不能发送该类消息！'})
+            obj = Message.objects.create(title=title, sender_id=user_id, send_state=send_state,body=body,type=type)
+            return obj
+        else:
+            raise serializers.ValidationError({'detail':'你忘了填写标题！'})
 
 
 #改件
 class OutboxMessageUpdateSerializer(serializers.ModelSerializer):
     id=serializers.IntegerField(read_only=True)
-    sender=serializers.HiddenField(
+    user_id=serializers.HiddenField(
         default=serializers.CurrentUserDefault()
     )
     title=serializers.CharField(required=True,help_text='标题')
     body=serializers.CharField(required=True,help_text='内容')
-    # type=serializers.IntegerField(required=True,help_text='类型')
-    # send_state=serializers.IntegerField(required=True,help_text='发送状态')
-    reply_message_id=serializers.IntegerField(required=False,help_text='父消息id')
+    class Meta:
+        model=Message
+        fields=['title','body','user_id','id','type','send_state','reply_message']
     def update(self, instance, validated_data):
-        # instance.title = validated_data.get('title', instance.title)
-        # instance.body = validated_data.get('body', instance.body)
-        # send_state=instance.send_state
-        # if send_state==1:
-        #     pass
-        # elif send_state==0:
-        #     instance.send_state = validated_data.get('send_state', instance.send_state)
-        # instance.type=validated_data.get('type',instance.type)
-        # a=validated_data.get('reply_message_id', instance.reply_message_id)
-        # if a:
-        #     instance.reply_message_id=a
-        # instance.update_time=datetime.now()
-        # instance.save()
-        # return instance
+        user_id=validated_data.get('user_id')
         if instance.send_state==0:
             instance.title = validated_data.get('title', instance.title)
             instance.body = validated_data.get('body', instance.body)
             instance.send_state = validated_data.get('send_state', instance.send_state)
             instance.type = validated_data.get('type', instance.type)
-            instance.reply_message_id = validated_data.get('reply_message_id', instance.reply_message_id)
-            instance.send_time = datetime.now()
+            reply_message=validated_data.get('reply_message')
+            if reply_message:
+                re_me = ReceiverMessage.objects.filter(message=reply_message, receiver_id=user_id)
+                if not re_me:
+                    gr_re_me = GroupReceiverMessage.objects.filter(receiver_group__message=reply_message,receiver_id=user_id)
+                    if not gr_re_me:
+                        raise serializers.ValidationError({'detail': '你没有收到该消息！不能回复该消息'})
+                if reply_message.type in [1, 2, 4]:
+                    type = 5
+                else:
+                    type = 3
+                instance.type=type
+                instance.reply_message=reply_message
+            if not instance.reply_message:
+                user = UserProfile.objects.get(id=user_id)
+                if user.is_student:
+                    if instance.type in [1, 2, 4]:
+                        raise serializers.ValidationError({'detail': '你不能发送该类消息！'})
+            instance.send_time = datetime.now
             instance.save()
             return instance
         else:
-            raise serializers.ValidationError('已发送信息不能修改！')
-    class Meta:
-        model=Message
-        fields=['title','body','sender','id','type','send_state','reply_message_id','update_time','send_time']
+            raise serializers.ValidationError({'detail':'已发送信息不能修改！'})
 
 
 #上传文件
-class OutboxMessageFileCreateSerializer(serializers.Serializer):
-    id=serializers.IntegerField(read_only=True,help_text='文件id')
-    message_id=serializers.IntegerField(required=True,help_text='消息id')
-    file_name=serializers.CharField(required=True,help_text='文件名')
-    file=serializers.FileField(required=True,help_text='文件')
+class OutboxMessageFileCreateSerializer(serializers.ModelSerializer):
+    id=serializers.IntegerField(read_only=True,help_text='文件id',label='文件id')
     user = serializers.HiddenField(
         default=serializers.CurrentUserDefault()
     )
+    class Meta:
+        model=MessageFile
+        fields=['message','disk_file','id','user']
     def create(self, validated_data):
-        mess_id = validated_data.get('message_id')
-        message = Message.objects.filter(id=mess_id)
-        if message:
-            u = validated_data.get('user')
-            if message[0].sender_id==u:
-                mes_file=MessageFile(message_id=validated_data.get('message_id'),file_name=validated_data.get('file_name'),file=validated_data.get('file'))
+        message=validated_data.get('message')
+        u = validated_data.get('user')
+        if message.sender_id==u:
+            if message.send_state==1:
+                raise serializers.ValidationError({'detail':'已发送该消息！不能添加文件！'})
+            disk_file=validated_data.get('disk_file')
+            if disk_file.if_delete:
+                raise serializers.ValidationError({'detail':'该文件已被回收！不能选择'})
+            disk=disk_file.disk
+            if disk.if_disable:
+                raise serializers.ValidationError({'detail':'你的网盘已被禁用，不能再继续使用！'})
+            if disk.if_close:
+                raise serializers.ValidationError({'detail':'你已经关闭了网盘！先去开启再继续使用吧'})
+            if disk_file.disk.ower_id==u:
+                mes_file=MessageFile(message=message,disk_file=disk_file)
                 mes_file.save()
                 return mes_file
             else:
-                raise serializers.ValidationError("当前用户不是发件人，没有权限上传文件！")
+                raise serializers.ValidationError({'detail':'你不能使用别人的文件！'})
         else:
-            raise serializers.ValidationError('消息不存在！')
-    class Meta:
-        model=MessageFile
-        fields=['message_id','file_name','file','id','user']
+            raise serializers.ValidationError({'detail':"当前用户不是发件人，没有权限上传文件！"})
 
 
 #更改上传文件
-class OutboxMessageFileUpdateSerializer(serializers.Serializer):
-    file_name=serializers.CharField(help_text='文件名')
-    file=serializers.FileField(help_text='文件')
-    def update(self, instance, validated_data):
-        instance.file_name=validated_data.get('file_name',instance.file_name)
-        instance.file=validated_data.get('file',instance.file)
-        instance.save()
-        return instance
-    class Meta:
-        model=MessageFile
-        fields=['message_id','file_name','file','id','user']
+# class OutboxMessageFileUpdateSerializer(serializers.Serializer):
+#     file_name=serializers.CharField(help_text='文件名')
+#     file=serializers.FileField(help_text='文件')
+#     def update(self, instance, validated_data):
+#         instance.file_name=validated_data.get('file_name',instance.file_name)
+#         instance.file=validated_data.get('file',instance.file)
+#         instance.save()
+#         return instance
+#     class Meta:
+#         model=MessageFile
+#         fields=['message_id','file_name','file','id','user']
 
 
 #创建接受者
-class OutboxMessageReceiverCreateSerializer(serializers.Serializer):
+class OutboxMessageReceiverCreateSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
-    message_id=serializers.IntegerField(required=True,help_text='消息id')
-    receiver_id=serializers.IntegerField(required=True,help_text='接收用户id')
     user = serializers.HiddenField(
         default=serializers.CurrentUserDefault()
     )
     def create(self, validated_data):
-        mess_id=validated_data.get('message_id')
-        message=Message.objects.filter(id=mess_id)
-        if message:
-            u = validated_data.get('user')
-            if message[0].sender_id==u:
-                receiver_id=validated_data.get('receiver_id')
-                rece=UserProfile.objects.filter(id=receiver_id)
-                if rece:
-                    mes_receiver = ReceiverMessage(message_id=validated_data.get('message_id'),receiver_id=receiver_id)
-                    try:
-                        mes_receiver.save()
-                    except:
-                        raise serializers.ValidationError('已向该用户发送消息，勿重复发送！')
-                    contact=RecentContact.objects.filter(user_id=u,contact_id=receiver_id)
-                    if contact:
-                        contact[0].add_time=datetime.now
-                    else:
-                        RecentContact.objects.create(user_id=u,contact_id=receiver_id)
-                    return mes_receiver
-                else:
-                    raise serializers.ValidationError("接收用户不存在！")
+        message=validated_data.get('message')
+        u = validated_data.get('user')
+        if message.sender_id==u:
+            if message.send_state==1:
+                raise serializers.ValidationError({'detail':'已发送该消息！不能添加接收者！'})
+            receiver=validated_data.get('receiver')
+            mes_receiver = ReceiverMessage.objects.filter(message=message,receiver=receiver)
+            if mes_receiver:
+                raise serializers.ValidationError({'detail':'已向该用户发送消息，勿重复发送！'})
+            mes_receiver = ReceiverMessage.objects.create(message=message, receiver=receiver)
+            contact=RecentContact.objects.filter(user_id=u,contact=receiver)
+            if contact:
+                contact=contact[0]
+                contact.add_time=datetime.now()
+                contact.save()
             else:
-                raise serializers.ValidationError("当前用户不是发件人，没有权限发送该消息给他人！")
+                RecentContact.objects.create(user_id=u,contact=receiver)
+            return mes_receiver
         else:
-            raise serializers.ValidationError('消息不存在！')
+            raise serializers.ValidationError({'detail':"你不是发件人，没有权限发送该消息给他人！"})
     class Meta:
         model=ReceiverMessage
-        fields=['message_id','receiver_id','user','id']
+        fields=['message','receiver','user','id']
 
 
 
 # 接收组创建
 class OutboxGroupCreateSerializer(serializers.ModelSerializer):
-    # id=serializers.IntegerField(read_only=True)
-    message_id=serializers.IntegerField(required=True,help_text='消息id')
+    id=serializers.IntegerField(read_only=True)
     # group_name=serializers.CharField(read_only=True,help_text='组织名称')
     user = serializers.HiddenField(
         default=serializers.CurrentUserDefault()
     )
-    gro_id=serializers.CharField(required=True,help_text='组织的id')
-    def create(self, validated_data):
-        message_id=validated_data.get('message_id')
-        # group_type=validated_data.get('group_type')
-        # group_id=validated_data.get('group_id')
-        # group_name=validated_data.get('group_name')
-        user=validated_data.get('user')
-        mess=Message.objects.filter(id=message_id)
-        if mess:
-            if mess[0].sender_id==user:
-                gro_id=validated_data.get('gro_id')
-                group=Group.objects.filter(id=gro_id)
-                if group:
-                    ad=GroupAdministrator.objects.filter(admin=user,group_id=gro_id)
-                    if ad:
-                        group_rece=ReceiverGroup.objects.create(group=group[0],message=mess[0])
-                        if group[0].group_type==1:
-                            group_receivers = UserProfile.objects.filter(student__score__schedule_lesson_id=group[0].id)
-                            for i in group_receivers:
-                                GroupReceiverMessage.objects.create(receiver_group=group_rece,receiver=i)
-                        elif group[0].group_type==2:
-                            group_receivers=UserProfile.objects.filter(student__cla_id=group[0].id)
-                            for i in group_receivers:
-                                GroupReceiverMessage.objects.create(receiver_group=group_rece,receiver=i)
-                        elif group[0].group_type==3:
-                            group_receivers=UserProfile.objects.filter(student__cla__colloge_id=group[0].id)
-                            for i in group_receivers:
-                                GroupReceiverMessage.objects.create(receiver_group=group_rece,receiver=i)
-                        elif group[0].group_type==4:
-                            group_receivers=UserProfile.objects.filter(student__cla__major_id=group[0].id)
-                            for i in group_receivers:
-                                GroupReceiverMessage.objects.create(receiver_group=group_rece,receiver=i)
-                        # elif group[0].group_type==5:
-                        #     pass
-                        else:
-                            raise serializers.ValidationError('找不到组织类型！')
-                        return group_rece
-                    else:
-                        if group[0].group_type==5:
-                            def_g=DefGroup.objects.filter(def_group_member=user,id=gro_id)
-                            if def_g:
-                                group_rece=ReceiverGroup.objects.create(group=def_g[0],message=mess[0])
-                                group_receivers=UserProfile.objects.filter(def_group_member__def_group=def_g[0])
-                                for i in group_receivers:
-                                    if i.id!=user:
-                                        GroupReceiverMessage.objects.create(receiver_group=group_rece,receiver=i)
-                                return group_rece
-                            else:
-                                raise serializers.ValidationError('自定义组织不存在！')
-                                # group_receivers=UserProfile.objects.filter()
-                        else:
-                            raise serializers.ValidationError('你不是该组织管理员，没有权限群发消息！')
-                else:
-                    raise serializers.ValidationError('组织不存在！')
-            else:
-                raise serializers.ValidationError('你不是该消息发送者，没有权限发送当前消息！')
-        else:
-            raise serializers.ValidationError('消息不存在！')
+    # group=serializers.CharField(required=True,help_text='组织的id',label='组织id')
     class Meta:
         model=ReceiverGroup
-        fields=['message_id','user','gro_id']
+        fields=['message','user','group','id']
+    def create(self, validated_data):
+        user=validated_data.get('user')
+        message=validated_data.get('message')
+        if message.sender_id==user:
+            if message.send_state==1:
+                raise serializers.ValidationError({'detail':'已发送该消息！不能添加接受者！'})
+            group=validated_data.get('group')
+            ad=GroupAdministrator.objects.filter(admin=user,group=group)
+            if ad:
+                group_rece = ReceiverGroup.objects.filter(group=group, message=message)
+                if group_rece:
+                    raise serializers.ValidationError({'detail':'已添加该群组！不能再添加发送'})
+                group_rece=ReceiverGroup.objects.create(group=group,message=message)
+                if group[0].group_type==1:
+                    group_receivers = UserProfile.objects.filter(student__score__schedule_lesson_id=group.group_id)
+                    for i in group_receivers:
+                        GroupReceiverMessage.objects.create(receiver_group=group_rece,receiver=i)
+                elif group[0].group_type==2:
+                    group_receivers=UserProfile.objects.filter(student__cla_id=group.group_id)
+                    for i in group_receivers:
+                        GroupReceiverMessage.objects.create(receiver_group=group_rece,receiver=i)
+                elif group[0].group_type==3:
+                    group_receivers=UserProfile.objects.filter(student__cla__colloge_id=group.group_id)
+                    for i in group_receivers:
+                        GroupReceiverMessage.objects.create(receiver_group=group_rece,receiver=i)
+                elif group[0].group_type==4:
+                    group_receivers=UserProfile.objects.filter(student__cla__major_id=group.group_id)
+                    for i in group_receivers:
+                        GroupReceiverMessage.objects.create(receiver_group=group_rece,receiver=i)
+                else:
+                    raise serializers.ValidationError({'detail':'找不到组织类型！'})
+                return group_rece
+            else:
+                if group.group_type==5:
+                    def_g=DefGroup.objects.filter(def_group_member=user,id=group.group_id)
+                    if def_g:
+                        group_rece=ReceiverGroup.objects.create(group=def_g[0],message=message)
+                        group_receivers=UserProfile.objects.filter(def_group_member__def_group=def_g[0])
+                        for i in group_receivers:
+                            if i.id!=user:
+                                GroupReceiverMessage.objects.create(receiver_group=group_rece,receiver=i)
+                        return group_rece
+                    else:
+                        raise serializers.ValidationError({'detail':'你不是该组组员！不能添加'})
+                        # group_receivers=UserProfile.objects.filter()
+                else:
+                    raise serializers.ValidationError({'detail':'你不是该组织管理员，没有权限群发消息！'})
+        else:
+            raise serializers.ValidationError({'detail':'你不是该消息发送者，没有权限发送当前消息！'})
 
 #收件箱
 #已读、收藏、删除
 class InboxMessageReceiverUpdateSerializer(serializers.Serializer):
     id=serializers.IntegerField(read_only=True)
-    if_read=serializers.BooleanField(required=False,help_text='标记是否已读')
+    if_read=serializers.BooleanField(required=False,help_text='标记是否已读',write_only=True)
     if_delete=serializers.BooleanField(required=False,help_text='是否回收')
     if_collect=serializers.BooleanField(required=False,help_text='是否收藏')
     if_report=serializers.BooleanField(required=False,help_text='是否举报')
@@ -343,7 +361,7 @@ class InboxMessageReceiverUpdateSerializer(serializers.Serializer):
 #已读、收藏、删除
 class InboxGroupReceiverUpdateSerializer(serializers.Serializer):
     id=serializers.IntegerField(read_only=True)
-    if_read=serializers.BooleanField(required=False,help_text='标记是否已读')
+    if_read=serializers.BooleanField(required=False,help_text='标记是否已读',write_only=True)
     if_delete=serializers.BooleanField(required=False,help_text='是否回收')
     if_collect=serializers.BooleanField(required=False,help_text='是否收藏')
     if_report=serializers.BooleanField(required=False,help_text='是否举报')
@@ -386,3 +404,290 @@ class InboxMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model=Message
         fields=['receiver_message','receiver_group','title','body','send_time','if_delete','if_collect','message_file','reply_message']
+
+class ReceiverUpdateByQuerySerailizer(serializers.Serializer):
+    user_id=serializers.HiddenField(default=serializers.CurrentUserDefault())
+    delete_id_list=serializers.ListField(child=serializers.IntegerField(),required=False,allow_null=True,allow_empty=True,write_only=True,label='收件人要回收的消息的id列表',help_text='收件人要回收的消息的id列表')
+    resume_id_list=serializers.ListField(child=serializers.IntegerField(),required=False,allow_null=True,allow_empty=True,write_only=True,label='收件人要恢复的消息的id列表',help_text='收件人要恢复的消息的id列表')
+    collect_id_list=serializers.ListField(child=serializers.IntegerField(),required=False,allow_null=True,allow_empty=True,write_only=True,label='收件人要收藏的消息的id列表',help_text='收件人要收藏的消息的id列表')
+    no_collect_id_list=serializers.ListField(child=serializers.IntegerField(),required=False,allow_null=True,allow_empty=True,write_only=True,label='收件人要取消收藏的消息的id列表',help_text='收件人要取消收藏的消息的id列表')
+    report_id_list=serializers.ListField(child=serializers.IntegerField(),required=False,allow_null=True,allow_empty=True,write_only=True,label='收件人要举报的消息的id列表',help_text='收件人要举报的消息的id列表')
+    read_id_list=serializers.ListField(child=serializers.IntegerField(),required=False,allow_null=True,allow_empty=True,write_only=True,label='收件人要标记已读的消息的id列表',help_text='收件人要标记已读的消息的id列表')
+    no_read_id_list=serializers.ListField(child=serializers.IntegerField(),required=False,allow_null=True,allow_empty=True,write_only=True,label='收件人要标记未读的消息的id列表',help_text='收件人要标记未读的消息的id列表')
+    def create(self, validated_data):
+        user_id=validated_data.get('user_id')
+        delete_id_list=validated_data.get('delete_id_list')
+        if delete_id_list:
+            for id in delete_id_list:
+                receiver_message=ReceiverMessage.objects.filter(message_id=id,receiver_id=user_id)
+                if receiver_message:
+                    receiver_message=receiver_message[0]
+                    if receiver_message.if_delete:
+                        raise serializers.ValidationError({'detail':'该消息已回收！不能重复回收！'})
+                    receiver_message.if_delete=True
+                    receiver_message.save()
+                else:
+                    raise serializers.ValidationError({'detail':'消息不存在！'})
+        resume_id_list = validated_data.get('resume_id_list')
+        if resume_id_list:
+            for id in resume_id_list:
+                receiver_message = ReceiverMessage.objects.filter(message_id=id, receiver_id=user_id)
+                if receiver_message:
+                    receiver_message = receiver_message[0]
+                    if not receiver_message.if_delete:
+                        raise serializers.ValidationError({'detail': '该消息未回收！不能恢复！'})
+                    receiver_message.if_delete = False
+                    receiver_message.save()
+                else:
+                    raise serializers.ValidationError({'detail': '消息不存在！'})
+        collect_id_list=validated_data.get('collect_id_list')
+        if collect_id_list:
+            for id in collect_id_list:
+                receiver_message = ReceiverMessage.objects.filter(message_id=id, receiver_id=user_id)
+                if receiver_message:
+                    receiver_message = receiver_message[0]
+                    if receiver_message.if_collect:
+                        raise serializers.ValidationError({'detail': '该消息已收藏！不能重复收藏！'})
+                    receiver_message.if_collect = True
+                    receiver_message.save()
+                else:
+                    raise serializers.ValidationError({'detail': '消息不存在！'})
+        no_collect_id_list=validated_data.get('no_collect_id_list')
+        if no_collect_id_list:
+            for id in no_collect_id_list:
+                receiver_message = ReceiverMessage.objects.filter(message_id=id, receiver_id=user_id)
+                if receiver_message:
+                    receiver_message = receiver_message[0]
+                    if not receiver_message.if_collect:
+                        raise serializers.ValidationError({'detail': '该消息未收藏！不能取消收藏！'})
+                    receiver_message.if_collect = False
+                    receiver_message.save()
+                else:
+                    raise serializers.ValidationError({'detail': '消息不存在！'})
+        report_id_list = validated_data.get('report_id_list')
+        if report_id_list:
+            for id in report_id_list:
+                receiver_message = ReceiverMessage.objects.filter(message_id=id, receiver_id=user_id)
+                if receiver_message:
+                    receiver_message = receiver_message[0]
+                    if receiver_message.if_report:
+                        raise serializers.ValidationError({'detail': '该消息已举报！不能重复举报！'})
+                    receiver_message.if_report = True
+                    receiver_message.save()
+                else:
+                    raise serializers.ValidationError({'detail': '消息不存在！'})
+        read_id_list = validated_data.get('read_id_list')
+        if read_id_list:
+            for id in read_id_list:
+                receiver_message = ReceiverMessage.objects.filter(message_id=id, receiver_id=user_id)
+                if receiver_message:
+                    receiver_message = receiver_message[0]
+                    if receiver_message.read_time!=None:
+                        raise serializers.ValidationError({'detail': '该消息已阅读！不能重复标记为已读！'})
+                    receiver_message.read_time=datetime.now()
+                    receiver_message.save()
+                else:
+                    raise serializers.ValidationError({'detail': '消息不存在！'})
+        no_read_id_list = validated_data.get('no_read_id_list')
+        if no_read_id_list:
+            for id in no_read_id_list:
+                receiver_message = ReceiverMessage.objects.filter(message_id=id, receiver_id=user_id)
+                if receiver_message:
+                    receiver_message = receiver_message[0]
+                    if receiver_message.read_time == None:
+                        raise serializers.ValidationError({'detail': '该消息未读！不能标记为未读！'})
+                    receiver_message.read_time = None
+                    receiver_message.save()
+                else:
+                    raise serializers.ValidationError({'detail': '消息不存在！'})
+        return {'detail': '批量操作成功！'}
+
+
+class GroupReceiverUpdateByQuerySerailizer(serializers.Serializer):
+    user_id=serializers.HiddenField(default=serializers.CurrentUserDefault())
+    delete_id_list=serializers.ListField(child=serializers.IntegerField(),required=False,allow_null=True,allow_empty=True,write_only=True,label='收件人要回收的消息的id列表',help_text='收件人要回收的消息的id列表')
+    resume_id_list=serializers.ListField(child=serializers.IntegerField(),required=False,allow_null=True,allow_empty=True,write_only=True,label='收件人要恢复的消息的id列表',help_text='收件人要恢复的消息的id列表')
+    collect_id_list=serializers.ListField(child=serializers.IntegerField(),required=False,allow_null=True,allow_empty=True,write_only=True,label='收件人要收藏的消息的id列表',help_text='收件人要收藏的消息的id列表')
+    no_collect_id_list=serializers.ListField(child=serializers.IntegerField(),required=False,allow_null=True,allow_empty=True,write_only=True,label='收件人要取消收藏的消息的id列表',help_text='收件人要取消收藏的消息的id列表')
+    report_id_list=serializers.ListField(child=serializers.IntegerField(),required=False,allow_null=True,allow_empty=True,write_only=True,label='收件人要举报的消息的id列表',help_text='收件人要举报的消息的id列表')
+    read_id_list = serializers.ListField(child=serializers.IntegerField(), required=False, allow_null=True,
+                                         allow_empty=True, write_only=True, label='收件人要标记已读的消息的id列表',
+                                         help_text='收件人要标记已读的消息的id列表')
+    no_read_id_list = serializers.ListField(child=serializers.IntegerField(), required=False, allow_null=True,
+                                            allow_empty=True, write_only=True, label='收件人要标记未读的消息的id列表',
+                                            help_text='收件人要标记未读的消息的id列表')
+    def create(self, validated_data):
+        user_id=validated_data.get('user_id')
+        delete_id_list=validated_data.get('delete_id_list')
+        if delete_id_list:
+            for id in delete_id_list:
+                receiver_message=GroupReceiverMessage.objects.filter(receiver_group__message_id=id,receiver_id=user_id)
+                if receiver_message:
+                    receiver_message=receiver_message[0]
+                    if receiver_message.if_delete:
+                        raise serializers.ValidationError({'detail':'该消息已回收！不能重复回收！'})
+                    receiver_message.if_delete=True
+                    receiver_message.save()
+                else:
+                    raise serializers.ValidationError({'detail':'消息不存在！'})
+        resume_id_list = validated_data.get('resume_id_list')
+        if resume_id_list:
+            for id in resume_id_list:
+                receiver_message = GroupReceiverMessage.objects.filter(receiver_group__message_id=id, receiver_id=user_id)
+                if receiver_message:
+                    receiver_message = receiver_message[0]
+                    if not receiver_message.if_delete:
+                        raise serializers.ValidationError({'detail': '该消息未回收！不能恢复！'})
+                    receiver_message.if_delete = False
+                    receiver_message.save()
+                else:
+                    raise serializers.ValidationError({'detail': '消息不存在！'})
+        collect_id_list=validated_data.get('collect_id_list')
+        if collect_id_list:
+            for id in collect_id_list:
+                receiver_message = GroupReceiverMessage.objects.filter(receiver_group__message_id=id,
+                                                                       receiver_id=user_id)
+                if receiver_message:
+                    receiver_message = receiver_message[0]
+                    if receiver_message.if_collect:
+                        raise serializers.ValidationError({'detail': '该消息已收藏！不能重复收藏！'})
+                    receiver_message.if_collect = True
+                    receiver_message.save()
+                else:
+                    raise serializers.ValidationError({'detail': '消息不存在！'})
+        no_collect_id_list=validated_data.get('no_collect_id_list')
+        if no_collect_id_list:
+            for id in no_collect_id_list:
+                receiver_message = GroupReceiverMessage.objects.filter(receiver_group__message_id=id,
+                                                                       receiver_id=user_id)
+                if receiver_message:
+                    receiver_message = receiver_message[0]
+                    if not receiver_message.if_collect:
+                        raise serializers.ValidationError({'detail': '该消息未收藏！不能取消收藏！'})
+                    receiver_message.if_collect = False
+                    receiver_message.save()
+                else:
+                    raise serializers.ValidationError({'detail': '消息不存在！'})
+        report_id_list = validated_data.get('report_id_list')
+        if report_id_list:
+            for id in report_id_list:
+                receiver_message = GroupReceiverMessage.objects.filter(receiver_group__message_id=id,
+                                                                       receiver_id=user_id)
+                if receiver_message:
+                    receiver_message = receiver_message[0]
+                    if receiver_message.if_report:
+                        raise serializers.ValidationError({'detail': '该消息已举报！不能重复举报！'})
+                    receiver_message.if_report = True
+                    receiver_message.save()
+                else:
+                    raise serializers.ValidationError({'detail': '消息不存在！'})
+        read_id_list = validated_data.get('read_id_list')
+        if read_id_list:
+            for id in read_id_list:
+                receiver_message = GroupReceiverMessage.objects.filter(receiver_group__message_id=id,
+                                                                       receiver_id=user_id)
+                if receiver_message:
+                    receiver_message = receiver_message[0]
+                    if receiver_message.read_time!=None:
+                        raise serializers.ValidationError({'detail': '该消息已读！不能重复标记为已读！'})
+                    receiver_message.read_time=datetime.now()
+                    receiver_message.save()
+                else:
+                    raise serializers.ValidationError({'detail': '消息不存在！'})
+        no_read_id_list = validated_data.get('no_read_id_list')
+        if no_read_id_list:
+            for id in no_read_id_list:
+                receiver_message = GroupReceiverMessage.objects.filter(receiver_group__message_id=id,
+                                                                       receiver_id=user_id)
+                if receiver_message:
+                    receiver_message = receiver_message[0]
+                    if receiver_message.read_time == None:
+                        raise serializers.ValidationError({'detail': '该消息未读！不能标记为未读！'})
+                    receiver_message.read_time = None
+                    receiver_message.save()
+                else:
+                    raise serializers.ValidationError({'detail': '消息不存在！'})
+        return {'detail': '批量操作成功！'}
+
+class SenderUpdateByQuerySerializer(serializers.Serializer):
+    user_id = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    delete_id_list = serializers.ListField(child=serializers.IntegerField(), required=False, allow_null=True,
+                                           allow_empty=True, write_only=True, label='发件人要回收的消息的id列表',
+                                           help_text='发件人要回收的消息的id列表')
+    resume_id_list = serializers.ListField(child=serializers.IntegerField(), required=False, allow_null=True,
+                                           allow_empty=True, write_only=True, label='发件人要恢复的消息的id列表',
+                                           help_text='发件人要恢复的消息的id列表')
+    collect_id_list = serializers.ListField(child=serializers.IntegerField(), required=False, allow_null=True,
+                                            allow_empty=True, write_only=True, label='发件人要收藏的消息的id列表',
+                                            help_text='发件人要收藏的消息的id列表')
+    no_collect_id_list = serializers.ListField(child=serializers.IntegerField(), required=False, allow_null=True,
+                                               allow_empty=True, write_only=True, label='发件人要取消收藏的消息的id列表',
+                                               help_text='发件人要取消收藏的消息的id列表')
+    def create(self, validated_data):
+        user_id = validated_data.get('user_id')
+        delete_id_list = validated_data.get('delete_id_list')
+        if delete_id_list:
+            for id in delete_id_list:
+                message=Message.objects.filter(id=id)
+                if message:
+                    message=message[0]
+                    if message.sender_id!=user_id:
+                        raise serializers.ValidationError({'detail':'你不能修改别人的消息！'})
+                    if message.if_delete:
+                        raise serializers.ValidationError({'detail':'该消息已回收！不要重复回收'})
+                    message.if_delete=True
+                    message.save()
+                else:
+                    raise serializers.ValidationError({'detail':'消息不存在！'})
+        resume_id_list = validated_data.get('resume_id_list')
+        if resume_id_list:
+            for id in resume_id_list:
+                message = Message.objects.filter(id=id)
+                if message:
+                    message = message[0]
+                    if message.sender_id != user_id:
+                        raise serializers.ValidationError({'detail': '你不能修改别人的消息！'})
+                    if not message.if_delete:
+                        raise serializers.ValidationError({'detail': '该消息未回收！不能恢复！'})
+                    message.if_delete = False
+                    message.save()
+                else:
+                    raise serializers.ValidationError({'detail': '消息不存在！'})
+        collect_id_list = validated_data.get('collect_id_list')
+        if collect_id_list:
+            for id in collect_id_list:
+                message = Message.objects.filter(id=id)
+                if message:
+                    message = message[0]
+                    if message.sender_id != user_id:
+                        raise serializers.ValidationError({'detail': '你不能修改别人的消息！'})
+                    if message.if_collect:
+                        raise serializers.ValidationError({'detail': '该消息已收藏！不能重复收藏！'})
+                    message.if_collect=True
+                    message.save()
+                else:
+                    raise serializers.ValidationError({'detail': '消息不存在！'})
+        no_collect_id_list = validated_data.get('no_collect_id_list')
+        if no_collect_id_list:
+            for id in resume_id_list:
+                message = Message.objects.filter(id=id)
+                if message:
+                    message = message[0]
+                    if message.sender_id != user_id:
+                        raise serializers.ValidationError({'detail': '你不能修改别人的消息！'})
+                    if not message.if_collect:
+                        raise serializers.ValidationError({'detail': '该消息未收藏！不能取消收藏！'})
+                    message.if_collect = False
+                    message.save()
+                else:
+                    raise serializers.ValidationError({'detail': '消息不存在！'})
+        return {'detail': '批量操作成功！'}
+
+
+class OneKeyToReadSerializer(serializers.Serializer):
+    user_id=serializers.HiddenField(default=serializers.CurrentUserDefault())
+    def create(self, validated_data):
+        user_id=validated_data.get('user_id')
+        ReceiverMessage.objects.filter(receiver_id=user_id,read_time=None,message__send_state=1).update(read_time=datetime.now())
+        GroupReceiverMessage.objects.filter(receiver_id=user_id,read_time=None,receiver_group__message__send_state=1).update(read_time=datetime.now())
+        return {'detail': '一键已读成功！'}

@@ -3,10 +3,12 @@ from __future__ import unicode_literals
 from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+# from haystack.utils.geo import Point
+# from haystack.utils import
 
 
 class Major(models.Model):
-    id=models.CharField(max_length=20,verbose_name='id',default='',primary_key=True)
+    # id=models.CharField(max_length=20,verbose_name='id',default='',primary_key=True)
     major_id=models.CharField(max_length=10,verbose_name=u'专业号',default='')
     post_code=models.CharField(max_length=20,verbose_name=u'表单码',default='')
     grade = models.IntegerField(verbose_name=u'年级', null=True, blank=True)
@@ -24,7 +26,6 @@ class Major(models.Model):
     minimum_graduation_credit=models.IntegerField(verbose_name=u'最低毕业学分',default=160)
     add_time = models.DateTimeField(default=datetime.now, verbose_name=u'添加时间')
     if_multiple_directions=models.BooleanField(default=False,verbose_name=u'是否有多个方向')
-
     class Meta:
         verbose_name=u'专业'
         verbose_name_plural=verbose_name
@@ -56,20 +57,21 @@ class Class(models.Model):
     post_code = models.CharField(max_length=30, verbose_name=u'表单码', default='')
     name=models.CharField(max_length=70,verbose_name=u'班级名')
     grade=models.IntegerField(verbose_name=u'年级',null=True,blank=True)
-    major=models.ForeignKey(Major,verbose_name=u'专业',null=True,blank=True,on_delete=models.CASCADE)
+    major=models.ForeignKey(Major,verbose_name=u'专业',null=True,blank=True,on_delete=models.CASCADE,related_name='cla')
     colloge=models.ForeignKey(Colloge,verbose_name=u'学院',on_delete=models.CASCADE)
     add_time = models.DateTimeField(default=datetime.now, verbose_name=u'添加时间')
     class Meta:
         verbose_name=u'班级'
         verbose_name_plural=verbose_name
     def get_student_nums(self):
-        return self.student_set.all().count()
+        return self.stu.all().count()
     get_student_nums.short_description='学生数'
     def __str__(self):
         return self.name
 
 
 class UserProfile(AbstractUser):
+    image=models.ImageField(verbose_name='头像',upload_to='uploads/%Y/%m/%d',blank=True,null=True)
     name=models.CharField(max_length=50,verbose_name=u'姓名',default='')
     gender = models.CharField(choices=(('male', u'男'), ('female', u'女')), max_length=6, default='female',verbose_name='性别',help_text='性别')
     # type=models.CharField(choices=(('student','学生'),('teacher','教师'),('admin','')))
@@ -85,15 +87,19 @@ class UserProfile(AbstractUser):
 class Student(models.Model):
     id=models.CharField(max_length=12,verbose_name=u'学号',primary_key=True,help_text='学号')
     name=models.CharField(max_length=50,verbose_name=u'姓名',default='',help_text='姓名')
-    cla=models.ForeignKey(Class,verbose_name=u'班级',null=True,blank=True,on_delete=models.CASCADE)
+    cla=models.ForeignKey(Class,verbose_name=u'班级',null=True,blank=True,on_delete=models.CASCADE,related_name='stu')
     gender=models.CharField(choices=(('male',u'男'),('female',u'女')),max_length=6,default='female',verbose_name=u'性别',help_text='性别')
     user=models.OneToOneField(UserProfile,verbose_name='用户',null=True,blank=True)
+    image = models.ImageField(verbose_name='照片', upload_to='uploads/%Y/%m/%d', blank=True, null=True)
     add_time = models.DateTimeField(default=datetime.now, verbose_name=u'添加时间')
     class Meta:
         verbose_name=u'学生'
         verbose_name_plural=verbose_name
     def __str__(self):
         return self.name
+    @property
+    def coordinates(self):
+        return self.id
 
 
 
@@ -139,8 +145,9 @@ class Teacher(models.Model):
     name=models.CharField(max_length=50,verbose_name=u'姓名')
     gender = models.CharField(choices=(('male', u'男'), ('female', u'女')), verbose_name=u'性别' ,max_length=6, default='female')
     department=models.ForeignKey(Department,verbose_name=u'部门',null=True,blank=True,on_delete=models.CASCADE)
-    user = models.OneToOneField(UserProfile, verbose_name='用户', null=True, blank=True)
+    user = models.OneToOneField(UserProfile, verbose_name='用户', null=True, blank=True,related_name='teacher')
     add_time = models.DateTimeField(default=datetime.now, verbose_name=u'添加时间')
+    image = models.ImageField(verbose_name='照片', upload_to='uploads/%Y/%m/%d', blank=True, null=True)
     class Meta:
         verbose_name=u'教师'
         verbose_name_plural=verbose_name
@@ -148,9 +155,16 @@ class Teacher(models.Model):
         return self.name
 
 
-
-
-
+class MyPassword(models.Model):
+    user=models.OneToOneField(UserProfile,verbose_name='用户',related_name='my_password',unique=True)
+    password=models.CharField(max_length=100,verbose_name='密文密码',help_text='密文密码',default='')
+    add_time=models.DateTimeField(auto_now_add=True,verbose_name='添加时间',help_text='添加时间')
+    # identity=models.CharField(choices=(('Student','学生'),('Teacher','教师')),max_length=8,verbose_name='身份',default='Student')
+    class Meta:
+        verbose_name='对称加密密码'
+        verbose_name_plural=verbose_name
+    def __str__(self):
+        return self.user.username
 
 
 

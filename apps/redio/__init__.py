@@ -1,0 +1,1 @@
+default_app_config='redio.apps.RedioConfig'

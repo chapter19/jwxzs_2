@@ -31,6 +31,7 @@ class DefGroup(models.Model):
     creater=models.ForeignKey(UserProfile,verbose_name='创建者',related_name='create_def_group')
     name=models.CharField(max_length=70,verbose_name='组名',default='')
     add_time = models.DateTimeField(verbose_name='添加时间', default=datetime.now)
+    group=models.OneToOneField(Group,verbose_name='对应的群组',blank=True,null=True,related_name='def_group')
     class Meta:
         verbose_name='自定义组'
         verbose_name_plural=verbose_name
