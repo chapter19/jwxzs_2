@@ -1,0 +1,65 @@
+{% extends 'xadmin/base_site.html' %}
+
+
+{% block content %}
+    <div>
+        <select name="departments" form="department_post_code" id="departments">
+            <option value="all">所有部门</option>
+            {% for de in department %}
+                <option value="{{ de.post_code }}">{{ de.name }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <form action="/xadmin/spider-teacher/ " method="get" id="department_post_code">
+            <input type="submit" name="开始爬取" value="开始爬取">
+            {% csrf_token %}
+        </form>
+        <div align="center"><p>{{ error }}</p></div>
+        {% if detail %}
+            <div align="center" id="detail"><p>{{ detail }}</p></div>
+        {% endif %}
+    </div>
+    <div>
+    <a href="/xadmin/spider/spiderlog/?_p_type__exact=Teacher">查看更多</a>
+        <table border="1">
+            <tbody>
+                <tr>
+                    <th>任务描述</th>
+                    <th>状态</th>
+                    <th>开始时间</th>
+                    <th>结束时间</th>
+                    <th>操作</th>
+                </tr>
+                {% for l in spider_log %}
+                    <tr>
+                        <td>{{ l.desc }}</td>
+                        <td>{{ l.get_status_display }}</td>
+                        <td>{{ l.start_time }}</td>
+                        <td>
+                            {% if l.stop_time %}
+                                {{ l.stop_time }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if l.status == 'getting' %}
+                                <a href="/stop-task/?id={{ l.id }}&url=/xadmin/spider-teacher/">终止</a>
+                            {% endif %}
+                            {% if l.status == 'error' and l.url %}
+                                <a href="{{ l.url }}">重试</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script lang="javascript">
+        go();
+        function go() {
+            deta=document.getElementById("detail");
+            if (deta){
+                window.location.href ='/xadmin/spider/spiderlogdetail/?_refresh=5';
+            }
+        }
+    </script>
+{% endblock %}

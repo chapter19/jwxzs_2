@@ -10,6 +10,7 @@ class Score(models.Model):
     # student_id=models.CharField(max_length=12,verbose_name=u'学号',default='')
     student=models.ForeignKey(Student,verbose_name=u'学生',on_delete=models.CASCADE,related_name='score')
     schedule_lesson = models.ForeignKey(ScheduleLesson, verbose_name=u'课表课程', default='',on_delete=models.CASCADE,related_name='score')
+    # lesson_type=models.CharField(max_length=30,default='专业主干',verbose_name='课程性质')
     score=models.FloatField(verbose_name=u'成绩',default=0.0,null=True,blank=True)
     standard_score=models.FloatField(verbose_name=u'标准分',default=-20.0,null=True,blank=True)
     rescore=models.FloatField(verbose_name=u'补考成绩',null=True,blank=True)

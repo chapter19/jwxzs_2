@@ -235,7 +235,7 @@ class Sess():
 
     #获取相似专业
     def get_the_similar_major(self,major_node_id):
-        cypher=""" MATCH data=(n)-[o]-(m:Major) WHERE id(n)=%d  RETURN data """ % (major_node_id)
+        cypher=""" MATCH data=(n)-[o:相似专业]-(m:Major) WHERE id(n)=%d  RETURN data """ % (major_node_id)
         post_data = {
             "statements": [{
                 "statement": cypher,

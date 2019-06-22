@@ -2,7 +2,74 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b4f22b5f-8f17-41d3-840b-f8a75f847d93" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/vccccccc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/spider/adminx.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/spider/forms.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/spider/tasks.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/update/adminx.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/update/tasks.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/extra_apps/django_celery_beat/adminx.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/extra_apps/xadmin/tasks.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/spiders/test.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/graduate_lose_efficacy.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/neo4j.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/spider_class.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/spider_colloge.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/spider_department.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/spider_major.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/spider_new_score.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/spider_schedule.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/spider_score.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/spider_student.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/spider_teacher.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/checkstudent/adminx.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/checkstudent/adminx.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/disks/adminx.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/disks/adminx.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/disks/apps.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/disks/apps.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/homeworks/adminx.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/homeworks/adminx.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/homeworks/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/homeworks/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/logs/adminx.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/logs/adminx.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/redio/adminx.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/redio/adminx.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/scores/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/scores/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/scores/serializer.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/scores/serializer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/scores/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/scores/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/semesters/adminx.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/semesters/adminx.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/semesters/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/semesters/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/subject/adminx.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/subject/adminx.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/users/adminx.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/users/adminx.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/users/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/users/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/users/serializer.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/users/serializer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/utils/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/utils/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/celerybeat-schedule.db" beforeDir="false" afterPath="$PROJECT_DIR$/celerybeat-schedule.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jwxzs_2/celery.py" beforeDir="false" afterPath="$PROJECT_DIR$/jwxzs_2/celery.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jwxzs_2/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/jwxzs_2/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/jwxzs_2/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/jwxzs_2/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neo4j/create_graph.py" beforeDir="false" afterPath="$PROJECT_DIR$/neo4j/create_graph.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/neo4j/http_api.py" beforeDir="false" afterPath="$PROJECT_DIR$/neo4j/http_api.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nohup.out" beforeDir="false" afterPath="$PROJECT_DIR$/nohup.out" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spiders/redio.py" beforeDir="false" afterPath="$PROJECT_DIR$/spiders/redio.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spiders/student_dynamic.py" beforeDir="false" afterPath="$PROJECT_DIR$/spiders/student_dynamic.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spiders/student_static.py" beforeDir="false" afterPath="$PROJECT_DIR$/spiders/student_static.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spiders/teacher_dynamic.py" beforeDir="false" afterPath="$PROJECT_DIR$/spiders/teacher_dynamic.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spiders/teacher_static.py" beforeDir="false" afterPath="$PROJECT_DIR$/spiders/teacher_static.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/test.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/whoosh_index/MAIN_8myuu6sld97jpwl1.seg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/whoosh_index/MAIN_gvoy1jqjgraatlhj.seg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/whoosh_index/MAIN_j6uuaziife8nr952.seg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/whoosh_index/MAIN_jqahzlkk7ho2yttj.seg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/whoosh_index/MAIN_keq29mujbj255m4t.seg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/whoosh_index/MAIN_ml1f0a8zkumey1m7.seg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/whoosh_index/MAIN_nj5yarrk24f0upfs.seg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/whoosh_index/MAIN_npdq34wn58uco7x0.seg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/whoosh_index/MAIN_o6ruhve3wwjtjd23.seg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/whoosh_index/MAIN_o9bhqedzonn8fxsi.seg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/whoosh_index/MAIN_rtruvrqmhzm7mztc.seg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/whoosh_index/MAIN_s3w5j3gijcge3441.seg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/whoosh_index/MAIN_ufrgnukl3cjv2dh0.seg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/whoosh_index/MAIN_v7fm1025lo0s82a0.seg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/whoosh_index/MAIN_xs5kq3tanhesqe46.seg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/whoosh_index/_MAIN_67961.toc" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -23,17 +90,17 @@
     <SUITE FILE_PATH="coverage/jwxzs_2$create_group_admin.coverage" NAME="create_group_admin Coverage Results" MODIFIED="1555766501375" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/db_tools" />
     <SUITE FILE_PATH="coverage/jwxzs_2$tests.coverage" NAME="tests Coverage Results" MODIFIED="1556636074639" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/apps/users" />
     <SUITE FILE_PATH="coverage/jwxzs_2$create_somedata.coverage" NAME="create_somedata Coverage Results" MODIFIED="1560266608828" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/db_tools" />
-    <SUITE FILE_PATH="coverage/jwxzs_2$teacher_static.coverage" NAME="teacher_static Coverage Results" MODIFIED="1560156864974" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spiders" />
+    <SUITE FILE_PATH="coverage/jwxzs_2$teacher_static.coverage" NAME="teacher_static Coverage Results" MODIFIED="1560595717639" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spiders" />
     <SUITE FILE_PATH="coverage/jwxzs_2$create_user.coverage" NAME="create_user Coverage Results" MODIFIED="1556639670762" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/db_tools" />
     <SUITE FILE_PATH="coverage/jwxzs_2$update_lesson.coverage" NAME="update_lesson Coverage Results" MODIFIED="1557336296967" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/db_tools" />
     <SUITE FILE_PATH="coverage/jwxzs_2$address.coverage" NAME="address Coverage Results" MODIFIED="1556967318190" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/apps/utils" />
     <SUITE FILE_PATH="coverage/jwxzs_2$settings.coverage" NAME="settings Coverage Results" MODIFIED="1557187365350" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/jwxzs_2" />
-    <SUITE FILE_PATH="coverage/jwxzs_2$student_static.coverage" NAME="student_static Coverage Results" MODIFIED="1560156794754" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spiders" />
     <SUITE FILE_PATH="coverage/jwxzs_2$student_dynamic.coverage" NAME="student_dynamic Coverage Results" MODIFIED="1560170311464" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spiders" />
+    <SUITE FILE_PATH="coverage/jwxzs_2$student_static.coverage" NAME="student_static Coverage Results" MODIFIED="1560498174063" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spiders" />
     <SUITE FILE_PATH="coverage/jwxzs_2$ip.coverage" NAME="ip Coverage Results" MODIFIED="1556962224725" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../jwxzs/someTools" />
     <SUITE FILE_PATH="coverage/jwxzs_2$disk_file_extension.coverage" NAME="disk_file_extension Coverage Results" MODIFIED="1559981714158" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/db_tools" />
-    <SUITE FILE_PATH="coverage/jwxzs_2$test.coverage" NAME="test Coverage Results" MODIFIED="1557190483174" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/apps/utils" />
     <SUITE FILE_PATH="coverage/jwxzs_2$password.coverage" NAME="password Coverage Results" MODIFIED="1560300786594" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/apps/utils" />
+    <SUITE FILE_PATH="coverage/jwxzs_2$test.coverage" NAME="test Coverage Results" MODIFIED="1560598644704" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/spiders" />
     <SUITE FILE_PATH="coverage/jwxzs_2$interface.coverage" NAME="interface Coverage Results" MODIFIED="1556636154485" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/db_tools" />
   </component>
   <component name="DatabaseView">
@@ -57,16 +124,16 @@
     <session id="-2108720794">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="38" />
+          <entry key="project.closed" value="43" />
           <entry key="project.open.time.0" value="3" />
-          <entry key="project.open.time.1" value="7" />
+          <entry key="project.open.time.1" value="8" />
           <entry key="project.open.time.4" value="4" />
           <entry key="project.open.time.5" value="7" />
-          <entry key="project.open.time.6" value="7" />
-          <entry key="project.open.time.7" value="8" />
-          <entry key="project.open.time.8" value="3" />
+          <entry key="project.open.time.6" value="8" />
+          <entry key="project.open.time.7" value="10" />
+          <entry key="project.open.time.8" value="4" />
           <entry key="project.open.time.9" value="2" />
-          <entry key="project.opened" value="41" />
+          <entry key="project.opened" value="46" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -75,13 +142,13 @@
           <entry key="css" value="1" />
           <entry key="db" value="1" />
           <entry key="gitignore" value="1" />
-          <entry key="html" value="10" />
+          <entry key="html" value="49" />
           <entry key="jpg" value="19" />
           <entry key="js" value="2" />
           <entry key="md" value="4" />
           <entry key="out" value="1" />
           <entry key="png" value="3" />
-          <entry key="py" value="2159" />
+          <entry key="py" value="2359" />
           <entry key="pyi" value="1" />
           <entry key="sh" value="2" />
           <entry key="txt" value="3" />
@@ -91,33 +158,34 @@
         <counts>
           <entry key="Bash" value="2" />
           <entry key="CSS" value="1" />
-          <entry key="HTML" value="10" />
+          <entry key="HTML" value="49" />
           <entry key="Image" value="22" />
           <entry key="JavaScript" value="2" />
           <entry key="Markdown" value="4" />
           <entry key="PLAIN_TEXT" value="7" />
-          <entry key="Python" value="2159" />
+          <entry key="Python" value="2359" />
           <entry key="PythonStub" value="1" />
           <entry key="SQL" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="dummy" value="34" />
-          <entry key="html" value="12" />
+          <entry key="Django Console" value="7" />
+          <entry key="dummy" value="35" />
+          <entry key="html" value="1968" />
           <entry key="md" value="249" />
-          <entry key="py" value="233369" />
-          <entry key="py@jwxzs_2" value="903" />
+          <entry key="py" value="249727" />
+          <entry key="py@jwxzs_2" value="1091" />
           <entry key="txt" value="27" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="CommandLine" value="858" />
-          <entry key="HTML" value="12" />
+          <entry key="CommandLine" value="1044" />
+          <entry key="HTML" value="1968" />
           <entry key="Markdown" value="249" />
-          <entry key="PLAIN_TEXT" value="106" />
-          <entry key="Python" value="233369" />
+          <entry key="PLAIN_TEXT" value="109" />
+          <entry key="Python" value="249734" />
         </counts>
       </usages-collector>
     </session>
@@ -127,104 +195,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/apps/message/adminx.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="54" selection-start-line="54" selection-end-line="54" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/extra_apps/xadmin/views/edit.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="209">
-              <caret line="291" selection-start-line="291" selection-end-line="291" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/apps/lessons/adminx.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="28" column="117" selection-start-line="28" selection-start-column="117" selection-end-line="28" selection-end-column="117" />
-              <folding>
-                <element signature="e#0#13#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/apps/scores/adminx.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="128">
-              <caret line="12" column="102" selection-start-line="12" selection-start-column="102" selection-end-line="12" selection-end-column="102" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/apps/disks/serializers.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="76">
-              <caret line="1412" column="59" selection-start-line="1412" selection-start-column="59" selection-end-line="1412" selection-end-column="59" />
-              <folding>
-                <marker date="1560306179876" expanded="true" signature="71784:71847" ph="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$USER_HOME$/.virtualenvs/jwxzs_3.6/lib/python3.6/site-packages/django/utils/autoreload.py">
+        <entry file="file://$PROJECT_DIR$/jwxzs_2/settings.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="209">
-              <caret line="206" selection-start-line="206" selection-end-line="206" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/apps/disks/models.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="168">
-              <caret line="232" column="4" selection-start-line="232" selection-start-column="4" selection-end-line="232" selection-end-column="4" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/apps/disks/views.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="248">
-              <caret line="261" column="42" selection-start-line="261" selection-start-column="42" selection-end-line="261" selection-end-column="42" />
-              <folding>
-                <element signature="e#0#78#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/apps/utils/password.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="64">
-              <caret line="4" column="54" selection-start-line="4" selection-start-column="54" selection-end-line="4" selection-end-column="54" />
-              <folding>
-                <element signature="e#23#36#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/apps/groups/models.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="48">
-              <caret line="6" column="14" selection-start-line="6" selection-start-column="4" selection-end-line="6" selection-end-column="14" />
+            <state relative-caret-position="301">
+              <caret line="333" column="27" lean-forward="true" selection-start-line="333" selection-start-column="27" selection-end-line="333" selection-end-column="27" />
             </state>
           </provider>
         </entry>
@@ -234,27 +209,18 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="HTML File" />
         <option value="Setup Script" />
         <option value="Python Script" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>权力</find>
-      <find>update_time</find>
-      <find>set</find>
-      <find>graph.create</find>
-      <find>StemmingAnalyzer</find>
-      <find>ChineseAnalyser</find>
-      <find>ChineseAnalyzer</find>
-      <find>proj</find>
       <find>Log</find>
       <find>from rest_framework_extensions.cache.mixins import CacheResponseMixin</find>
       <find>MY_PASSWORD</find>
       <find>Semester</find>
-      <find>pymongo</find>
       <find>status_code</find>
       <find>mongo</find>
       <find>pre</find>
@@ -272,6 +238,15 @@
       <find>HomeworkScore</find>
       <find>TeacherScheduleViewSet</find>
       <find>.label</find>
+      <find>re</find>
+      <find>re.scor</find>
+      <find>re.lesson_credit</find>
+      <find>schedule_lesson_create_score</find>
+      <find>get_schedule_student</find>
+      <find>revoke</find>
+      <find>th</find>
+      <find>pymongo</find>
+      <find>create_maj_less_rela</find>
     </findStrings>
     <replaceStrings>
       <replace>on_delete=models.CASCADE</replace>
@@ -282,6 +257,9 @@
       <replace>ChineseAnalyser</replace>
       <replace>ChineseAnalyzer</replace>
       <replace>MY_WORD</replace>
+      <replace>obj.</replace>
+      <replace>obj.schedule_lesson.lesson.credit</replace>
+      <replace>td</replace>
     </replaceStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/apps/homeworks</dir>
@@ -293,57 +271,57 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/neo4j/http_api.py" />
-        <option value="$PROJECT_DIR$/apps/friends/filters.py" />
-        <option value="$PROJECT_DIR$/apps/friends/serializers.py" />
-        <option value="$PROJECT_DIR$/apps/checkstudent/views.py" />
-        <option value="$PROJECT_DIR$/apps/users/tasks.py" />
-        <option value="$PROJECT_DIR$/apps/homeworks/filters.py" />
-        <option value="$PROJECT_DIR$/apps/homeworks/tasks.py" />
-        <option value="$PROJECT_DIR$/apps/homeworks/serializers.py" />
-        <option value="$PROJECT_DIR$/apps/homeworks/views.py" />
-        <option value="$PROJECT_DIR$/db_tools/disk_file_extension.py" />
-        <option value="$PROJECT_DIR$/apps/disks/adminx.py" />
-        <option value="$PROJECT_DIR$/apps/homeworks/models.py" />
+        <option value="$PROJECT_DIR$/apps/spider/forms.py" />
+        <option value="$PROJECT_DIR$/apps/utils/settings.py" />
+        <option value="$PROJECT_DIR$/apps/spider/apps.py" />
+        <option value="$PROJECT_DIR$/apps/spider/__init__.py" />
+        <option value="$PROJECT_DIR$/templates/spider_student.py" />
+        <option value="$PROJECT_DIR$/templates/spider-department.html" />
+        <option value="$PROJECT_DIR$/spiders/test.py" />
+        <option value="$USER_HOME$/.virtualenvs/jwxzs_3.6/lib/python3.6/site-packages/django/core/management/base.py" />
+        <option value="$PROJECT_DIR$/jwxzs_2/urls.py" />
+        <option value="$PROJECT_DIR$/templates/spider_colloge.html" />
+        <option value="$PROJECT_DIR$/templates/spider_class.html" />
+        <option value="$PROJECT_DIR$/templates/spider_department.html" />
+        <option value="$PROJECT_DIR$/templates/spider_new_score.html" />
+        <option value="$PROJECT_DIR$/templates/spider_schedule.html" />
+        <option value="$PROJECT_DIR$/templates/spider_score.html" />
+        <option value="$PROJECT_DIR$/templates/spider_student.html" />
+        <option value="$PROJECT_DIR$/templates/spider_teacher.html" />
         <option value="$PROJECT_DIR$/apps/homeworks/adminx.py" />
-        <option value="$PROJECT_DIR$/apps/message/models.py" />
-        <option value="$PROJECT_DIR$/apps/message/views.py" />
-        <option value="$PROJECT_DIR$/apps/message/serializers.py" />
-        <option value="$PROJECT_DIR$/apps/users/filters.py" />
-        <option value="$PROJECT_DIR$/apps/groups/models.py" />
-        <option value="$PROJECT_DIR$/apps/groups/filters.py" />
+        <option value="$PROJECT_DIR$/apps/redio/adminx.py" />
+        <option value="$PROJECT_DIR$/apps/checkstudent/adminx.py" />
+        <option value="$PROJECT_DIR$/apps/disks/adminx.py" />
+        <option value="$PROJECT_DIR$/apps/logs/adminx.py" />
+        <option value="$PROJECT_DIR$/apps/subject/adminx.py" />
+        <option value="$PROJECT_DIR$/apps/homeworks/models.py" />
         <option value="$PROJECT_DIR$/apps/users/serializer.py" />
-        <option value="$PROJECT_DIR$/apps/lessons/models.py" />
-        <option value="$PROJECT_DIR$/apps/friends/views.py" />
-        <option value="$PROJECT_DIR$/apps/users/views.py" />
-        <option value="$PROJECT_DIR$/apps/message/filters.py" />
-        <option value="$PROJECT_DIR$/apps/groups/views.py" />
-        <option value="$PROJECT_DIR$/apps/groups/serializers.py" />
-        <option value="$PROJECT_DIR$/jwxzs_2/settings.py" />
-        <option value="$PROJECT_DIR$/spiders/student_static.py" />
+        <option value="$PROJECT_DIR$/apps/users/adminx.py" />
+        <option value="$PROJECT_DIR$/apps/semesters/adminx.py" />
+        <option value="$PROJECT_DIR$/apps/disks/apps.py" />
+        <option value="$PROJECT_DIR$/apps/disks/serializers.py" />
+        <option value="$PROJECT_DIR$/neo4j/http_api.py" />
+        <option value="$PROJECT_DIR$/spiders/redio.py" />
+        <option value="$PROJECT_DIR$/spiders/student_dynamic.py" />
         <option value="$PROJECT_DIR$/spiders/teacher_dynamic.py" />
         <option value="$PROJECT_DIR$/spiders/teacher_static.py" />
+        <option value="$PROJECT_DIR$/apps/update/models.py" />
+        <option value="$PROJECT_DIR$/templates/graduate_lose_efficacy.html" />
         <option value="$PROJECT_DIR$/apps/users/models.py" />
-        <option value="$PROJECT_DIR$/apps/utils/settings.py" />
-        <option value="$PROJECT_DIR$/spiders/redio.py" />
-        <option value="$PROJECT_DIR$/apps/scores/models.py" />
-        <option value="$PROJECT_DIR$/spiders/student_dynamic.py" />
-        <option value="$PROJECT_DIR$/apps/scores/views.py" />
-        <option value="$PROJECT_DIR$/jwxzs_2/urls.py" />
-        <option value="$PROJECT_DIR$/apps/scores/serializer.py" />
-        <option value="$PROJECT_DIR$/apps/lessons/views.py" />
-        <option value="$PROJECT_DIR$/apps/lessons/serializer.py" />
-        <option value="$PROJECT_DIR$/apps/lessons/filters.py" />
-        <option value="$PROJECT_DIR$/apps/disks/models.py" />
-        <option value="$PROJECT_DIR$/apps/disks/filters.py" />
-        <option value="$PROJECT_DIR$/db_tools/create_somedata.py" />
-        <option value="$PROJECT_DIR$/apps/message/adminx.py" />
-        <option value="$PROJECT_DIR$/apps/lessons/adminx.py" />
-        <option value="$PROJECT_DIR$/apps/scores/adminx.py" />
-        <option value="$PROJECT_DIR$/apps/utils/password.py" />
-        <option value="$PROJECT_DIR$/apps/utils/aes.py" />
-        <option value="$PROJECT_DIR$/apps/disks/views.py" />
-        <option value="$PROJECT_DIR$/apps/disks/serializers.py" />
+        <option value="$PROJECT_DIR$/neo4j/create_graph.py" />
+        <option value="$PROJECT_DIR$/apps/update/tasks.py" />
+        <option value="$PROJECT_DIR$/jwxzs_2/celery.py" />
+        <option value="$PROJECT_DIR$/templates/neo4j.html" />
+        <option value="$PROJECT_DIR$/apps/spider/models.py" />
+        <option value="$PROJECT_DIR$/spiders/student_static.py" />
+        <option value="$PROJECT_DIR$/apps/spider/tasks.py" />
+        <option value="$PROJECT_DIR$/templates/spider_major.html" />
+        <option value="$PROJECT_DIR$/apps/spider/views.py" />
+        <option value="$PROJECT_DIR$/apps/update/apps.py" />
+        <option value="$PROJECT_DIR$/apps/update/__init__.py" />
+        <option value="$PROJECT_DIR$/apps/update/adminx.py" />
+        <option value="$PROJECT_DIR$/apps/spider/adminx.py" />
+        <option value="$PROJECT_DIR$/jwxzs_2/settings.py" />
       </list>
     </option>
   </component>
@@ -382,6 +360,17 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope">
+        <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
+          <expand>
+            <path>
+              <item name="jwxzs_2" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -397,58 +386,16 @@
             <path>
               <item name="jwxzs_2" type="b2602c69:ProjectViewProjectNode" />
               <item name="jwxzs_2" type="462c0819:PsiDirectoryNode" />
-              <item name="apps" type="462c0819:PsiDirectoryNode" />
-              <item name="disks" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="jwxzs_2" type="b2602c69:ProjectViewProjectNode" />
-              <item name="jwxzs_2" type="462c0819:PsiDirectoryNode" />
-              <item name="apps" type="462c0819:PsiDirectoryNode" />
-              <item name="message" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="jwxzs_2" type="b2602c69:ProjectViewProjectNode" />
-              <item name="jwxzs_2" type="462c0819:PsiDirectoryNode" />
-              <item name="apps" type="462c0819:PsiDirectoryNode" />
-              <item name="scores" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="jwxzs_2" type="b2602c69:ProjectViewProjectNode" />
-              <item name="jwxzs_2" type="462c0819:PsiDirectoryNode" />
-              <item name="apps" type="462c0819:PsiDirectoryNode" />
-              <item name="users" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="jwxzs_2" type="b2602c69:ProjectViewProjectNode" />
-              <item name="jwxzs_2" type="462c0819:PsiDirectoryNode" />
-              <item name="apps" type="462c0819:PsiDirectoryNode" />
-              <item name="utils" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="jwxzs_2" type="b2602c69:ProjectViewProjectNode" />
-              <item name="jwxzs_2" type="462c0819:PsiDirectoryNode" />
-              <item name="db_tools" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="jwxzs_2" type="b2602c69:ProjectViewProjectNode" />
-              <item name="jwxzs_2" type="462c0819:PsiDirectoryNode" />
               <item name="jwxzs_2" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="jwxzs_2" type="b2602c69:ProjectViewProjectNode" />
               <item name="jwxzs_2" type="462c0819:PsiDirectoryNode" />
-              <item name="spiders" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
             </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="Scope">
-        <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
-          <expand>
             <path>
-              <item name="jwxzs_2" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="jwxzs_2" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
             </path>
           </expand>
           <select />
@@ -458,23 +405,24 @@
   </component>
   <component name="PropertiesComponent">
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
-    <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///Users/vccccccc/PycharmProjects/jwxzs_2/media/thumbnail/default/other_default.png" />
+    <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///Users/vccccccc/PycharmProjects/jwxzs_2/apps/semesters/models.py" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="fileTemplates" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/apps" />
+      <recent name="$PROJECT_DIR$/extra_apps" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/media/thumbnail/default" />
       <recent name="$PROJECT_DIR$/extra_apps" />
       <recent name="$USER_HOME$/.virtualenvs/jwxzs_3.6/lib/python3.6/site-packages/haystack/backends" />
       <recent name="$USER_HOME$/.virtualenvs/jwxzs_3.6/lib/python3.6/site-packages/haystack" />
       <recent name="$PROJECT_DIR$/extra apps/haystack" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/apps" />
-      <recent name="$PROJECT_DIR$/extra_apps" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -489,7 +437,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.aes">
+  <component name="RunManager" selected="Django server.jwxzs_2">
     <configuration name="aes" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="jwxzs_2" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -504,28 +452,6 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/apps/utils/aes.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="create_somedata" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="jwxzs_2" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/db_tools" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/db_tools/create_somedata.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -556,7 +482,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="student_dynamic" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="student_static" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="jwxzs_2" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -569,7 +495,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/spiders/student_dynamic.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/spiders/student_static.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -592,6 +518,28 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/spiders/teacher_static.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="jwxzs_2" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/spiders" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/spiders/test.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -626,19 +574,19 @@
     </configuration>
     <list>
       <item itemvalue="Django server.jwxzs_2" />
-      <item itemvalue="Python.student_dynamic" />
-      <item itemvalue="Python.teacher_static" />
-      <item itemvalue="Python.create_somedata" />
       <item itemvalue="Python.password" />
       <item itemvalue="Python.aes" />
+      <item itemvalue="Python.student_static" />
+      <item itemvalue="Python.teacher_static" />
+      <item itemvalue="Python.test" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.test" />
+        <item itemvalue="Python.teacher_static" />
+        <item itemvalue="Python.student_static" />
         <item itemvalue="Python.aes" />
         <item itemvalue="Python.password" />
-        <item itemvalue="Python.create_somedata" />
-        <item itemvalue="Python.student_dynamic" />
-        <item itemvalue="Python.teacher_static" />
       </list>
     </recent_temporary>
   </component>
@@ -668,23 +616,23 @@
     <frame x="0" y="0" width="1680" height="1050" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49760765" visible="true" weight="0.15628816" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49760765" visible="true" weight="0.16769041" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" sideWeight="0.50239235" side_tool="true" weight="0.27501574" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32959184" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4884005" weight="0.34591836" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.4932845" visible="true" weight="0.33367348" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.489011" weight="0.34591836" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.48779" visible="true" weight="0.33265308" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32857144" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50793654" side_tool="true" weight="0.35408163" />
-      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.4920635" weight="0.35408163" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5110565" side_tool="true" weight="0.39081633" />
+      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.491453" weight="0.37040818" />
       <window_info anchor="bottom" id="Python Console" order="12" sideWeight="0.4981685" weight="0.32857144" />
-      <window_info anchor="bottom" id="manage.py@jwxzs_2" order="13" sideWeight="0.49073172" weight="0.39081633" />
+      <window_info anchor="bottom" id="manage.py@jwxzs_2" order="13" sideWeight="0.4889435" weight="0.39081633" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -692,6 +640,7 @@
       <window_info anchor="right" id="R Graphics" order="4" />
       <window_info anchor="right" id="R Packages" order="5" weight="0.32976714" />
       <window_info anchor="right" id="Database" order="6" weight="0.32976714" />
+      <window_info anchor="right" id="Call Graph" order="7" side_tool="true" weight="0.32985258" />
     </layout>
     <layout-to-restore>
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49760765" visible="true" weight="0.21489622" />
@@ -766,7 +715,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/spiders/redio.py</url>
-          <line>309</line>
+          <line>308</line>
           <option name="timeStamp" value="76" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -781,12 +730,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/spiders/student_static.py</url>
-          <line>502</line>
-          <option name="timeStamp" value="91" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/spiders/student_static.py</url>
-          <line>537</line>
+          <line>646</line>
           <option name="timeStamp" value="92" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -821,7 +765,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/apps/scores/serializer.py</url>
-          <line>64</line>
+          <line>152</line>
           <option name="timeStamp" value="121" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -846,11 +790,6 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/apps/disks/serializers.py</url>
-          <line>1610</line>
-          <option name="timeStamp" value="145" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/apps/disks/serializers.py</url>
           <line>800</line>
           <option name="timeStamp" value="153" />
         </line-breakpoint>
@@ -858,16 +797,6 @@
           <url>file://$PROJECT_DIR$/apps/users/tasks.py</url>
           <line>139</line>
           <option name="timeStamp" value="156" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/spiders/student_static.py</url>
-          <line>120</line>
-          <option name="timeStamp" value="159" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/spiders/student_static.py</url>
-          <line>58</line>
-          <option name="timeStamp" value="160" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/apps/users/tasks.py</url>
@@ -894,403 +823,425 @@
           <line>1463</line>
           <option name="timeStamp" value="179" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/apps/scores/views.py</url>
+          <line>32</line>
+          <option name="timeStamp" value="180" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/spiders/teacher_static.py</url>
+          <line>718</line>
+          <option name="timeStamp" value="190" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/apps/spider/views.py</url>
+          <line>582</line>
+          <option name="timeStamp" value="193" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/apps/disks/serializers.py</url>
+          <line>1625</line>
+          <option name="timeStamp" value="194" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/media/imgs/teacher/000006.jpg">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/utils/settings.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="224">
-          <caret line="14" selection-start-line="14" selection-end-line="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spiders/student_static.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17568">
-          <caret line="1098" column="17" selection-start-line="1098" selection-start-column="17" selection-end-line="1098" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spiders/redio.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="266">
-          <caret line="326" lean-forward="true" selection-start-line="326" selection-end-line="326" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/scores/serializer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="118">
-          <caret line="35" lean-forward="true" selection-start-line="35" selection-end-line="35" />
-          <folding>
-            <element signature="e#23#61#0" expanded="true" />
-            <marker date="1560172314122" expanded="true" signature="3031:4112" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/lessons/filters.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="192">
-          <caret line="14" column="16" lean-forward="true" selection-start-line="14" selection-start-column="16" selection-end-line="14" selection-end-column="16" />
-          <folding>
-            <marker date="1560175154827" expanded="true" signature="1996:2468" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/lessons/serializer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="482">
-          <caret line="64" column="30" selection-start-line="64" selection-start-column="30" selection-end-line="64" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/lessons/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
-          <caret line="173" column="37" selection-start-line="173" selection-start-column="37" selection-end-line="173" selection-end-column="37" />
-          <folding>
-            <element signature="e#24#64#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/lessons/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="449">
-          <caret line="58" column="14" selection-start-line="58" selection-start-column="6" selection-end-line="58" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/scores/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="640">
-          <caret line="40" column="47" selection-start-line="40" selection-start-column="47" selection-end-line="40" selection-end-column="47" />
-          <folding>
-            <element signature="e#22#61#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spiders/student_dynamic.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="352">
-          <caret line="641" column="21" selection-start-line="641" selection-start-column="8" selection-end-line="641" selection-end-column="21" />
-          <folding>
-            <marker date="1560170293711" expanded="true" signature="6521:9745" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/scores/filters.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="20" column="35" selection-start-line="20" selection-start-column="17" selection-end-line="20" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/redio/tasks.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="116">
-          <caret line="12" column="18" selection-start-line="12" selection-start-column="18" selection-end-line="12" selection-end-column="18" />
-          <folding>
-            <element signature="e#23#53#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/logs/serializers.py">
+    <entry file="file://$PROJECT_DIR$/apps/lessons/adminx.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="208">
-          <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
+          <caret line="13" column="27" selection-start-line="13" selection-start-column="4" selection-end-line="13" selection-end-column="27" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/logs/views.py">
+    <entry file="file://$PROJECT_DIR$/apps/homeworks/adminx.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="33" lean-forward="true" selection-start-line="33" selection-end-line="33" />
+        <state relative-caret-position="407">
+          <caret line="170" column="29" selection-start-line="170" selection-start-column="4" selection-end-line="170" selection-end-column="29" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/logs/models.py">
+    <entry file="file://$PROJECT_DIR$/apps/redio/adminx.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="192">
-          <caret line="12" column="132" selection-start-line="12" selection-start-column="55" selection-end-line="12" selection-end-column="132" />
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="112">
+          <caret line="8" column="14" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="14" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/logs/filters.py">
+    <entry file="file://$PROJECT_DIR$/apps/checkstudent/adminx.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="12" column="62" selection-start-line="12" selection-start-column="55" selection-end-line="12" selection-end-column="62" />
+        <state relative-caret-position="256">
+          <caret line="18" column="29" selection-start-line="18" selection-start-column="29" selection-end-line="18" selection-end-column="29" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/redio/filters.py">
+    <entry file="file://$PROJECT_DIR$/apps/subject/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="12" column="37" selection-start-line="12" selection-start-column="37" selection-end-line="12" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/jwxzs_2/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="498">
-          <caret line="78" column="38" selection-start-line="78" selection-start-column="38" selection-end-line="78" selection-end-column="38" />
-          <folding>
-            <element signature="e#719#759#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Downloads/kNN.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4369">
-          <caret line="30" column="15" lean-forward="true" selection-start-line="30" selection-start-column="15" selection-end-line="30" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/db_tools/lesson_lable.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-19" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/db_tools/create_group_admin.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.virtualenvs/jwxzs_3.6/lib/python3.6/site-packages/rest_framework/mixins.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="560">
-          <caret line="39" selection-start-line="39" selection-end-line="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/disks/filters.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="52">
-          <caret line="13" column="8" selection-start-line="13" selection-start-column="8" selection-end-line="13" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/redio/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="159">
-          <caret line="32" column="26" selection-start-line="32" selection-start-column="26" selection-end-line="32" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/db_tools/create_somedata.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="67" column="21" selection-start-line="67" selection-start-column="21" selection-end-line="67" selection-end-column="21" />
-          <folding>
-            <marker date="1560266604236" expanded="true" signature="243:248" ph="..." />
-            <marker date="1560266604236" expanded="true" signature="1184:2791" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/message/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="352">
-          <caret line="79" column="30" lean-forward="true" selection-start-line="79" selection-start-column="30" selection-end-line="79" selection-end-column="30" />
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/message/serializers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3971">
-          <caret line="22" selection-start-line="22" selection-end-line="22" />
-          <folding>
-            <element signature="e#22#60#0" expanded="true" />
-            <marker date="1560083318347" expanded="true" signature="18325:18593" ph="..." />
-            <marker date="1560083318347" expanded="true" signature="31536:31537" ph="..." />
-            <marker date="1560083318347" expanded="true" signature="35752:35757" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/groups/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="48">
-          <caret line="6" column="14" selection-start-line="6" selection-start-column="4" selection-end-line="6" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/scores/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="179">
-          <caret line="63" column="30" lean-forward="true" selection-start-line="63" selection-start-column="30" selection-end-line="63" selection-end-column="30" />
-          <folding>
-            <element signature="e#24#57#0" expanded="true" />
-            <marker date="1560172196871" expanded="true" signature="6750:6887" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/utils/password.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="64">
-          <caret line="4" column="54" selection-start-line="4" selection-start-column="54" selection-end-line="4" selection-end-column="54" />
-          <folding>
-            <element signature="e#23#36#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/users/apps.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/users/filters.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/users/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="326">
-          <caret line="102" lean-forward="true" selection-start-line="102" selection-end-line="102" />
-        </state>
+        <state relative-caret-position="-57" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/apps/users/adminx.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="416">
-          <caret line="91" lean-forward="true" selection-start-line="91" selection-end-line="91" />
+        <state relative-caret-position="134">
+          <caret line="143" lean-forward="true" selection-start-line="143" selection-end-line="143" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/users/admin.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/users/tasks.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="344">
-          <caret line="149" column="18" selection-start-line="149" selection-start-column="18" selection-end-line="149" selection-end-column="18" />
-          <folding>
-            <element signature="e#22#52#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/users/tests.py">
-      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/apps/users/serializer.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="291">
-          <caret line="94" column="23" lean-forward="true" selection-start-line="94" selection-start-column="23" selection-end-line="94" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/users/search_indexes.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
+        <state relative-caret-position="290">
+          <caret line="89" column="28" lean-forward="true" selection-start-line="89" selection-start-column="28" selection-end-line="89" selection-end-column="28" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/apps/users/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="214">
-          <caret line="84" column="28" selection-start-line="84" selection-start-column="28" selection-end-line="84" selection-end-column="28" />
+        <state relative-caret-position="415">
+          <caret line="310" column="22" selection-start-line="310" selection-start-column="22" selection-end-line="310" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/groups/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/graph/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
           <folding>
-            <element signature="e#22#75#0" expanded="true" />
-            <marker date="1560131647163" expanded="true" signature="11300:11443" ph="..." />
+            <element signature="e#0#35#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/utils/aes.py">
+    <entry file="file://$PROJECT_DIR$/neo4j/http_api.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="502">
-          <caret line="46" lean-forward="true" selection-start-line="46" selection-end-line="46" />
+        <state relative-caret-position="538">
+          <caret line="243" column="9" lean-forward="true" selection-start-line="243" selection-start-column="9" selection-end-line="243" selection-end-column="9" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/message/adminx.py">
+    <entry file="file://$PROJECT_DIR$/apps/graph/serializers.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="54" selection-start-line="54" selection-end-line="54" />
+        <state relative-caret-position="305">
+          <caret line="56" column="25" selection-start-line="56" selection-start-column="25" selection-end-line="56" selection-end-column="25" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/extra_apps/xadmin/views/edit.py">
+    <entry file="file://$PROJECT_DIR$/apps/disks/serializers.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="291" selection-start-line="291" selection-end-line="291" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.virtualenvs/jwxzs_3.6/lib/python3.6/site-packages/rest_framework/serializers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="213" selection-start-line="213" selection-end-line="213" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/lessons/adminx.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="28" column="117" selection-start-line="28" selection-start-column="117" selection-end-line="28" selection-end-column="117" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apps/scores/adminx.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="128">
-          <caret line="12" column="102" selection-start-line="12" selection-start-column="102" selection-end-line="12" selection-end-column="102" />
+        <state relative-caret-position="280">
+          <caret line="1627" column="28" lean-forward="true" selection-start-line="1627" selection-start-column="28" selection-end-line="1627" selection-end-column="28" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/apps/disks/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="248">
-          <caret line="261" column="42" selection-start-line="261" selection-start-column="42" selection-end-line="261" selection-end-column="42" />
+        <state relative-caret-position="531">
+          <caret line="97" column="30" selection-start-line="97" selection-start-column="30" selection-end-line="97" selection-end-column="30" />
           <folding>
             <element signature="e#0#78#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/disks/models.py">
+    <entry file="file://$PROJECT_DIR$/apps/disks/apps.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="232" column="4" selection-start-line="232" selection-start-column="4" selection-end-line="232" selection-end-column="4" />
+        <state relative-caret-position="80">
+          <caret line="5" column="23" selection-start-line="5" selection-start-column="23" selection-end-line="5" selection-end-column="23" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/disks/serializers.py">
+    <entry file="file://$PROJECT_DIR$/apps/semesters/adminx.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="76">
-          <caret line="1412" column="59" selection-start-line="1412" selection-start-column="59" selection-end-line="1412" selection-end-column="59" />
+        <state relative-caret-position="544">
+          <caret line="35" column="29" selection-start-line="35" selection-start-column="29" selection-end-line="35" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spiders/get_cap.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
           <folding>
-            <marker date="1560306179876" expanded="true" signature="71784:71847" ph="..." />
+            <element signature="e#36#51#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/.virtualenvs/jwxzs_3.6/lib/python3.6/site-packages/django/utils/autoreload.py">
+    <entry file="file://$PROJECT_DIR$/spiders/student_dynamic.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1920">
+          <caret line="120" column="25" lean-forward="true" selection-start-line="43" selection-start-column="14" selection-end-line="120" selection-end-column="25" />
+          <folding>
+            <element signature="e#202#248#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spiders/subject_system.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spiders/teacher_dynamic.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-894">
+          <caret line="121" lean-forward="true" selection-start-line="121" selection-end-line="121" />
+          <folding>
+            <element signature="e#149#198#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.virtualenvs/jwxzs_3.6/lib/python3.6/copyreg.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../celery_test/celery_test/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="367">
+          <caret line="81" column="5" selection-start-line="78" selection-start-column="4" selection-end-line="81" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spiders/redio.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-4270">
+          <caret line="41" selection-start-line="41" selection-end-line="118" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spiders/teacher_static.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="154">
+          <caret line="881" column="30" lean-forward="true" selection-start-line="881" selection-start-column="30" selection-end-line="881" selection-end-column="30" />
+          <folding>
+            <element signature="e#149#198#0" expanded="true" />
+            <marker date="1561092354134" expanded="true" signature="71583:71766" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jwxzs_2/wsgi.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/spider/forms.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/spider_class.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-682">
+          <caret selection-end-line="71" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jwxzs_2/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="187" selection-start-line="187" selection-end-line="187" />
+          <folding>
+            <element signature="e#719#759#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/extra_apps/xadmin/sites.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="202">
+          <caret line="318" selection-start-line="318" selection-end-line="318" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/update/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="224">
+          <caret line="14" column="45" selection-start-line="14" selection-start-column="37" selection-end-line="14" selection-end-column="45" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.virtualenvs/jwxzs_3.6/lib/python3.6/site-packages/django/apps/registry.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="209">
-          <caret line="206" selection-start-line="206" selection-end-line="206" />
+          <caret line="124" selection-start-line="124" selection-end-line="124" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/neo4j/create_graph.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-6586">
+          <caret line="7" column="16" lean-forward="true" selection-start-line="7" selection-start-column="16" selection-end-line="7" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/update/tasks.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="178">
+          <caret line="36" column="16" selection-start-line="36" selection-start-column="4" selection-end-line="36" selection-end-column="16" />
+          <folding>
+            <element signature="e#22#52#0" expanded="true" />
+            <marker date="1561184556468" expanded="true" signature="428:433" ph="..." />
+            <marker date="1561184556468" expanded="true" signature="1071:1666" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/graduate_lose_efficacy.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="19" column="10" lean-forward="true" selection-start-line="19" selection-start-column="10" selection-end-line="19" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/users/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="400">
+          <caret line="28" column="13" selection-start-line="28" selection-start-column="4" selection-end-line="28" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jwxzs_2/celery.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="121">
+          <caret line="12" column="46" selection-start-line="12" selection-start-column="46" selection-end-line="12" selection-end-column="46" />
+          <folding>
+            <element signature="e#25#81#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/spider/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="202">
+          <caret line="17" column="74" selection-start-line="17" selection-start-column="71" selection-end-line="17" selection-end-column="74" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/lessons/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="190">
+          <caret line="26" column="17" selection-start-line="26" selection-start-column="6" selection-end-line="26" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/spider_department.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="368">
+          <caret line="23" column="17" selection-end-line="62" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/update/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="45" lean-forward="true" selection-start-column="45" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/spider/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/update/apps.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="5" column="4" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/spider/adminx.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="64" column="40" lean-forward="true" selection-start-line="64" selection-start-column="40" selection-end-line="64" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/update/adminx.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="11" column="31" lean-forward="true" selection-start-line="11" selection-start-column="18" selection-end-line="11" selection-end-column="31" />
+          <folding>
+            <element signature="e#23#36#0" expanded="true" />
+            <marker date="1561190487899" expanded="true" signature="98:103" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/spider/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-67">
+          <caret line="55" column="22" lean-forward="true" selection-start-line="55" selection-start-column="22" selection-end-line="55" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#44#0" expanded="true" />
+            <marker date="1561189969019" expanded="true" signature="654:2724" ph="..." />
+            <marker date="1561189969019" expanded="true" signature="2761:9169" ph="..." />
+            <marker date="1561189969019" expanded="true" signature="16214:16219" ph="..." />
+            <marker date="1561189969019" expanded="true" signature="27820:27821" ph="..." />
+            <marker date="1561189969019" expanded="true" signature="32491:32495" ph="..." />
+            <marker date="1561189969019" expanded="true" signature="33415:33420" ph="..." />
+            <marker date="1561189969019" expanded="true" signature="33442:33451" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/spider_major.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="154">
+          <caret line="25" column="33" lean-forward="true" selection-start-line="25" selection-start-column="33" selection-end-line="25" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/spider/tasks.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="485">
+          <caret line="227" column="23" lean-forward="true" selection-start-line="227" selection-start-column="23" selection-end-line="227" selection-end-column="23" />
+          <folding>
+            <element signature="e#23#53#0" expanded="true" />
+            <marker date="1561189258684" expanded="true" signature="547:720" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spiders/student_static.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="149">
+          <caret line="1181" column="27" selection-start-line="1181" selection-start-column="8" selection-end-line="1181" selection-end-column="27" />
+          <folding>
+            <element signature="e#220#266#0" expanded="true" />
+            <marker date="1561189215171" expanded="true" signature="17111:17366" ph="..." />
+            <marker date="1561189215171" expanded="true" signature="17791:18141" ph="..." />
+            <marker date="1561189215171" expanded="true" signature="24038:24045" ph="..." />
+            <marker date="1561189215171" expanded="true" signature="59304:60228" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/semesters/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="383">
+          <caret line="39" column="9" selection-start-line="39" selection-start-column="4" selection-end-line="39" selection-end-column="9" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/neo4j.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="112">
+          <caret line="7" column="81" lean-forward="true" selection-start-line="7" selection-start-column="81" selection-end-line="7" selection-end-column="81" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jwxzs_2/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="301">
+          <caret line="333" column="27" lean-forward="true" selection-start-line="333" selection-start-column="27" selection-end-line="333" selection-end-column="27" />
         </state>
       </provider>
     </entry>

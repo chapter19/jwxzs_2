@@ -67,10 +67,13 @@ INSTALLED_APPS = [
     'subject',
     'homeworks',
     'disks',
+    'spider',
+    'update',
     'ckeditor',
     'ckeditor_uploader',
     'haystack',
     'django_celery_results',
+    # 'django_celery_beat',
     # 'rest_captcha',
     # 'djcelery',
 ]
@@ -123,7 +126,11 @@ DATABASES = {
         'PASSWORD':'1',
         'HOST':'127.0.0.1',
         'OPTIONS':{'init_command':'SET default_storage_engine=INNODB;'},
-    }
+    },
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # }
 }
 
 # Password validation
@@ -323,8 +330,8 @@ CACHES = {
     }
 }
 
-#高德key
-AMAP_KEY='b0e54c69dd35bfeb5bc1910f1625a273'
+
+AMAP_KEY='你的高德IP获取地址APP的密钥'
 
 
 

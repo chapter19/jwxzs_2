@@ -1,10 +1,10 @@
 #-*- coding:utf-8 -*-
 
-import os,django
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "jwxzs_2.settings")# project_name 项目名称
-django.setup()
+# import os,django
+# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "jwxzs_2.settings")# project_name 项目名称
+# django.setup()
 
-from jwxzs_2.settings import VERIFICATIONCODE_SRC\
+# from jwxzs_2.settings import VERIFICATIONCODE_SRC
     # ,GRADE_LIST
 
 from utils.settings import MY_WORD,MY_USERNAME
@@ -12,11 +12,12 @@ from utils.settings import MY_WORD,MY_USERNAME
 import requests
 from bs4 import BeautifulSoup
 from PIL import Image
-import pytesseract
+# import pytesseract
 import uuid,os,time
 from users.models import Colloge,Class,Student,Major,UserProfile
 from lessons.models import MajorLesson,Lesson
 from semesters.models import Semester
+from spider.models import SpiderLogDetail
 
 from jwxzs_2.settings import PUBLIC_PASSWORD
 
@@ -48,72 +49,72 @@ class SpiderStaticStudent:
             else:
                 return 0
 
-    #获取隐藏值和验证码
-    def __get_hid_data_and_vecode(self,url,error_time_limit=7,timeout=2):
-        try:
-            b=self.__s.get(url,timeout=timeout)
-            soup=BeautifulSoup(b.text,'html5lib')
-            # print(soup)
-            __VIEWSTATE = soup.select('input[id="__VIEWSTATE"]')
-            __EVENTVALIDATION = soup.select('input[id="__EVENTVALIDATION"]')
-            photo_url='http://jwc.jxnu.edu.cn/Portal/'+soup.select('#_ctl0_cphContent_imgPasscode')[0].get('src')
-            # print(photo_url)
-            d=self.__s.get(photo_url)
-            vecode_name=str(uuid.uuid1())+'.gif'
-            src=VERIFICATIONCODE_SRC+vecode_name
-            # print(__VIEWSTATE[0].get('value'),__EVENTVALIDATION[0].get('value'),vecode_name)
-            with open(src,'wb') as vecode:
-                vecode.write(d.content)
-                vecode.close()
-            return __VIEWSTATE[0].get('value'),__EVENTVALIDATION[0].get('value'),vecode_name
-        except:
-            error_time_limit-=1
-            if error_time_limit>0:
-                print('__get_hid_data_and_vecode timeout, retrying。。')
-                return self.__get_hid_data_and_vecode(url=url,error_time_limit=error_time_limit,timeout=timeout)
-            else:
-                return 0
-
-    #验证码识别
-    def verification_code(self):
-        # try:
-        print('verification_code is working。。')
-        url1 = 'http://jwc.jxnu.edu.cn/Portal/LoginAccount.aspx?t=account'
-        hid=self.__get_hid_data_and_vecode(url=url1)
-        src=VERIFICATIONCODE_SRC+hid[2]
-        image=Image.open(src)
-        # x, y = image.size
-        # p = Image.new('RGBA', image.size, (255, 255, 255))
-        # p.paste(image, (0, 0, x, y), image)
-        # image=image.convert('L')
-        # threshold=80
-        # table=[]
-        # for i in range(256):
-        #     if i < threshold:
-        #         table.append(0)
-        #     else:
-        #         table.append(1)
-        # image=image.point(table,'1')
-        # w,h=image.size
-        # ppp = Image.new('RGBA', image.size, (255, 255, 255))
-        # ppp.paste(image, (0, 0, w, h))
-        # iii=ppp.resize((w,h))
-        # os.remove(src)
-        # iii.save(src)
-        # pppp=Image.open(src)
-
-        # iii=image.resize((w*2,h*2))
-        # iii.show()
-        result=str(pytesseract.image_to_string(image,lang='eng')).replace('.','').replace(',','').replace('(','').replace(')','').replace(':','').replace('/','').replace('[','').replace(']','').strip()
-        os.remove(src)
-        print(result)
-        # new_src='./VerificationCode/'+result+'.png'
-        # os.rename(src,new_src)
-        # print(result)
-        return hid[0],hid[1],result
-        # except:
-        #     print('verification_code failed.')
-        #     return None
+    # #获取隐藏值和验证码
+    # def __get_hid_data_and_vecode(self,url,error_time_limit=7,timeout=2):
+    #     try:
+    #         b=self.__s.get(url,timeout=timeout)
+    #         soup=BeautifulSoup(b.text,'html5lib')
+    #         # print(soup)
+    #         __VIEWSTATE = soup.select('input[id="__VIEWSTATE"]')
+    #         __EVENTVALIDATION = soup.select('input[id="__EVENTVALIDATION"]')
+    #         photo_url='http://jwc.jxnu.edu.cn/Portal/'+soup.select('#_ctl0_cphContent_imgPasscode')[0].get('src')
+    #         # print(photo_url)
+    #         d=self.__s.get(photo_url)
+    #         vecode_name=str(uuid.uuid1())+'.gif'
+    #         src=VERIFICATIONCODE_SRC+vecode_name
+    #         # print(__VIEWSTATE[0].get('value'),__EVENTVALIDATION[0].get('value'),vecode_name)
+    #         with open(src,'wb') as vecode:
+    #             vecode.write(d.content)
+    #             vecode.close()
+    #         return __VIEWSTATE[0].get('value'),__EVENTVALIDATION[0].get('value'),vecode_name
+    #     except:
+    #         error_time_limit-=1
+    #         if error_time_limit>0:
+    #             print('__get_hid_data_and_vecode timeout, retrying。。')
+    #             return self.__get_hid_data_and_vecode(url=url,error_time_limit=error_time_limit,timeout=timeout)
+    #         else:
+    #             return 0
+    #
+    # #验证码识别
+    # def verification_code(self):
+    #     # try:
+    #     print('verification_code is working。。')
+    #     url1 = 'http://jwc.jxnu.edu.cn/Portal/LoginAccount.aspx?t=account'
+    #     hid=self.__get_hid_data_and_vecode(url=url1)
+    #     src=VERIFICATIONCODE_SRC+hid[2]
+    #     image=Image.open(src)
+    #     # x, y = image.size
+    #     # p = Image.new('RGBA', image.size, (255, 255, 255))
+    #     # p.paste(image, (0, 0, x, y), image)
+    #     # image=image.convert('L')
+    #     # threshold=80
+    #     # table=[]
+    #     # for i in range(256):
+    #     #     if i < threshold:
+    #     #         table.append(0)
+    #     #     else:
+    #     #         table.append(1)
+    #     # image=image.point(table,'1')
+    #     # w,h=image.size
+    #     # ppp = Image.new('RGBA', image.size, (255, 255, 255))
+    #     # ppp.paste(image, (0, 0, w, h))
+    #     # iii=ppp.resize((w,h))
+    #     # os.remove(src)
+    #     # iii.save(src)
+    #     # pppp=Image.open(src)
+    #
+    #     # iii=image.resize((w*2,h*2))
+    #     # iii.show()
+    #     result=str(pytesseract.image_to_string(image,lang='eng')).replace('.','').replace(',','').replace('(','').replace(')','').replace(':','').replace('/','').replace('[','').replace(']','').strip()
+    #     os.remove(src)
+    #     print(result)
+    #     # new_src='./VerificationCode/'+result+'.png'
+    #     # os.rename(src,new_src)
+    #     # print(result)
+    #     return hid[0],hid[1],result
+    #     # except:
+    #     #     print('verification_code failed.')
+    #     #     return None
 
     # 登录
     # def sign_in(self,limit_time=10,timeout=5):
@@ -189,21 +190,27 @@ class SpiderStaticStudent:
             else:
                 print(self.id)
                 print(self.password)
-                return None
+                raise Exception('登录异常！')
 
     #插入学院
-    def __CollogeToObject(self,data):
-        colloge=Colloge()
-        colloge.id=data['id']
-        colloge.name=data['name']
-        colloge.post_code=data['post_code']
-        try:
-            colloge.save()
-        except:
+    def __CollogeToObject(self,log_id,data):
+        colloge=Colloge.objects.filter(id=data['id'])
+        if colloge:
+            colloge=colloge[0]
+            desc='{0} {1}'.format(colloge.name,colloge.id)
+            SpiderLogDetail.objects.create(spider_log_id=log_id,desc=desc,model='Colloge',status='fail')
             print('colloge exsit')
+        else:
+            colloge=Colloge()
+            colloge.id=data['id']
+            colloge.name=data['name']
+            colloge.post_code=data['post_code']
+            colloge.save()
+            desc = '{0} {1}'.format(colloge.name, colloge.id)
+            SpiderLogDetail.objects.create(spider_log_id=log_id, desc=desc, model='Colloge')
 
 
-    def get_colloges(self,limit_time=7,timeout=5):
+    def get_colloges(self,log_id,limit_time=7,timeout=5):
         try:
             url=r'http://jwc.jxnu.edu.cn/User/default.aspx?&&code=119&uctl=MyControl%5call_searchstudent.ascx'
             hid_data=self.__get_hid_data(url)
@@ -230,7 +237,7 @@ class SpiderStaticStudent:
                     'name':op.get_text().strip()
                 }
                 try:
-                    self.__CollogeToObject(data)
+                    self.__CollogeToObject(data=data,log_id=log_id)
                     print(data)
                 except:
                     print('insert colloge already')
@@ -240,7 +247,7 @@ class SpiderStaticStudent:
                 print('get_colloges timeout, retrying。。')
                 return self.get_colloges(limit_time=limit_ti,timeout=timeout)
             else:
-                return None
+                raise Exception('爬取学院异常！')
 
 
     def __get_start_class_hid(self,limit_time=7,timeout=4):
@@ -271,17 +278,22 @@ class SpiderStaticStudent:
             else:
                 return None
 
-    def __ClassToObject(self,data):
-        cla=Class()
-        cla.id=data['id']
-        cla.name=data['name']
-        cla.post_code=data['post_code']
-        cla.colloge=data['colloge']
-        cla.grade=data['grade']
-        try:
-            cla.save()
-        except:
+    def __ClassToObject(self,data,log_id):
+        cla=Class.objects.filter(id=data['id'])
+        if cla:
+            cla=cla[0]
+            SpiderLogDetail.objects.create(spider_log_id=log_id, desc=cla.name, model='Class', status='fail')
             print('class exsit')
+        else:
+            cla=Class()
+            cla.id=data['id']
+            cla.name=data['name']
+            cla.post_code=data['post_code']
+            cla.colloge=data['colloge']
+            cla.grade=data['grade']
+            cla.save()
+            SpiderLogDetail.objects.create(spider_log_id=log_id, desc=cla.name,model='Class')
+
 
     def __clena_grade(self,str):
         try:
@@ -291,7 +303,7 @@ class SpiderStaticStudent:
             return None
 
 
-    def get_one_colloge_classes(self,colloge_code='46000   ',limit_time=5,timeout=4):
+    def get_one_colloge_classes(self,log_id,colloge_code='46000   ',limit_time=5,timeout=4):
         try:
             url = r'http://jwc.jxnu.edu.cn/User/default.aspx?&&code=119&uctl=MyControl%5call_searchstudent.ascx'
             hid_data = self.__get_start_class_hid()
@@ -319,7 +331,7 @@ class SpiderStaticStudent:
                     'colloge':Colloge.objects.get(id=colloge_code.strip()),
                     'grade':self.__clena_grade(name)
                 }
-                self.__ClassToObject(data=data)
+                self.__ClassToObject(data=data,log_id=log_id)
                 print(data)
 
             # print(soup)
@@ -327,22 +339,11 @@ class SpiderStaticStudent:
             limit_ti = limit_time - 1
             if limit_ti > 0:
                 print('get_one_colloge_classes timeout, retrying。。')
-                return self.get_one_colloge_classes(colloge_code=colloge_code,limit_time=limit_ti, timeout=timeout)
+                return self.get_one_colloge_classes(log_id=log_id,colloge_code=colloge_code,limit_time=limit_ti, timeout=timeout)
             else:
-                return None
+                raise Exception('爬取异常！')
 
-
-    def get_class(self,id=['37000','450','81000']):
-        colloges=Colloge.objects.all()
-        for co in colloges:
-            if co.id not in id:
-                self.get_one_colloge_classes(co.post_code)
-            else:
-                pass
-            # options = soup.select('#_ctl1_ddlCollege > option')
-
-
-    def __get_start_student_hid(self, colloge_code='46000   ', limit_time=10, timeout=6):
+    def get_one_colloge_one_grade_classes(self,grade,log_id,colloge_code='46000   ',limit_time=5,timeout=4):
         try:
             url = r'http://jwc.jxnu.edu.cn/User/default.aspx?&&code=119&uctl=MyControl%5call_searchstudent.ascx'
             hid_data = self.__get_start_class_hid()
@@ -359,6 +360,75 @@ class SpiderStaticStudent:
             }
             wb_data = self.__s.post(url=url, data=data)
             soup = BeautifulSoup(wb_data.text, 'lxml')
+            options=soup.select('#_ctl1_ddlClass > option')
+            for op in options:
+                post_code=op.get('value')
+                name=op.get_text().strip()
+                if name[:2]==str(grade):
+                    data={
+                        'id':post_code.strip(),
+                        'post_code':post_code,
+                        'name':name,
+                        'colloge':Colloge.objects.get(id=colloge_code.strip()),
+                        'grade':self.__clena_grade(name)
+                    }
+                    self.__ClassToObject(data=data,log_id=log_id)
+                    print(data)
+        except:
+            limit_ti = limit_time - 1
+            if limit_ti > 0:
+                print('get_one_colloge_classes timeout, retrying。。')
+                return self.get_one_colloge_classes(log_id=log_id,colloge_code=colloge_code,limit_time=limit_ti, timeout=timeout)
+            else:
+                raise Exception('爬取异常！')
+
+    def get_one_grade_class_from_all_colloge(self,grade,log_id):
+        colloges = Colloge.objects.all()
+        for co in colloges:
+            if co.id not in id:
+                self.get_one_colloge_one_grade_classes(grade=grade,colloge_code=co.post_code,log_id=log_id)
+            else:
+                pass
+
+
+    def get_class_from_all_colloge(self,log_id,id=['37000','450','81000']):
+        colloges=Colloge.objects.all()
+        for co in colloges:
+            if co.id not in id:
+                self.get_one_colloge_classes(colloge_code=co.post_code,log_id=log_id)
+            else:
+                pass
+            # options = soup.select('#_ctl1_ddlCollege > option')
+
+    def get_class(self,colloge_post_code,log_id,if_all=False):
+        if if_all:
+            colloges = Colloge.objects.all()
+            for co in colloges:
+                if co.id not in id:
+                    self.get_one_colloge_classes(colloge_code=co.post_code,log_id=log_id)
+                else:
+                    pass
+        else:
+            self.get_one_colloge_classes(colloge_post_code)
+
+
+    def __get_start_student_hid(self, colloge_code='46000   ', limit_time=10, timeout=6):
+        try:
+            url = r'http://jwc.jxnu.edu.cn/User/default.aspx?&&code=119&uctl=MyControl%5call_searchstudent.ascx'
+            hid_data = self.__get_start_class_hid()
+            data = {
+                '__EVENTTARGET': '',
+                '__EVENTARGUMENT': '',
+                '__LASTFOCUS': '',
+                '__VIEWSTATE': hid_data[0],
+                '__EVENTVALIDATION': hid_data[1],
+                '_ctl1:rbtType': 'College',
+                '_ctl1:ddlCollege': colloge_code,
+                '_ctl1:ddlClass': '24982950            ',
+                '_ctl1:btnSearch': '查询'
+            }
+            wb_data = self.__s.post(url=url, data=data)
+            soup = BeautifulSoup(wb_data.text, 'lxml')
             __VIEWSTATE = soup.select('input[id="__VIEWSTATE"]')
             __EVENTVALIDATION = soup.select('input[id="__EVENTVALIDATION"]')
             return __VIEWSTATE[0].get('value'), __EVENTVALIDATION[0].get('value')
@@ -370,29 +440,32 @@ class SpiderStaticStudent:
             else:
                 return None
 
-    def __StudentToObject(self,data):
-        stu=Student()
-        stu.id=data['id']
-        stu.name=data['name']
-        stu.gender=data['gender']
-        stu.cla=data['class']
-        try:
+    def __StudentToObject(self,data,log_id):
+        stu=Student.objects.filter(id=data['id'])
+        if stu:
+            stu = stu[0]
+            desc='{0} {1} {2}'.format(stu.cla.name,stu.name,stu.id)
+            SpiderLogDetail.objects.create(spider_log_id=log_id, desc=desc, model='Student', status='fail')
+            print('student exsit')
+        else:
+            stu=Student()
+            stu.id=data['id']
+            stu.name=data['name']
+            stu.gender=data['gender']
+            stu.cla=data['class']
             stu.save()
             if not stu.user:
-                user=self.__student_create_user(stu)
+                user = self.__student_create_user(stu)
                 self.get_student_photo(user)
-        except:
-            print('student exsit')
+            desc = '{0} {1} {2}'.format(stu.cla.name, stu.name, stu.id)
+            SpiderLogDetail.objects.create(spider_log_id=log_id, desc=desc, model='Student')
 
     def __student_create_user(self,stu):
         if not stu.user:
             user=UserProfile.objects.create(username=stu.id,name=stu.name,gender=stu.gender,is_student=True,is_active=False,password=PUBLIC_PASSWORD)
             return user
 
-
-
-
-    def get_one_class_students(self,colloge_post_code,class_post_code,limit_time=10,timeout=6):
+    def get_one_class_students(self,colloge_post_code,log_id,class_post_code,limit_time=5,timeout=5):
         try:
             hid = self.__get_start_student_hid(colloge_code=colloge_post_code)
             url=r'http://jwc.jxnu.edu.cn/User/default.aspx?&&code=119&uctl=MyControl%5call_searchstudent.ascx'
@@ -426,7 +499,7 @@ class SpiderStaticStudent:
                         'class':cl,
                         'gender':'male' if st[4].get_text().strip()=='男' else 'female'
                     }
-                    self.__StudentToObject(data)
+                    self.__StudentToObject(data=data,log_id=log_id)
                     print(data)
             else:
                 return None
@@ -434,11 +507,37 @@ class SpiderStaticStudent:
             limit_ti = limit_time - 1
             if limit_ti > 0:
                 print('get_one_class_students timeout, retrying。。')
-                return self.get_one_class_students(colloge_post_code=colloge_post_code,class_post_code=class_post_code, limit_time=limit_ti, timeout=timeout)
+                return self.get_one_class_students(log_id=log_id,colloge_post_code=colloge_post_code,class_post_code=class_post_code, limit_time=limit_ti, timeout=timeout)
             else:
-                return None
+                raise Exception('爬取学生异常！')
 
-    def __MajorToObject(self,data):
+    def get_colloge_grade_student(self,log_id,colloge_post_code,grade):
+        if colloge_post_code=='all':
+            if grade=='all':
+                cla=Class.objects.all()
+                for c in cla:
+                    self.get_one_class_students(colloge_post_code=c.colloge.post_code,log_id=log_id,class_post_code=c.post_code)
+            else:
+                cla=Class.objects.filter(grade=int(grade))
+                for c in cla:
+                    self.get_one_class_students(colloge_post_code=c.colloge.post_code,log_id=log_id,class_post_code=c.post_code)
+        else:
+            colloge = Colloge.objects.filter(post_code=colloge_post_code)
+            if not colloge:
+                raise Exception('爬取学生异常！学院不存在！')
+            else:
+                colloge=colloge[0]
+                if grade=='all':
+                    cla=Class.objects.filter(colloge=colloge)
+                    for c in cla:
+                        self.get_one_class_students(colloge_post_code=colloge.post_code, log_id=log_id,class_post_code=c.post_code)
+                else:
+                    cla = Class.objects.filter(colloge=colloge,grade=int(grade))
+                    for c in cla:
+                        self.get_one_class_students(colloge_post_code=colloge.post_code, log_id=log_id,class_post_code=c.post_code)
+
+
+    def __MajorToObject(self,log_id,data):
         major=Major()
         major.major_id=data['major_id']
         major.post_code=data['post_code']
@@ -458,7 +557,11 @@ class SpiderStaticStudent:
         major.if_multiple_directions=data['if_multiple_directions']
         try:
             major.save()
+            desc='{0}级{1}'.format(data['grade'],data['name'])
+            SpiderLogDetail.objects.create(spider_log_id=log_id,model='Major',status='success',desc=desc)
         except:
+            desc = '{0}级{1}'.format(major.grade, major.name)
+            SpiderLogDetail.objects.create(spider_log_id=log_id, model='Major', status='fail', desc=desc)
             print('major exist')
         return major
 
@@ -497,7 +600,7 @@ class SpiderStaticStudent:
                 return None
 
 
-    def __MajorLessonToObject(self,data):
+    def __MajorLessonToObject(self,log_id,data):
         #单方向专业课程是否已存在
         if data['major'].if_multiple_directions:
             major_lesson = MajorLesson.objects.filter(major=data['major'], lesson_id=data['lesson_id'],major_directions=data['major_directions'])
@@ -525,14 +628,20 @@ class SpiderStaticStudent:
                 major_lesson.if_degree=data['if_degree']
                 try:
                     major_lesson.save()
+                    desc = '{0}级{1}'.format(data['grade'], data['name'])
+                    SpiderLogDetail.objects.create(spider_log_id=log_id, model='MajorLesson', status='success', desc=desc)
                     print(major_lesson,'创建成功')
                     return major_lesson
                 except:
                     # print(str(data['major'].name) + str(data['major_directions']) + str(data['lesson_id']) + ' exist')
                     print('专业课程保存失败')
+                    desc = '{0}级{1}'.format(data['grade'], data['name'])
+                    SpiderLogDetail.objects.create(spider_log_id=log_id, model='Major', status='error', desc=desc)
                     return None
             else:
                 print('专业课程已存在')
+                desc = '{0}级{1}'.format(data['grade'], data['name'])
+                SpiderLogDetail.objects.create(spider_log_id=log_id, model='Major', status='error', desc=desc)
                 return major_lesson.first()
         else:
             major_lesson = MajorLesson.objects.filter(major=data['major'], lesson_id=data['lesson_id'])
@@ -555,15 +664,21 @@ class SpiderStaticStudent:
                 major_less.if_degree = data['if_degree']
                 try:
                     major_less.save()
+                    desc = '{0}级{1}'.format(data['grade'], data['name'])
+                    SpiderLogDetail.objects.create(spider_log_id=log_id, model='Major', status='success', desc=desc)
                     print(major_less, '创建成功')
                     return major_less
                 except:
                     # print(str(data['major'].name) + str(data['major_directions']) + str(data['lesson_id']) + ' exist')
                     print('专业课程保存失败')
+                    desc = '{0}级{1}'.format(data['grade'], data['name'])
+                    SpiderLogDetail.objects.create(spider_log_id=log_id, model='Major', status='error', desc=desc)
                     print(major_less)
                     return None
             else:
                 print('专业课程已存在！')
+                desc = '{0}级{1}'.format(data['grade'], data['name'])
+                SpiderLogDetail.objects.create(spider_log_id=log_id, model='Major', status='error', desc=desc)
                 return major_lesson.first()
             # major_lesson=MajorLesson.objects.filter(major=data['major'],lesson_id=data['lesson_id'],major__if_multiple_directions=True,major_directions=data['major_directions'])
 
@@ -586,7 +701,7 @@ class SpiderStaticStudent:
 
 
 
-    def get_one_grade_one_major(self,grade,major,limit_time=5,timeout=3):
+    def get_one_grade_one_major(self,log_id,grade,major,limit_time=5,timeout=3):
         try:
             mmmajor_id=major['post_code'].strip()
             grrade=self.semester2grade(grade)
@@ -668,7 +783,7 @@ class SpiderStaticStudent:
                             'if_multiple_directions': True if len(lis) > 1 else False,
                         }
                         print(data)
-                        the_major = self.__MajorToObject(data)
+                        the_major = self.__MajorToObject(log_id=log_id,data=data)
                     except:
                         data = {
                             'major_id': major['post_code'].strip(),
@@ -677,10 +792,13 @@ class SpiderStaticStudent:
                             'name': major['major_name'].strip(),
                         }
                         try:
-                            the_major = Major.objects.create(major_id=data['major_id'], post_code=data['post_code'],
-                                                             grade=data['grade'], name=data['name'])
+                            the_major = Major.objects.create(major_id=data['major_id'], post_code=data['post_code'],grade=data['grade'], name=data['name'])
+                            desc = '{0}级{1}'.format(data['grade'], data['name'])
+                            SpiderLogDetail.objects.create(spider_log_id=log_id, model='Major', status='success',desc=desc)
                         except:
                             the_major = Major.objects.get(major_id=data['major_id'], grade=data['grade'])
+                            desc = '{0}级{1}'.format(data['grade'], data['name'])
+                            SpiderLogDetail.objects.create(spider_log_id=log_id, model='Major', status='fail',desc=desc)
                     tbodys = soup.select('table[width="98%"] > tbody > tr:nth-of-type(4) > td > table > tbody')
                     try:
                         for tbody in tbodys:
@@ -716,7 +834,7 @@ class SpiderStaticStudent:
                                     'open_semester':open_semester,
                                 }
                                 print(data)
-                                self.__MajorLessonToObject(data)
+                                self.__MajorLessonToObject(log_id,data)
                     except:
                         pass
 
@@ -759,7 +877,7 @@ class SpiderStaticStudent:
                                         'limit_lesson_minimum_credit':limit_lesson_minimum_credit,
                                     }
                                     print(data)
-                                    self.__MajorLessonToObject(data)
+                                    self.__MajorLessonToObject(log_id=log_id,data=data)
                                 else:
                                     data = {
                                         'major': the_major,
@@ -772,7 +890,7 @@ class SpiderStaticStudent:
                                         'limit_lesson_minimum_credit':limit_lesson_minimum_credit,
                                     }
                                     print(data)
-                                    self.__MajorLessonToObject(data)
+                                    self.__MajorLessonToObject(log_id,data)
                     except:
                         pass
                 except:
@@ -781,7 +899,7 @@ class SpiderStaticStudent:
             limit_ti = limit_time - 1
             if limit_ti > 0:
                 print('get_one_grade_one_major timeout, retrying。。')
-                return self.get_one_grade_one_major(grade=grade,major=major,limit_time=limit_ti)
+                return self.get_one_grade_one_major(log_id=log_id,grade=grade,major=major,limit_time=limit_ti)
             else:
                 return None
 
@@ -1061,6 +1179,27 @@ class SpiderStaticStudent:
                 # print(grade)
                 self.get_one_grade_one_major(grade=grade['post_code'],major=major)
 
+    def get_one_grade_major(self,log_id,grade_post_code):
+        url = r'http://jwc.jxnu.edu.cn/User/default.aspx?&code=104&&uctl=MyControl\all_jxjh.ascx'
+        # hid_data=self.get_hid_data(url)
+        wb_data = self.__s.get(url)
+        soup = BeautifulSoup(wb_data.text, 'lxml')
+        # __VIEWSTATE = soup.select('input[name="__VIEWSTATE"]')[0].get('value')
+        # __EVENTVALIDATION = soup.select('input[name="__EVENTVALIDATION"]')[0].get('value')
+        majors = soup.select('#_ctl1_zhuanye > option')
+        for major in majors:
+            post_code = major.get('value')
+            maj = major.get_text().strip()
+            major = {
+                'post_code': post_code,
+                'major_name': maj,
+            }
+            # grade_list = self.grade_list
+            # print(major_id)
+            # for grade in grade_list:
+                # print(grade)
+            self.get_one_grade_one_major(log_id=log_id,grade=grade_post_code, major=major)
+
 
     def get_student_photo(self,user,timeout=4,limit_time=5):
         try:
@@ -1097,6 +1236,7 @@ class SpiderStaticStudent:
 if __name__ == '__main__':
     spd=SpiderStaticStudent(MY_USERNAME,MY_WORD)
     spd.sign_in()
+    # spd.get_class(colloge_post_code='57000   ')
     # for i in range(200):
     #     spd.sign_in()
     # print(MY_WORD,MY_USERNAME)

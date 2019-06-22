@@ -1,0 +1,17 @@
+{% extends 'xadmin/base_site.html' %}
+
+
+{% block content %}
+    <div>
+        <select name="grade" form="grade-form">
+            <option value="volvo">Volvo</option>
+            <option value="saab">Saab</option>
+            <option value="opel">Opel</option>
+            <option value="audi">Audi</option>
+        </select>
+        <form action="/xadmin/spider-student/" id="grade-form">
+{#            <input type="text" name="grade" placeholder="年级">#}
+            <input type="submit" name="爬取">
+        </form>
+    </div>
+{% endblock %}

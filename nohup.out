@@ -43,3 +43,72 @@ Not Found: /
 [15/Apr/2019 12:56:41] "GET /xadmin/jsi18n/ HTTP/1.1" 200 4828
 [15/Apr/2019 12:56:43] "GET /xadmin/users/class/ HTTP/1.1" 200 293545
 [15/Apr/2019 12:56:43] "GET /xadmin/jsi18n/ HTTP/1.1" 200 4828
+[2019-06-15 22:16:16,173: INFO/Beat] beat: Starting...
+[2019-06-15 22:16:17,200: INFO/MainProcess] Connected to amqp://guest:**@127.0.0.1:5672//
+[2019-06-15 22:16:17,216: INFO/MainProcess] mingle: searching for neighbors
+[2019-06-15 22:16:18,261: INFO/MainProcess] mingle: all alone
+[2019-06-15 22:16:18,284: WARNING/MainProcess] /Users/vccccccc/.virtualenvs/jwxzs_3.6/lib/python3.6/site-packages/kombu/pidbox.py:74: UserWarning: A node named celery@myhost.local is already using this process mailbox!
+
+Maybe you forgot to shutdown the other node or did not do so properly?
+Or if you meant to start multiple nodes on the same host please make sure
+you give each node a unique node name!
+
+  warnings.warn(W_PIDBOX_IN_USE.format(node=self))
+[2019-06-15 22:16:18,294: WARNING/MainProcess] /Users/vccccccc/.virtualenvs/jwxzs_3.6/lib/python3.6/site-packages/celery/fixups/django.py:202: UserWarning: Using settings.DEBUG leads to a memory leak, never use this setting in production environments!
+  warnings.warn('Using settings.DEBUG leads to a memory leak, never '
+[2019-06-15 22:16:18,294: INFO/MainProcess] celery@myhost.local ready.
+
+worker: Hitting Ctrl+C again will terminate all running tasks!
+
+worker: Warm shutdown (MainProcess)
+[2019-06-15 22:16:22,647: INFO/MainProcess] beat: Shutting down...
+ 
+ -------------- celery@myhost.local v4.3.0 (rhubarb)
+---- **** ----- 
+--- * ***  * -- Darwin-18.6.0-x86_64-i386-64bit 2019-06-15 22:16:16
+-- * - **** --- 
+- ** ---------- [config]
+- ** ---------- .> app:         jwxzs_2:0x10ff987f0
+- ** ---------- .> transport:   amqp://guest:**@localhost:5672//
+- ** ---------- .> results:     disabled://
+- *** --- * --- .> concurrency: 8 (prefork)
+-- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+--- ***** ----- 
+ -------------- [queues]
+                .> celery           exchange=celery(direct) key=celery
+                
+
+[tasks]
+  . friends.tasks.collect_friend_log
+  . friends.tasks.send_collect_message
+  . homeworks.tasks.auto_correct
+  . homeworks.tasks.auto_correct_no_submit_homework
+  . jwxzs_2.celery.debug_task
+  . lessons.tasks.student_schedule_log
+  . lessons.tasks.teacher_schedule_log
+  . redio.tasks.get_redio
+  . redio.tasks.redio_list_log
+  . redio.tasks.redio_retrieve_log
+  . scores.tasks.schedule_student_list_log
+  . scores.tasks.student_scores_log
+  . scores.tasks.student_total_credit_log
+  . scores.tasks.teacher_scores_log
+  . scores.tasks.teacher_total_credit_log
+  . scores.tasks.update_score
+  . spider.tasks.get_class
+  . spider.tasks.get_colloge
+  . spider.tasks.get_department
+  . spider.tasks.get_schedule
+  . spider.tasks.get_score
+  . spider.tasks.get_student
+  . spider.tasks.get_teacher
+  . subject.tasks.pingjiao_list_create_pingjiaoteacher
+  . subject.tasks.update_pingjiao
+  . users.tasks.get_student_all_data
+  . users.tasks.login_log
+  . users.tasks.search_student_log
+  . users.tasks.search_teacher_log
+  . users.tasks.student_detail_log
+  . users.tasks.student_photo_task
+  . users.tasks.teacher_photo_task
+

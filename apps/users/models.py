@@ -26,6 +26,7 @@ class Major(models.Model):
     minimum_graduation_credit=models.IntegerField(verbose_name=u'最低毕业学分',default=160)
     add_time = models.DateTimeField(default=datetime.now, verbose_name=u'添加时间')
     if_multiple_directions=models.BooleanField(default=False,verbose_name=u'是否有多个方向')
+    is_active=models.BooleanField(default=True,verbose_name='是否在读未毕业')
     class Meta:
         verbose_name=u'专业'
         verbose_name_plural=verbose_name
@@ -86,6 +87,7 @@ class UserProfile(AbstractUser):
 
 class Student(models.Model):
     id=models.CharField(max_length=12,verbose_name=u'学号',primary_key=True,help_text='学号')
+    is_active=models.BooleanField(default=True,verbose_name='是否在读')
     name=models.CharField(max_length=50,verbose_name=u'姓名',default='',help_text='姓名')
     cla=models.ForeignKey(Class,verbose_name=u'班级',null=True,blank=True,on_delete=models.CASCADE,related_name='stu')
     gender=models.CharField(choices=(('male',u'男'),('female',u'女')),max_length=6,default='female',verbose_name=u'性别',help_text='性别')

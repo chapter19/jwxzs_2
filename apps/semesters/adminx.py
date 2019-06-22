@@ -1,7 +1,7 @@
 #-*- coding:utf-8 -*-
 
 import xadmin
-from .models import Semester,CurrentSemester,NextSemester
+from .models import Semester,CurrentSemester,NextSemester,Grade
 
 
 class SemesterAdmin(object):
@@ -32,7 +32,11 @@ class NextSemesterAdmin(object):
     model_icon = 'fa fa-list'
     display_list=['next_semester']
 
+class GradeAdmin(object):
+    model_icon = 'fa fa-list'
+    list_display=['grade','semester']
 
 xadmin.site.register(Semester,SemesterAdmin)
 xadmin.site.register(CurrentSemester,CurrentSemesterAdmin)
 xadmin.site.register(NextSemester,NextSemesterAdmin)
+xadmin.site.register(Grade,GradeAdmin)

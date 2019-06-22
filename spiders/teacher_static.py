@@ -1,8 +1,8 @@
 #-*- coding:utf-8 -*-
 
-import os,django
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "jwxzs_2.settings")# project_name 项目名称
-django.setup()
+# import os,django
+# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "jwxzs_2.settings")# project_name 项目名称
+# django.setup()
 
 from jwxzs_2.settings import VERIFICATIONCODE_SRC
 from jwxzs_2.settings import PUBLIC_PASSWORD
@@ -12,13 +12,14 @@ from utils.settings import MY_USERNAME,MY_WORD
 import requests
 from bs4 import BeautifulSoup
 from PIL import Image
-import pytesseract
+# import pytesseract
 import uuid,os,time
 from users.models import Teacher,Department,Student,UserProfile
 from scores.models import Score
 from lessons.models import ScheduleLesson,Schedule,Lesson,ErrorSchedule
 from semesters.models import Semester
 from groups.models import GroupAdministrator,Group
+from spider.models import SpiderLogDetail
 
 # from jwxzs_2.settings import SEMESTER_LIST
 
@@ -71,82 +72,82 @@ class SpiderStaticTeacher:
             else:
                 return 0
 
-    #获取隐藏值和验证码
-    def __get_hid_data_and_vecode(self,url,error_time_limit=7,timeout=2):
-        try:
-            b=self.__s.get(url,timeout=timeout)
-            soup=BeautifulSoup(b.text,'html5lib')
-            # print(soup)
-            __VIEWSTATE = soup.select('input[id="__VIEWSTATE"]')
-            __EVENTVALIDATION = soup.select('input[id="__EVENTVALIDATION"]')
-            photo_url='http://jwc.jxnu.edu.cn/Portal/'+soup.select('#_ctl0_cphContent_imgPasscode')[0].get('src')
-            # print(photo_url)
-            d=self.__s.get(photo_url)
-            vecode_name=str(uuid.uuid1())+'.png'
-            src=VERIFICATIONCODE_SRC+vecode_name
-            # print(__VIEWSTATE[0].get('value'),__EVENTVALIDATION[0].get('value'),vecode_name)
-            with open(src,'wb') as vecode:
-                vecode.write(d.content)
-                vecode.close()
-            return __VIEWSTATE[0].get('value'),__EVENTVALIDATION[0].get('value'),vecode_name
-        except:
-            error_time_limit-=1
-            if error_time_limit>0:
-                print('__get_hid_data_and_vecode timeout, retrying。。')
-                return self.__get_hid_data_and_vecode(url=url,error_time_limit=error_time_limit,timeout=timeout)
-            else:
-                return 0
-
-    #验证码识别
-    def verification_code(self):
-        try:
-            print('verification_code is working。。')
-            url1 = 'http://jwc.jxnu.edu.cn/Portal/LoginAccount.aspx?t=account'
-            hid=self.__get_hid_data_and_vecode(url=url1)
-            src=VERIFICATIONCODE_SRC+hid[2]
-            # v=get_vectorCompare(src)
-            # new_src='./VerificationCode/'+v+'.png'
-            # os.rename(src,new_src)
-            # print(v)
-            # print(src)
-            image=Image.open(src)
-            x, y = image.size
-            p = Image.new('RGBA', image.size, (255, 255, 255))
-            p.paste(image, (0, 0, x, y), image)
-            # p.save('src')
-            # p.show()
-            # 转化为灰度图像
-            image=p.convert('L')
-            threshold=80
-            table=[]
-            for i in range(256):
-                if i < threshold:
-                    table.append(0)
-                else:
-                    table.append(1)
-            image=image.point(table,'1')
-            # image.show()
-            w,h=image.size
-            # print(w,h)
-            ppp = Image.new('RGBA', image.size, (255, 255, 255))
-            ppp.paste(image, (0, 0, w, h))
-            iii=ppp.resize((w,h))
-            # iii.show()
-            os.remove(src)
-            iii.save(src)
-            pppp=Image.open(src)
-            # iii=image.resize((w*2,h*2))
-            # iii.show()
-            result=str(pytesseract.image_to_string(pppp,lang='eng')).replace('.','').replace(',','').replace('(','').replace(')','').replace(':','').replace('/','').replace('[','').replace(']','').strip()
-            os.remove(src)
-            print(result)
-            # new_src='./VerificationCode/'+result+'.png'
-            # os.rename(src,new_src)
-            # print(result)
-            return hid[0],hid[1],result
-        except:
-            print('verification_code failed.')
-            return None
+    # #获取隐藏值和验证码
+    # def __get_hid_data_and_vecode(self,url,error_time_limit=7,timeout=2):
+    #     try:
+    #         b=self.__s.get(url,timeout=timeout)
+    #         soup=BeautifulSoup(b.text,'html5lib')
+    #         # print(soup)
+    #         __VIEWSTATE = soup.select('input[id="__VIEWSTATE"]')
+    #         __EVENTVALIDATION = soup.select('input[id="__EVENTVALIDATION"]')
+    #         photo_url='http://jwc.jxnu.edu.cn/Portal/'+soup.select('#_ctl0_cphContent_imgPasscode')[0].get('src')
+    #         # print(photo_url)
+    #         d=self.__s.get(photo_url)
+    #         vecode_name=str(uuid.uuid1())+'.png'
+    #         src=VERIFICATIONCODE_SRC+vecode_name
+    #         # print(__VIEWSTATE[0].get('value'),__EVENTVALIDATION[0].get('value'),vecode_name)
+    #         with open(src,'wb') as vecode:
+    #             vecode.write(d.content)
+    #             vecode.close()
+    #         return __VIEWSTATE[0].get('value'),__EVENTVALIDATION[0].get('value'),vecode_name
+    #     except:
+    #         error_time_limit-=1
+    #         if error_time_limit>0:
+    #             print('__get_hid_data_and_vecode timeout, retrying。。')
+    #             return self.__get_hid_data_and_vecode(url=url,error_time_limit=error_time_limit,timeout=timeout)
+    #         else:
+    #             return 0
+    #
+    # #验证码识别
+    # def verification_code(self):
+    #     try:
+    #         print('verification_code is working。。')
+    #         url1 = 'http://jwc.jxnu.edu.cn/Portal/LoginAccount.aspx?t=account'
+    #         hid=self.__get_hid_data_and_vecode(url=url1)
+    #         src=VERIFICATIONCODE_SRC+hid[2]
+    #         # v=get_vectorCompare(src)
+    #         # new_src='./VerificationCode/'+v+'.png'
+    #         # os.rename(src,new_src)
+    #         # print(v)
+    #         # print(src)
+    #         image=Image.open(src)
+    #         x, y = image.size
+    #         p = Image.new('RGBA', image.size, (255, 255, 255))
+    #         p.paste(image, (0, 0, x, y), image)
+    #         # p.save('src')
+    #         # p.show()
+    #         # 转化为灰度图像
+    #         image=p.convert('L')
+    #         threshold=80
+    #         table=[]
+    #         for i in range(256):
+    #             if i < threshold:
+    #                 table.append(0)
+    #             else:
+    #                 table.append(1)
+    #         image=image.point(table,'1')
+    #         # image.show()
+    #         w,h=image.size
+    #         # print(w,h)
+    #         ppp = Image.new('RGBA', image.size, (255, 255, 255))
+    #         ppp.paste(image, (0, 0, w, h))
+    #         iii=ppp.resize((w,h))
+    #         # iii.show()
+    #         os.remove(src)
+    #         iii.save(src)
+    #         pppp=Image.open(src)
+    #         # iii=image.resize((w*2,h*2))
+    #         # iii.show()
+    #         result=str(pytesseract.image_to_string(pppp,lang='eng')).replace('.','').replace(',','').replace('(','').replace(')','').replace(':','').replace('/','').replace('[','').replace(']','').strip()
+    #         os.remove(src)
+    #         print(result)
+    #         # new_src='./VerificationCode/'+result+'.png'
+    #         # os.rename(src,new_src)
+    #         # print(result)
+    #         return hid[0],hid[1],result
+    #     except:
+    #         print('verification_code failed.')
+    #         return None
 
     # 登录
     # def sign_in(self,limit_time=10,timeout=5):
@@ -229,30 +230,27 @@ class SpiderStaticTeacher:
                 print(self.password)
                 return None
 
-    def __DepartmentToObject(self,data):
-        dep=Department()
-        dep.id=data['id']
-        dep.name=data['name']
-        dep.post_code=data['post_code']
-        dep.save()
+    def __DepartmentToObject(self,log_id,data):
+        dep=Department.objects.filter(id=data['id'])
+        if dep:
+            dep=dep[0]
+            desc='{0} {1}'.format(dep.name,dep.id)
+            SpiderLogDetail.objects.create(spider_log_id=log_id,model='Department',desc=desc,status='fail')
+            print('department exist!')
+        else:
+            dep=Department()
+            dep.id=data['id']
+            dep.name=data['name']
+            dep.post_code=data['post_code']
+            dep.save()
+            desc = '{0} {1}'.format(dep.name, dep.id)
+            SpiderLogDetail.objects.create(spider_log_id=log_id, model='Department', desc=desc)
+            print('department get success, name: {0}'.format(dep.name))
 
-    def get_department(self,limit_time=5,timeout=4):
+    def get_department(self,log_id,limit_time=5,timeout=4):
         try:
             url=r'http://jwc.jxnu.edu.cn/User/default.aspx?&&code=120&uctl=MyControl%5call_teacher.ascx'
             hid=self.__get_hid_data(url)
-            '''
-            
-            __EVENTTARGET: _ctl1$rbtType$1
-            __EVENTARGUMENT: 
-            __LASTFOCUS: 
-            __VIEWSTATE: /wEPDwUJNzIzMTk0NzYzD2QWAgIBD2QWCgIBDw8WAh4EVGV4dAUpMjAxOeW5tDPmnIgxMuaXpSDmmJ/mnJ/kuowmbmJzcDvmpI3moJHoioJkZAIFDw8WAh8ABRvlvZPliY3kvY3nva7vvJrmlZnlt6Xkv6Hmga9kZAIHDw8WAh8ABS8gICDmrKLov47mgqjvvIwoMjAxNjI2NzAzMDc5LFN0dWRlbnQpIOW8oOacrOiJr2RkAgoPZBYEAgEPDxYCHghJbWFnZVVybAVFLi4vTXlDb250cm9sL0FsbF9QaG90b1Nob3cuYXNweD9Vc2VyTnVtPTIwMTYyNjcwMzA3OSZVc2VyVHlwZT1TdHVkZW50ZGQCAw8WAh8ABbklPGRpdiBpZD0nbWVudVBhcmVudF8wJyBjbGFzcz0nbWVudVBhcmVudCcgb25jbGljaz0nbWVudUdyb3VwU3dpdGNoKDApOyc+5oiR55qE5L+h5oGvPC9kaXY+PGRpdiBpZD0nbWVudUdyb3VwMCcgY2xhc3M9J21lbnVHcm91cCc+PERpdiBjbGFzcz0nbWVudUl0ZW0nIHRpdGxlPSfor77nqIvooagnPjxhIGhyZWY9ImRlZmF1bHQuYXNweD8mY29kZT0xMTEmJnVjdGw9TXlDb250cm9sXHhmel9rY2IuYXNjeCZNeUFjdGlvbj1QZXJzb25hbCIgdGFyZ2V0PSdwYXJlbnQnPuivvueoi+ihqDwvYT48L2Rpdj48RGl2IGNsYXNzPSdtZW51SXRlbScgdGl0bGU9J+WfuuacrOS/oeaBryc+PGEgaHJlZj0iLi5cTXlDb250cm9sXFN0dWRlbnRfSW5mb3JDaGVjay5hc3B4IiB0YXJnZXQ9J19ibGFuayc+5Z+65pys5L+h5oGvPC9hPjwvZGl2PjxEaXYgY2xhc3M9J21lbnVJdGVtJyB0aXRsZT0n5L+u5pS55a+G56CBJz48YSBocmVmPSJkZWZhdWx0LmFzcHg/JmNvZGU9MTEwJiZ1Y3RsPU15Q29udHJvbFxwZXJzb25hbF9jaGFuZ2Vwd2QuYXNjeCIgdGFyZ2V0PSdwYXJlbnQnPuS/ruaUueWvhueggTwvYT48L2Rpdj48RGl2IGNsYXNzPSdtZW51SXRlbScgdGl0bGU9J+WtpuexjemihOitpic+PGEgaHJlZj0iamF2YXNjcmlwdDpPcGVuV2luZG93KCd4ZnpfYnlzaC5hc2N4JkFjdGlvbj1QZXJzb25hbCcpOyIgdGFyZ2V0PScnPuWtpuexjemihOitpjwvYT48L2Rpdj48RGl2IGNsYXNzPSdtZW51SXRlbScgdGl0bGU9J+aWsOeUn+WvvOW4iCc+PGEgaHJlZj0iZGVmYXVsdC5hc3B4PyZjb2RlPTIxNCYmdWN0bD1NeUNvbnRyb2xcc3R1ZGVudF9teXRlYWNoZXIuYXNjeCIgdGFyZ2V0PSdwYXJlbnQnPuaWsOeUn+WvvOW4iDwvYT48L2Rpdj48RGl2IGNsYXNzPSdtZW51SXRlbScgdGl0bGU9J+ivvueoi+aIkOe7qSc+PGEgaHJlZj0iamF2YXNjcmlwdDpPcGVuV2luZG93KCd4ZnpfY2ouYXNjeCZBY3Rpb249UGVyc29uYWwnKTsiIHRhcmdldD0nJz7or77nqIvmiJDnu6k8L2E+PC9kaXY+PERpdiBjbGFzcz0nbWVudUl0ZW0nIHRpdGxlPSfmiYvmnLrlj7fnoIEnPjxhIGhyZWY9Ii4uXE15Q29udHJvbFxQaG9uZS5hc3B4IiB0YXJnZXQ9J19ibGFuayc+5omL5py65Y+356CBPC9hPjwvZGl2PjxEaXYgY2xhc3M9J21lbnVJdGVtJyB0aXRsZT0n5a626ZW/55m75b2VJz48YSBocmVmPSJkZWZhdWx0LmFzcHg/JmNvZGU9MjAzJiZ1Y3RsPU15Q29udHJvbFxKel9zdHVkZW50c2V0dGluZy5hc2N4IiB0YXJnZXQ9J3BhcmVudCc+5a626ZW/55m75b2VPC9hPjwvZGl2PjxEaXYgY2xhc3M9J21lbnVJdGVtJyB0aXRsZT0n5Y+M5LiT5Lia5Y+M5a2m5L2N6K++56iL5a6J5o6S6KGoJz48YSBocmVmPSIuLlxNeUNvbnRyb2xcRGV6eV9rYi5hc3B4IiB0YXJnZXQ9J19ibGFuayc+5Y+M5LiT5Lia5Y+M5a2m5L2N6K++56iL5a6J5o6S6KGoPC9hPjwvZGl2PjxEaXYgY2xhc3M9J21lbnVJdGVtJyB0aXRsZT0n55u454mH5pu05o2i55Sz6K+3Jz48YSBocmVmPSIuLlxNeUNvbnRyb2xccGhvdG9fcmVwbGFjZS5hc3B4IiB0YXJnZXQ9J19ibGFuayc+55u454mH5pu05o2i55Sz6K+3PC9hPjwvZGl2PjxEaXYgY2xhc3M9J21lbnVJdGVtJyB0aXRsZT0n5a2m5Lmg5L2T6aqMJz48YSBocmVmPSIuLlxNeUNvbnRyb2xcU3R1ZGVudF9NeVJlcG9ydC5hc3B4IiB0YXJnZXQ9J19ibGFuayc+5a2m5Lmg5L2T6aqMPC9hPjwvZGl2PjwvZGl2PjxkaXYgaWQ9J21lbnVQYXJlbnRfMScgY2xhc3M9J21lbnVQYXJlbnQnIG9uY2xpY2s9J21lbnVHcm91cFN3aXRjaCgxKTsnPuWFrOWFseacjeWKoTwvZGl2PjxkaXYgaWQ9J21lbnVHcm91cDEnIGNsYXNzPSdtZW51R3JvdXAnPjxEaXYgY2xhc3M9J21lbnVJdGVtJyB0aXRsZT0n5Z+55YW75pa55qGIJz48YSBocmVmPSJkZWZhdWx0LmFzcHg/JmNvZGU9MTA0JiZ1Y3RsPU15Q29udHJvbFxhbGxfanhqaC5hc2N4IiB0YXJnZXQ9J3BhcmVudCc+5Z+55YW75pa55qGIPC9hPjwvZGl2PjxEaXYgY2xhc3M9J21lbnVJdGVtJyB0aXRsZT0n6K++56iL5L+h5oGvJz48YSBocmVmPSJkZWZhdWx0LmFzcHg/JmNvZGU9MTE2JiZ1Y3RsPU15Q29udHJvbFxhbGxfY291cnNlc2VhcmNoLmFzY3giIHRhcmdldD0ncGFyZW50Jz7or77nqIvkv6Hmga88L2E+PC9kaXY+PERpdiBjbGFzcz0nbWVudUl0ZW0nIHRpdGxlPSflvIDor77lronmjpInPjxhIGhyZWY9Ii4uXE15Q29udHJvbFxQdWJsaWNfS2thcC5hc3B4IiB0YXJnZXQ9J19ibGFuayc+5byA6K++5a6J5o6SPC9hPjwvZGl2PjxEaXYgY2xhc3M9J21lbnVJdGVtJyB0aXRsZT0n5a2m55Sf5L+h5oGvJz48YSBocmVmPSJkZWZhdWx0LmFzcHg/JmNvZGU9MTE5JiZ1Y3RsPU15Q29udHJvbFxhbGxfc2VhcmNoc3R1ZGVudC5hc2N4IiB0YXJnZXQ9J3BhcmVudCc+5a2m55Sf5L+h5oGvPC9hPjwvZGl2PjxEaXYgY2xhc3M9J21lbnVJdGVtT24nIHRpdGxlPSfmlZnlt6Xkv6Hmga8nPjxhIGhyZWY9ImRlZmF1bHQuYXNweD8mY29kZT0xMjAmJnVjdGw9TXlDb250cm9sXGFsbF90ZWFjaGVyLmFzY3giIHRhcmdldD0ncGFyZW50Jz7mlZnlt6Xkv6Hmga88L2E+PC9kaXY+PERpdiBjbGFzcz0nbWVudUl0ZW0nIHRpdGxlPSfnn63kv6HlubPlj7AnPjxhIGhyZWY9ImRlZmF1bHQuYXNweD8mY29kZT0xMjImJnVjdGw9TXlDb250cm9sXG1haWxfbGlzdC5hc2N4IiB0YXJnZXQ9J3BhcmVudCc+55+t5L+h5bmz5Y+wPC9hPjwvZGl2PjxEaXYgY2xhc3M9J21lbnVJdGVtJyB0aXRsZT0n5pWZ5a6k5pWZ5a2m5a6J5o6SJz48YSBocmVmPSIuLlxNeUNvbnRyb2xccHVibGljX2NsYXNzcm9vbS5hc3B4IiB0YXJnZXQ9J19ibGFuayc+5pWZ5a6k5pWZ5a2m5a6J5o6SPC9hPjwvZGl2PjxEaXYgY2xhc3M9J21lbnVJdGVtJyB0aXRsZT0n5Y+M5a2m5L2N6K++56iL5oiQ57upJz48YSBocmVmPSJqYXZhc2NyaXB0Ok9wZW5XaW5kb3coJ2RlenlfY2ouYXNjeCZBY3Rpb249UGVyc29uYWwnKTsiIHRhcmdldD0nJz7lj4zlrabkvY3or77nqIvmiJDnu6k8L2E+PC9kaXY+PERpdiBjbGFzcz0nbWVudUl0ZW0nIHRpdGxlPSfmr5XkuJrnlJ/lm77lg4/ph4fpm4bkv6Hmga/moKHlr7knPjxhIGhyZWY9Ii4uXE15Q29udHJvbFxUWENKX0luZm9yQ2hlY2suYXNweCIgdGFyZ2V0PSdfYmxhbmsnPuavleS4mueUn+WbvuWDj+mHh+mbhuS/oeaBr+agoeWvuTwvYT48L2Rpdj48RGl2IGNsYXNzPSdtZW51SXRlbScgdGl0bGU9J+acn+acq+aIkOe7qeafpeivoic+PGEgaHJlZj0iamF2YXNjcmlwdDpPcGVuV2luZG93KCd4ZnpfVGVzdF9jai5hc2N4Jyk7IiB0YXJnZXQ9Jyc+5pyf5pyr5oiQ57up5p+l6K+iPC9hPjwvZGl2PjxEaXYgY2xhc3M9J21lbnVJdGVtJyB0aXRsZT0n5pyf5pyr5oiQ57up5p+l5YiG55Sz6K+3Jz48YSBocmVmPSJqYXZhc2NyaXB0Ok9wZW5XaW5kb3coJ0Nmc3FfU3R1ZGVudC5hc2N4Jyk7IiB0YXJnZXQ9Jyc+5pyf5pyr5oiQ57up5p+l5YiG55Sz6K+3PC9hPjwvZGl2PjxEaXYgY2xhc3M9J21lbnVJdGVtJyB0aXRsZT0n6KGl57yT6ICD6ICD6K+V5a6J5o6SJz48YSBocmVmPSJqYXZhc2NyaXB0Ok9wZW5XaW5kb3coJ3hmel9UZXN0X0JISy5hc2N4Jyk7IiB0YXJnZXQ9Jyc+6KGl57yT6ICD6ICD6K+V5a6J5o6SPC9hPjwvZGl2PjxEaXYgY2xhc3M9J21lbnVJdGVtJyB0aXRsZT0n5a2m5Lmg6Zeu562UJz48YSBocmVmPSJkZWZhdWx0LmFzcHg/JmNvZGU9MTU5JiZ1Y3RsPU15Q29udHJvbFxBbGxfU3R1ZHlfTGlzdC5hc2N4IiB0YXJnZXQ9J3BhcmVudCc+5a2m5Lmg6Zeu562UPC9hPjwvZGl2PjwvZGl2PjxkaXYgaWQ9J21lbnVQYXJlbnRfMicgY2xhc3M9J21lbnVQYXJlbnQnIG9uY2xpY2s9J21lbnVHcm91cFN3aXRjaCgyKTsnPuaVmeWtpuS/oeaBrzwvZGl2PjxkaXYgaWQ9J21lbnVHcm91cDInIGNsYXNzPSdtZW51R3JvdXAnPjxEaXYgY2xhc3M9J21lbnVJdGVtJyB0aXRsZT0n572R5LiK6K+E5pWZJz48YSBocmVmPSJqYXZhc2NyaXB0Ok9wZW5XaW5kb3coJ3BqX3N0dWRlbnRfaW5kZXguYXNjeCcpOyIgdGFyZ2V0PScnPue9keS4iuivhOaVmTwvYT48L2Rpdj48RGl2IGNsYXNzPSdtZW51SXRlbScgdGl0bGU9J+aVmeWKoeaEj+ingeeusSc+PGEgaHJlZj0iLi4vRGVmYXVsdC5hc3B4P0FjdGlvbj1BZHZpc2UiIHRhcmdldD0nX2JsYW5rJz7mlZnliqHmhI/op4HnrrE8L2E+PC9kaXY+PERpdiBjbGFzcz0nbWVudUl0ZW0nIHRpdGxlPSfmnJ/mnKvogIPor5XlronmjpInPjxhIGhyZWY9ImRlZmF1bHQuYXNweD8mY29kZT0xMjkmJnVjdGw9TXlDb250cm9sXHhmel90ZXN0X3NjaGVkdWxlLmFzY3giIHRhcmdldD0ncGFyZW50Jz7mnJ/mnKvogIPor5XlronmjpI8L2E+PC9kaXY+PERpdiBjbGFzcz0nbWVudUl0ZW0nIHRpdGxlPSfovoXkv67lj4zkuJPkuJrlj4zlrabkvY3miqXlkI0nPjxhIGhyZWY9ImphdmFzY3JpcHQ6T3BlbldpbmRvdygnRGV6eV9ibS5hc2N4Jyk7IiB0YXJnZXQ9Jyc+6L6F5L+u5Y+M5LiT5Lia5Y+M5a2m5L2N5oql5ZCNPC9hPjwvZGl2PjxEaXYgY2xhc3M9J21lbnVJdGVtJyB0aXRsZT0nMjAxOOe6p+acrOenkeWtpueUn+i9rOS4k+S4muaKpeWQjSc+PGEgaHJlZj0iLi5cTXlDb250cm9sXHp6eV9zdHVkZW50X3NxLmFzcHgiIHRhcmdldD0nX2JsYW5rJz4yMDE457qn5pys56eR5a2m55Sf6L2s5LiT5Lia5oql5ZCNPC9hPjwvZGl2PjxEaXYgY2xhc3M9J21lbnVJdGVtJyB0aXRsZT0n5q+V5Lia55Sf5q+V5Lia44CB5a2m5L2N55Sz6K+3Jz48YSBocmVmPSIuLlxNeUNvbnRyb2xcQnl4d1NxX3N0dWRlbnQuYXNweCIgdGFyZ2V0PSdfYmxhbmsnPuavleS4mueUn+avleS4muOAgeWtpuS9jeeUs+ivtzwvYT48L2Rpdj48L2Rpdj5kAgwPZBYCZg9kFgYCAQ8QZGQWAWZkAgYPEA8WBh4NRGF0YVRleHRGaWVsZAUM5Y2V5L2N5ZCN56ewHg5EYXRhVmFsdWVGaWVsZAUJ5Y2V5L2N5Y+3HgtfIURhdGFCb3VuZGdkEBVhGOS/neWNq+WkhO+8iOS/neWNq+mDqO+8iQnotKLliqHlpIQS6LSi5pS/6YeR6J6N5a2m6ZmiEuWfjuW4guW7uuiuvuWtpumZohLliJ3nrYnmlZnogrLlrabpmaIn5Yib5paw5Yib5Lia5pWZ6IKy56CU56m25LiO5oyH5a+85Lit5b+DPOWFmuWnlOWKnuWFrOWupO+8iOagoemVv+WKnuWFrOWupO+8ieOAgeagoeWPi+W3peS9nOWKnuWFrOWupA/lhZrlp5Tnu5/miJjpg6gk5YWa5aeU5a6j5Lyg6YOo44CB5paw6Ze75L+h5oGv5Lit5b+DKuWFmuWnlOe7hOe7h+mDqO+8iOacuuWFs+WFmuWnlO+8ieOAgeWFmuagoQnmoaPmoYjppoYV5Zyw55CG5LiO546v5aKD5a2m6ZmiDOiwg+WHuuS6uuWRmDDlj5HlsZXop4TliJLlip7lhazlrqTvvIjnnIHpg6jlhbHlu7rlip7lhazlrqTvvIkM6L+U6IGY5Lq65ZGYDOaKmuW3nuW4iOS4kwzpmYTlsZ7lsI/lraYP6ZmE5bGe5bm85YS/5ZutDOmZhOWxnuS4reWtpg/pq5jnrYnnoJTnqbbpmaIG5bel5LyaEuWFrOi0ueW4iOiMg+eUn+mZoi3lip/og73mnInmnLrlsI/liIblrZDmlZnogrLpg6jph43ngrnlrp7pqozlrqRF5Zu96ZmF5ZCI5L2c5LiO5Lqk5rWB5aSE44CB5pWZ6IKy5Zu96ZmF5ZCI5L2c5LiO55WZ5a2m5bel5L2c5Yqe5YWs5a6kEuWbvemZheaVmeiCsuWtpumZojDlm73lrrbljZXns5bljJblrablkIjmiJDlt6XnqIvmioDmnK/noJTnqbbkuK3lv4Mz5ZCO5Yuk5L+d6Zqc5aSE77yI5ZCO5Yuk5Lqn5Lia5Y+R5bGV5pyJ6ZmQ5YWs5Y+477yJEuWMluWtpuWMluW3peWtpumZojDln7rlu7rnrqHnkIblpITvvIjlhbHpnZLmoKHljLrlu7rorr7lip7lhazlrqTvvIkb6K6h566X5py65L+h5oGv5bel56iL5a2m6ZmiG+e6quWnlO+8iOebkeWvn+WuoeiuoeWkhO+8iRLnu6fnu63mlZnogrLlrabpmaIb5rGf6KW/57uP5rWO5Y+R5bGV56CU56m26ZmiIeaxn+ilv+W4iOWkp+aZr+W+t+mVh+mZtueTt+iBjOWkpyTmsZ/opb/luIjlpKfkvZPogrLov5DliqjmioDmnK/lrabpmaIb5rGf6KW/5biI5aSn5Zui5qCh5LiT56eR6YOoGOaxn+ilv+W4iOWkp+m5sOa9reWIhumZoh7msZ/opb/luIjlpKfogYzkuJrmioDmnK/liIbpmaIP5pWZ5biI5pWZ6IKy5aSECeaVmeWKoeWkhBjmlZnogrLmlZnlrabor4TkvLDkuK3lv4MM5pWZ6IKy5a2m6ZmiD+aVmeiCsueglOeptumZog/kupXlhojlsbHluIjpmaIP5pmv5b636ZWH6auY5LiTDOS5neaxn+W4iOS4kx7lhpvkuovmlZnnoJTpg6jvvIjmraboo4Xpg6jvvIk556eR5oqA5Zut566h55CG5Yqe5YWs5a6k77yI56eR5oqA5Zut5Y+R5bGV5pyJ6ZmQ5YWs5Y+477yJD+enkeWtpuaKgOacr+WkhBLnp5HlrabmioDmnK/lrabpmaIS56a76YCA5LyR5bel5L2c5aSED+emu+mAgOS8keS6uuWRmBvljoblj7LmlofljJbkuI7ml4XmuLjlrabpmaIV6ams5YWL5oCd5Li75LmJ5a2m6ZmiDOe+juacr+WtpumZogzokI3kuaHpq5jkuJM26YSx6Ziz5rmW5rm/5Zyw5LiO5rWB5Z+f56CU56m25pWZ6IKy6YOo6YeN54K55a6e6aqM5a6kBuWFtuS7lh7pnZLlsbHmuZbmoKHljLrnrqHnkIblip7lhazlrqQJ5Lq65LqL5aSEDOi9r+S7tuWtpumZognllYblrabpmaIM5LiK6aW25biI6ZmiD+ekvuS8muenkeWtpuWkhBLnlJ/lkb3np5HlrablrabpmaI/5biI6LWE5Z+56K6t5Lit5b+D77yI5rGf6KW/55yB6auY562J5a2m5qCh5biI6LWE5Z+56K6t5Lit5b+D77yJM+WunumqjOWupOW7uuiuvuS4jueuoeeQhuS4reW/g+OAgeWIhuaekOa1i+ivleS4reW/gxvmlbDlrabkuI7kv6Hmga/np5HlrablrabpmaIM5L2T6IKy5a2m6ZmiCeWbvuS5pummhkLlm6Llp5TvvIjlm73lrrblpKflrabnlJ/mlofljJbntKDotKjmlZnogrLln7rlnLDnrqHnkIblip7lhazlrqTvvIkP5aSW5Zu96K+t5a2m6ZmiDOWkluiBmOS6uuWRmDPnvZHnu5zljJbmlK/mkpHova/ku7blm73lrrblm73pmYXnp5HmioDlkIjkvZzln7rlnLAP5paH5YyW56CU56m26ZmiCeaWh+WtpumZoi3ml6DmnLrohpzmnZDmlpnlm73lrrblm73pmYXnp5HmioDlkIjkvZzln7rlnLAb54mp55CG5LiO6YCa5L+h55S15a2Q5a2m6ZmiFeWFiOi/m+adkOaWmeeglOeptumZohjnjrDku6PmlZnogrLmioDmnK/kuK3lv4MM5qCh6ZW/5Yqp55CGCeagoemihuWvvAzlv4PnkIblrabpmaIV5paw6Ze75LiO5Lyg5pKt5a2m6ZmiDOaWsOS9meWtpumZohLkv6Hmga/ljJblip7lhazlrqQP5a2m5oql5p2C5b+X56S+HuWtpueUn+WkhO+8iOWtpueUn+W3peS9nOmDqO+8iTznoJTnqbbnlJ/pmaLvvIjlrabnp5Hlu7rorr7lip7lhazlrqTjgIHnoJTnqbbnlJ/lt6XkvZzpg6jvvIkG5Yy76ZmiDOWunOaYpeWtpumZogzpn7PkuZDlrabpmaIP5oub55Sf5bCx5Lia5aSEDOaUv+azleWtpumZog/otYTkuqfnrqHnkIblpIQe6LWE5Lqn57uP6JCl5pyJ6ZmQ6LSj5Lu75YWs5Y+4EuiHqui0ueWHuuWbveS6uuWRmBVhCDE4MCAgICAgCDE3MCAgICAgCDY4MDAwICAgCDYzMDAwICAgCDgyMDAwICAgCDg5MDAwICAgCDEwMiAgICAgCDEwNyAgICAgCDEwNSAgICAgCDEwMyAgICAgCDEwOSAgICAgCDQ4MDAwICAgCDk2MDAwICAgCDEzNiAgICAgCDk4MDAwICAgCDcxMDAwICAgCDg0MDAwICAgCDgzMDAwICAgCDg1MDAwICAgCDEzMCAgICAgCDIyMCAgICAgCDU3MDAwICAgCEswMzAwICAgCDE2MCAgICAgCDY5MDAwICAgCDM2NSAgICAgCDg4MDAwICAgCDYxMDAwICAgCDE0NCAgICAgCDYyMDAwICAgCDEwMSAgICAgCDQ1MCAgICAgCDMyNCAgICAgCDc0MDAwICAgCDQ3MDAwICAgCDM0MDAwICAgCDcwMDAwICAgCDgwMDAwICAgCDI1MCAgICAgCDI0MDAwICAgCDM2MiAgICAgCDUwMDAwICAgCDM5MCAgICAgCDcyMDAwICAgCDczMDAwICAgCDc1MDAwICAgCDM3MDAwICAgCDEzMiAgICAgCDE0MCAgICAgCDgxMDAwICAgCDEwNCAgICAgCDk3MDAwICAgCDU4MDAwICAgCDQ2MDAwICAgCDY1MDAwICAgCDc2MDAwICAgCDMyMCAgICAgCDk5MDAwICAgCDQwMiAgICAgCDE1MCAgICAgCDY3MDAwICAgCDU0MDAwICAgCDc3MDAwICAgCDM2MCAgICAgCDY2MDAwICAgCDMxMCAgICAgCDEwNiAgICAgCDU1MDAwICAgCDU2MDAwICAgCDI5MCAgICAgCDIzMCAgICAgCDUyMDAwICAgCDk0MDAwICAgCDMwMCAgICAgCDM1MCAgICAgCDUxMDAwICAgCDM4MDAwICAgCDYwMDAwICAgCDMyNSAgICAgCDM2MSAgICAgCDIxMCAgICAgCDEwMCAgICAgCDQ5MDAwICAgCDY0MDAwICAgCDc4MDAwICAgCDMwNCAgICAgCDQyMCAgICAgCDExMCAgICAgCDE5MCAgICAgCDg2MDAwICAgCDc5MDAwICAgCDUzMDAwICAgCDQ0MCAgICAgCDU5MDAwICAgCDg3MDAwICAgCDMzMCAgICAgCDk1MDAwICAgFCsDYWdnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2cWAWZkAgsPPCsACwBkZI7A5f3PaIIsWD6YdHxKIs1sPDhuEeTrIRLm0C7JGRD9
-            __EVENTVALIDATION: /wEWCwKZyNaSDgKKhuW9AQKEtvjxDAK8l9n5DAKvn7i0CQLfh/KmAwKcsIfKAgKGyf/3AgLey8+cAwKzn7+/AwLm4YozjhlckQPQRGAnBldLrqf7C9YYnEQoYS6JZuvCuwIw4eQ=
-            _ctl1:rbtType: College
-            _ctl1:txtKeyWord: 请输入关键字!
-            _ctl1:ddlType: 姓名
-            _ctl1:ddlSQLType: 精确
-            
-            '''
             data={
                 '__EVENTTARGET':'_ctl1$rbtType$1',
                 '__EVENTARGUMENT':'',
@@ -274,23 +272,21 @@ class SpiderStaticTeacher:
                     'post_code':post_code,
                     'name':op.get_text().strip()
                 }
-                self.__DepartmentToObject(data)
+                self.__DepartmentToObject(data=data,log_id=log_id)
                 print(data)
-
         except:
             limit_ti = limit_time - 1
             if limit_ti > 0:
                 print('get_department timeout, retrying。。')
                 return self.get_department(limit_time=limit_ti, timeout=timeout)
             else:
-                return None
+                raise Exception('爬取部门异常！')
 
     def __get_start_teacher_hid(self,limit_time=5,timeout=4):
         try:
             url = r'http://jwc.jxnu.edu.cn/User/default.aspx?&&code=120&uctl=MyControl%5call_teacher.ascx'
             hid = self.__get_hid_data(url)
             '''
-
             __EVENTTARGET: _ctl1$rbtType$1
             __EVENTARGUMENT: 
             __LASTFOCUS: 
@@ -300,7 +296,6 @@ class SpiderStaticTeacher:
             _ctl1:txtKeyWord: 请输入关键字!
             _ctl1:ddlType: 姓名
             _ctl1:ddlSQLType: 精确
-
             '''
             data = {
                 '__EVENTTARGET': '_ctl1$rbtType$1',
@@ -326,21 +321,30 @@ class SpiderStaticTeacher:
             else:
                 return None
 
-    def __TeacherToObject(self,data):
-        te=Teacher()
-        te.id=data['id']
-        te.name=data['name']
-        te.gender=data['gender']
-        if data['department']!=None:
-            te.department=data['department']
-        try:
+    def __TeacherToObject(self,log_id,data):
+        te=Teacher.objects.filter(id=data['id'])
+        if te:
+            te=te[0]
+            desc='{0} {1} {2}'.format(te.name,te.department.name,te.id)
+            SpiderLogDetail.objects.create(spider_log_id=log_id, desc=desc, model='Teacher', status='fail')
+            print(data['id'] + '教师已存在')
+        else:
+            te=Teacher()
+            te.id=data['id']
+            te.name=data['name']
+            te.gender=data['gender']
+            if data['department']!=None:
+                te.department=data['department']
             te.save()
             if not te.user:
                 user=self.__teacher_create_user(te)
                 self.get_teacher_photo(user)
+            if te.department:
+                desc = '{0} {1} {2}'.format(te.department.name,te.name,te.id)
+            else:
+                desc=te.name
+            SpiderLogDetail.objects.create(spider_log_id=log_id, desc=desc, model='Teacher', status='success')
             print(data['id']+'教师插入成功')
-        except:
-            print(data['id']+'教师已存在')
 
 
     def __teacher_create_user(self,tea):
@@ -349,7 +353,7 @@ class SpiderStaticTeacher:
             return user
 
 
-    def get_one_colloge_teachers(self,post_code,limit_time=5,timeout=4):
+    def get_one_colloge_teachers(self,post_code,log_id,limit_time=5,timeout=4):
         try:
             url = r'http://jwc.jxnu.edu.cn/User/default.aspx?&&code=120&uctl=MyControl%5call_teacher.ascx'
             hid=self.__get_start_teacher_hid()
@@ -389,23 +393,23 @@ class SpiderStaticTeacher:
                     'name': td[1].get_text().strip(),
                     'gender': 'female' if sex == '女' else 'male'
                 }
-                self.__TeacherToObject(data)
+                self.__TeacherToObject(data=data,log_id=log_id)
                 print(data)
         except:
             limit_ti = limit_time - 1
             if limit_ti > 0:
                 print('get_one_colloge_teachers timeout, retrying。。')
-                return self.get_one_colloge_teachers(post_code=post_code,limit_time=limit_ti, timeout=timeout)
+                return self.get_one_colloge_teachers(post_code=post_code,log_id=log_id,limit_time=limit_ti, timeout=timeout)
             else:
-                return None
+                raise Exception('爬取异常！')
 
-    def get_teacher(self):
+    def get_teacher(self,log_id):
         departments=Department.objects.all()
         for de in departments:
-            self.get_one_colloge_teachers(post_code=de.post_code)
+            self.get_one_colloge_teachers(post_code=de.post_code,log_id=log_id)
 
 
-    def get_all_teacher(self,limit_time=5,timeout=20):
+    def get_all_teacher(self,log_id,limit_time=5,timeout=20):
         try:
             url = r'http://jwc.jxnu.edu.cn/User/default.aspx?&&code=120&uctl=MyControl%5call_teacher.ascx'
             hid = self.__get_hid_data(url)
@@ -438,45 +442,49 @@ class SpiderStaticTeacher:
                 td = teacher.select('td')
                 sex = td[3].get_text().strip()
                 id=td[2].get_text().strip()
-                try:
-                    teac=Teacher.objects.get(id=id)
-                except:
-                    de = Department.objects.filter(name=td[0].get_text().strip())
-                    data = {
-                        'id': id,
-                        'department': de[0] if de != [] else None,
-                        'name': td[1].get_text().strip(),
-                        'gender': 'female' if sex == '女' else 'male'
-                    }
-                    self.__TeacherToObject(data)
-                    print(data)
+                de = Department.objects.filter(name=td[0].get_text().strip())
+                data = {
+                    'id': id,
+                    'department': de[0] if de != [] else None,
+                    'name': td[1].get_text().strip(),
+                    'gender': 'female' if sex == '女' else 'male'
+                }
+                self.__TeacherToObject(data=data,log_id=log_id)
+                print(data)
         except:
             limit_ti = limit_time - 1
             if limit_ti > 0:
                 print('get_one_colloge_teachers timeout, retrying。。')
-                return self.get_all_teacher(limit_time=limit_ti, timeout=timeout)
+                return self.get_all_teacher(log_id=log_id,limit_time=limit_ti, timeout=timeout)
             else:
                 return None
 
-    def __ScheduleLessonToObject(self,data):
-        schlesson=ScheduleLesson()
-        schlesson.semester=data['semester']
-        schlesson.class_id=data['class_id']
-        schlesson.class_name=data['class_name']
-        try:
-            lesson=Lesson.objects.get(id=data['lesson_id'])
-            schlesson.lesson=lesson
-        except:
+    def __ScheduleLessonToObject(self,log_id,data):
+        schlesson=ScheduleLesson.objects.filter(teacher_id=data['teacher_id'],semester=data['semester'],lesson_id=data['lesson_id'],class_id=data['class_id'])
+        if schlesson:
+            schlesson=schlesson[0]
+            desc='{0} {1} {2} {3}'.format(schlesson.lesson.name,schlesson.class_name,schlesson.teacher.name,schlesson.semester)
+            SpiderLogDetail.objects.create(spider_log_id=log_id,desc=desc,model='ScheduleLesson',status='fail')
+            print('课程已存在！')
+        else:
+            schlesson=ScheduleLesson()
+            schlesson.semester=data['semester']
+            schlesson.class_id=data['class_id']
+            schlesson.class_name=data['class_name']
             try:
-                credit=self.get_lesson_credit(data['lesson_id'])
+                lesson=Lesson.objects.get(id=data['lesson_id'])
+                schlesson.lesson=lesson
             except:
-                credit=2
-            lesson=Lesson(id=data['lesson_id'],name=data['lesson_name'],credit=credit)
-            lesson.save()
-            schlesson.lesson=lesson
-        teacher=Teacher.objects.get(id=data['teacher_id'])
-        schlesson.teacher=teacher
-        try:
+                try:
+                    credit=self.get_lesson_credit(data['lesson_id'])
+                except:
+                    credit=2
+                lesson=Lesson(id=data['lesson_id'],name=data['lesson_name'],credit=credit)
+                lesson.save()
+                schlesson.lesson=lesson
+
+            teacher=Teacher.objects.get(id=data['teacher_id'])
+            schlesson.teacher=teacher
             schlesson.save()
             try:
                 group=Group()
@@ -494,23 +502,28 @@ class SpiderStaticTeacher:
                     print('课表课程组插入老师管理员失败')
             except:
                 print('课表课程插入组失败')
+            desc = '{0} {1} {2} {3}'.format(schlesson.lesson.name, schlesson.class_name, schlesson.teacher.name,schlesson.semester)
+            SpiderLogDetail.objects.create(spider_log_id=log_id, desc=desc, model='ScheduleLesson')
             return schlesson
-        except:
-            print('schedule lesson 保存失败')
-            return None
 
-    def schedule_lesson_create_score(self,schlesson,student_id):
-        try:
-            stu=Student.objects.get(id=student_id)
-            score=Score(student=stu,schedule_lesson=schlesson)
-            try:
+
+    def schedule_lesson_create_score(self,log_id,schlesson,student_id):
+        score=Score.objects.filter(student_id=student_id,schedule_lesson=schlesson)
+        if score:
+            score=score[0]
+            desc='{0} {1} {2}'.format(score.student.name,score.schedule_lesson.lesson.name,score.schedule_lesson.semester)
+            SpiderLogDetail.objects.create(spider_log_id=log_id,desc=desc,model='Score',status='fail')
+        else:
+            stu=Student.objects.filter(id=student_id)
+            if stu:
+                score=Score(student=stu,schedule_lesson=schlesson)
                 score.save()
-            except:
-                print(student_id+' 保存失败')
-        except:
-            print('获取学生失败,学生id: {0}'.format(student_id))
+                desc = '{0} {1} {2}'.format(score.student.name, score.schedule_lesson.lesson.name,score.schedule_lesson.semester)
+                SpiderLogDetail.objects.create(spider_log_id=log_id, desc=desc, model='Score')
+            else:
+                print('学生未找到')
 
-    def get_one_teacher_one_semester_schedule(self,teacher_id,semester,limit_time=5,timeout=5):
+    def get_one_teacher_one_semester_schedule(self,log_id,teacher_id,semester,limit_time=5,timeout=5):
         try:
             url=r'http://jwc.jxnu.edu.cn/MyControl/All_Display.aspx?UserControl=Xfz_Kcb.ascx&UserType=Teacher&UserNum='+teacher_id
             hid=self.__get_hid_data(url=url)
@@ -523,19 +536,19 @@ class SpiderStaticTeacher:
             wb_data=self.__s.post(url,data=data)
             soup = BeautifulSoup(wb_data.text.replace('<br>', '|').replace('<br/>', '|'), 'lxml')
             try:
-                y=self.__get_schedule_lesson(soup=soup,teacher_id=teacher_id,semester=semester)
-                self.__get_schedule_counter(y=y,soup=soup,url=url,semester=semester,teacher_id=teacher_id)
+                y=self.__get_schedule_lesson(soup=soup,teacher_id=teacher_id,semester=semester,log_id=log_id)
+                self.__get_schedule_counter(y=y,soup=soup,url=url,semester=semester,teacher_id=teacher_id,log_id=log_id)
             except:
                 print('{0}{1}课表课程异常'.format(teacher_id,semester))
         except:
             limit_ti = limit_time - 1
             if limit_ti > 0:
                 print('get_one_teacher_one_semester_schedule timeout, retrying。。')
-                return self.get_one_teacher_one_semester_schedule(teacher_id=teacher_id,semester=semester,limit_time=limit_ti, timeout=timeout)
+                return self.get_one_teacher_one_semester_schedule(log_id=log_id,teacher_id=teacher_id,semester=semester,limit_time=limit_ti, timeout=timeout)
             else:
                 return None
 
-    def __get_schedule_lesson(self,soup,teacher_id,semester,limit_time=5):
+    def __get_schedule_lesson(self,soup,log_id,teacher_id,semester,limit_time=5):
         try:
             y=[]
             bb = soup.select('tr[bgcolor="White"]')
@@ -556,20 +569,20 @@ class SpiderStaticTeacher:
                     'teacher_id': teacher_id,
                     'semester': semester,
                 }
-                schlesson = self.__ScheduleLessonToObject(data=data)
-                self.get_schedule_student(lesson_id=data['lesson_id'], class_id=data['class_id'],semester=semester.strip().split(' ')[0], schlesson=schlesson)
+                schlesson = self.__ScheduleLessonToObject(data=data,log_id=log_id)
+                self.get_schedule_student(log_id=log_id,lesson_id=data['lesson_id'], class_id=data['class_id'],semester=semester.strip().split(' ')[0], schlesson=schlesson)
                 y.append(class_name)
             return y
         except:
             limit_ti = limit_time - 1
             if limit_ti > 0:
                 print('获取课表课程失败，正在重试。。')
-                return self.__get_schedule_lesson(soup=soup,teacher_id=teacher_id, semester=semester,limit_time=limit_ti)
+                return self.__get_schedule_lesson(log_id=log_id,soup=soup,teacher_id=teacher_id, semester=semester,limit_time=limit_ti)
             else:
                 return None
 
 
-    def __get_schedule_counter(self,y,soup,url,semester,teacher_id,limit_time=5):
+    def __get_schedule_counter(self,log_id,y,soup,url,semester,teacher_id,limit_time=5):
         if y != []:
             try:
                 class_list = soup.select('table[width="600"] tr')
@@ -625,12 +638,16 @@ class SpiderStaticTeacher:
                                     else:
                                         try:
                                             sc = ScheduleLesson.objects.get(class_name__contains=class_name,lesson__name=lesso_name, semester=semester)
-                                            try:
-                                                schedule = Schedule(class_room=classroom, counter=bbb,
-                                                                    schedule_lesson=sc)
+                                            schedule=Schedule.objects.filter(class_room=classroom, counter=bbb,schedule_lesson=sc)
+                                            if schedule:
+                                                schedule=schedule[0]
+                                                desc='%s %s %s %s %s %d'%(lesso_name, class_name, schedule.schedule_lesson.semester, schedule.schedule_lesson.teacher.name, class_name, bbb)
+                                                SpiderLogDetail.objects.create(spider_log_id=log_id,desc=desc,model='Schedule',status='fail')
+                                            else:
+                                                schedule = Schedule(class_room=classroom, counter=bbb,schedule_lesson=sc)
                                                 schedule.save()
-                                            except:
-                                                print('课表已存在')
+                                                desc = '%s %s %s %s %s %d' % (lesso_name, class_name, schedule.schedule_lesson.semester,schedule.schedule_lesson.teacher.name, class_name, bbb)
+                                                SpiderLogDetail.objects.create(spider_log_id=log_id, desc=desc,model='Schedule')
                                         except:
                                             print('----------------------------')
                                             # print('class_name:' + class_name + ' | lesson_name' + lesso_name + ' | counter:' + bbb)
@@ -652,8 +669,18 @@ class SpiderStaticTeacher:
                                     try:
                                         sc = ScheduleLesson.objects.get(class_name__contains=class_name,lesson__name=lesso_name, semester=semester)
                                         try:
-                                            schedule = Schedule(class_room=classroom, counter=bbb, schedule_lesson=sc)
-                                            schedule.save()
+                                            schedule = Schedule.objects.filter(class_room=classroom, counter=bbb,schedule_lesson=sc)
+                                            if schedule:
+                                                schedule = schedule[0]
+                                                desc = '%s %s %s %s %s %d' % (
+                                                lesso_name, class_name, schedule.schedule_lesson.semester,
+                                                schedule.schedule_lesson.teacher.name, class_name, bbb)
+                                                SpiderLogDetail.objects.create(spider_log_id=log_id, desc=desc,model='Schedule', status='fail')
+                                            else:
+                                                schedule = Schedule(class_room=classroom, counter=bbb,schedule_lesson=sc)
+                                                schedule.save()
+                                                desc = '%s %s %s %s %s %d' % (lesso_name, class_name, schedule.schedule_lesson.semester,schedule.schedule_lesson.teacher.name, class_name, bbb)
+                                                SpiderLogDetail.objects.create(spider_log_id=log_id, desc=desc,model='Schedule')
                                         except:
                                             print('课表已存在')
                                     except:
@@ -669,7 +696,6 @@ class SpiderStaticTeacher:
                                 #     'uck_counter':bbb,
                                 #     'class_name':class_name
                                 # }
-
                         else:
                             bbb += 1
             except:
@@ -677,7 +703,7 @@ class SpiderStaticTeacher:
                 if limit_ti > 0:
                     print('{0} 的 {1} 课表异常，正在重试'.format(teacher_id, semester))
                     print('__get_schedule_counter error, retrying。。')
-                    return self.__get_schedule_counter(y=y,soup=soup,url=url,semester=semester,teacher_id=teacher_id,limit_time=limit_ti)
+                    return self.__get_schedule_counter(log_id=log_id,y=y,soup=soup,url=url,semester=semester,teacher_id=teacher_id,limit_time=limit_ti)
                 else:
                     error = ErrorSchedule(teacher_id=teacher_id, semester=semester)
                     error.save()
@@ -685,7 +711,7 @@ class SpiderStaticTeacher:
 
 
     #获取课表的学生名单
-    def get_schedule_student(self,lesson_id,class_id,semester,schlesson=None,limit_time=5,timeout=3):
+    def get_schedule_student(self,log_id,lesson_id,class_id,semester,schlesson=None,limit_time=5,timeout=3):
         try:
             url=r'http://jwc.jxnu.edu.cn/MyControl/All_Display.aspx?UserControl=Xfz_Class_student2.ascx&bjh={0}&kch={1}&xq={2}'.format(class_id,lesson_id,semester)
             wb_data=self.__s.get(url)
@@ -694,32 +720,37 @@ class SpiderStaticTeacher:
             for stu_id in stu_ids:
                 sid=stu_id.get_text().strip()
                 # print(sid)
-                self.schedule_lesson_create_score(schlesson=schlesson,student_id=sid)
+                self.schedule_lesson_create_score(log_id=log_id,schlesson=schlesson,student_id=sid)
         except:
             limit_ti = limit_time - 1
             if limit_ti > 0:
                 print('get_schedule_student timeout, retrying。。')
-                return self.get_schedule_student(lesson_id=lesson_id,class_id=class_id,semester=semester,schlesson=schlesson,limit_time=limit_ti, timeout=timeout)
+                return self.get_schedule_student(log_id=log_id,lesson_id=lesson_id,class_id=class_id,semester=semester,schlesson=schlesson,limit_time=limit_ti, timeout=timeout)
             else:
                 return None
 
 
-    def get_one_teacher_all_semester_schedule(self,teacher_id,semester_list=get_spider_semester()):
+    def get_one_teacher_all_semester_schedule(self,log_id,teacher_id,semester_list=get_spider_semester()):
         # semester_list=self.semester_list
         for semester in semester_list:
-            self.get_one_teacher_one_semester_schedule(semester=semester['post_code'],teacher_id=teacher_id)
+            self.get_one_teacher_one_semester_schedule(log_id=log_id,semester=semester['post_code'],teacher_id=teacher_id)
 
-    def get_schedule(self,semester_list=get_spider_semester()):
+    def get_schedule(self,log_id,semester_list=get_spider_semester()):
         teachers=Teacher.objects.all().order_by('name')
         for tea in teachers:
-            self.get_one_teacher_all_semester_schedule(teacher_id=tea.id,semester_list=semester_list)
+            self.get_one_teacher_all_semester_schedule(log_id=log_id,teacher_id=tea.id,semester_list=semester_list)
+
+    def get_one_semester_schedule(self,semester,log_id):
+        teachers = Teacher.objects.all()
+        for tea in teachers:
+            self.get_one_teacher_one_semester_schedule(log_id=log_id,teacher_id=tea.id,semester=semester)
 
 
-    def multiprocessing_get_schedule(self):
-        pool = multiprocessing.Pool(processes=5)
-        teachers=Teacher.objects.values_list('id',flat=True)
-        teachers=list(teachers)
-        pool.map(self.get_one_teacher_all_semester_schedule,teachers)
+    # def multiprocessing_get_schedule(self):
+    #     pool = multiprocessing.Pool(processes=5)
+    #     teachers=Teacher.objects.values_list('id',flat=True)
+    #     teachers=list(teachers)
+    #     pool.map(self.get_one_teacher_all_semester_schedule,teachers)
 
 
 
@@ -838,11 +869,25 @@ class SpiderStaticTeacher:
                 return None
 
 
-
+    def testss(self):
+        try:
+            url=r'http://jwc.jxnu.edu.cn/MyControl/All_Display.aspx?UserControl=Xfz_Class_student.ascx&bjh=2468045&kch=062301&xq=2016/9/1'
+            wb_data=self.__s.get(url)
+            soup1 = BeautifulSoup(wb_data.text, 'html5lib')
+            stu_ids = soup1.select('tr[style="color:#330099;background-color:White;"] > td:nth-of-type(3)')
+            print(soup1)
+            print(stu_ids)
+            # for stu_id in stu_ids:
+            #     sid=stu_id.get_text().strip()
+            #     # print(sid)
+            #     self.schedule_lesson_create_score(log_id=log_id,schlesson=schlesson,student_id=sid)
+        except:
+            pass
 
 if __name__ == '__main__':
     tea=SpiderStaticTeacher(MY_USERNAME,MY_WORD)
     tea.sign_in(limit_time=20)
+    tea.testss()
     # tea.get_schedule()
 
 

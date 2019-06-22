@@ -182,6 +182,7 @@ router.register(r'homework-score',HomeworkScoreView,basename='homework-score')
 router.register(r'question-score',QuestionScoreView,basename='question-score')
 router.register(r'auto-correct-no-submit-homework',AutoCorrectNoSubmitHomeworkView,basename='auto-correct-no-submit-homework')
 
+from spider.views import StopTaskView
 
 urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),
@@ -196,6 +197,7 @@ urlpatterns = [
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
     url(r'^channels-api/', include('channels_api.urls')),
     url(r'^search/',include('haystack.urls')),
+    url(r'^stop-task/',StopTaskView.as_view(),name='stop-task')
     # url(r'api/v1/captcha/', include('rest_captcha.urls')),
     # url(r'^api/v1/captcha-check/',CaptchaView.as_view(),name='captcha-check')
     # url(r'api/v1/group-list/',GroupList.as_view(),name='group-list')

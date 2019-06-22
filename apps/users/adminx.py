@@ -151,6 +151,7 @@ class StudentDetailAdmin(object):
 
 class MyPasswordAdmin(object):
     list_display=['user','password','add_time']
+    model_icon='fa fa-lock'
     def save_models(self):
         obj=self.new_obj
         obj.password=make_my_password(obj.password)
@@ -171,7 +172,7 @@ xadmin.site.register(MyPassword,MyPasswordAdmin)
 
 
 xadmin.site.register(views.BaseAdminView,BaseSetting)
-xadmin.site.register(views.CommAdminView,GlobalSettings)
+# xadmin.site.register(views.CommAdminView,GlobalSettings)
 
 
 

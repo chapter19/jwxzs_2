@@ -14,6 +14,7 @@ from django.db.models import Q
 from rest_framework_extensions.cache.mixins import CacheResponseMixin
 from rest_framework_extensions.cache.decorators import cache_response
 from rest_framework.response import Response
+from rest_framework import pagination
 from rest_framework import status
 from semesters.models import Semester
 
@@ -21,11 +22,34 @@ from semesters.models import Semester
 from users.views import DefaultPagination
 from .tasks import student_scores_log,teacher_scores_log,student_total_credit_log,teacher_total_credit_log,schedule_student_list_log
 
+
+
+class ScorePagination(pagination.PageNumberPagination):
+    page_size = 20
+    page_size_query_param = 'page_size'
+    page_query_param = 'page'
+    max_page_size = 100
+    def get_paginated_response(self, data):
+        semester_credit=0
+        for d in data:
+            semester_credit+=d['schedule_lesson']['lesson']['credit']
+        return Response({
+            'links': {
+                'next': self.get_next_link(),
+                'previous': self.get_previous_link()
+            },
+            'semester_credit':semester_credit,
+            'count': self.page.paginator.count,
+            'results': data
+        })
+
+
 class ScoreViewSet(CacheResponseMixin,mixins.ListModelMixin,viewsets.GenericViewSet):
     '''
     List:
         学生成绩接口
     '''
+    # pagination_class = ScorePagination
     pagination_class = DefaultPagination
     queryset = Score.objects.all()
     permission_classes = (IsAuthenticated,)
@@ -170,4 +194,8 @@ class NewScoreView(mixins.CreateModelMixin,mixins.ListModelMixin,viewsets.Generi
         return serializer.save()
     def get_queryset(self):
         return NewScore.objects.filter(student_id=self.request.user.username)
+
+
+# class SemesterView():
+#     pass
 

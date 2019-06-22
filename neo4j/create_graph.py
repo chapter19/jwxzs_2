@@ -3,9 +3,9 @@ from py2neo import Graph,Database,NodeMatcher,RelationshipMatcher
 from py2neo.data import Node,Relationship
 
 
-import os,django
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "jwxzs_2.settings")# project_name 项目名称
-django.setup()
+# import os,django
+# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "jwxzs_2.settings")# project_name 项目名称
+# django.setup()
 
 from users.models import Student,Teacher,Department,Class,Major
 from semesters.models import Semester
@@ -99,7 +99,7 @@ class JwxzsGraph(object):
 
 
     def create_all_student_node(self):
-        students=Student.objects.all()
+        students=Student.objects.filter(is_active=True)
         for stu in students:
             stu_nodes=self.matcher.match('Student',id=stu.id)
             if stu_nodes:
@@ -132,8 +132,8 @@ class JwxzsGraph(object):
                 print(tea_node)
 
 
-    def select_schedule_lesson(self):
-        sch_less=ScheduleLesson.objects.all()
+    def select_schedule_lesson(self,semester):
+        sch_less=ScheduleLesson.objects.filter(semester=semester)
         for s_l in  sch_less:
             semester = Semester.objects.filter(post_code=s_l.semester)[0].verbose_name
             lesson_node = self.matcher.match('Lesson', id=s_l.lesson_id).first()
@@ -271,7 +271,7 @@ class JwxzsGraph(object):
 
     #创建专业节点并创建专业课联系
     def create_major_node(self):
-        majors=Major.objects.all()
+        majors=Major.objects.filter(is_active=True)
         for maj in majors:
             ma=self.matcher.match('Major',id=maj.major_id,grade=maj.grade)
             if not ma:
@@ -305,6 +305,7 @@ class JwxzsGraph(object):
                         print('major lesson relation exist!')
         else:
             print('the major has no major lesson!')
+
 
     #创建学生专业关系
     def create_stu_maj_rela(self):
@@ -405,6 +406,16 @@ class JwxzsGraph(object):
             self.graph.push(tea_node)
             print(tea_node)
 
+    def update_all(self,semester):
+        month=semester.split('/')[1]
+        # self.create_lesson_node()
+        if month=='9':
+            self.create_all_student_node()
+            self.create_all_teacher_node()
+            self.create_major_node()
+            self.create_like_maj_rela()
+            self.create_stu_maj_rela()
+        self.select_schedule_lesson(semester=semester)
 
 jwxzsgraph=JwxzsGraph()
 

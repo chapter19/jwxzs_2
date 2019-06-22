@@ -12,112 +12,134 @@ class KnowledgeLabelAdmin(object):
     list_display=['name','semester','lesson','teacher','unit_count','lesson_count','homework_count','question_count','create_user','create_time']
     search_fields=['name','lesson__name','teacher__name','teacher__id','id']
     list_filter=['name','semester','lesson__name','teacher__name','unit_count','lesson_count','homework_count','question_count','create_user__username','create_time']
+    model_icon = 'fa fa-book'
 
 
 class UnitAdmin(object):
+    model_icon = 'fa fa-book'
     list_display=['num','name','semester','lesson','teacher','info','unit_type','parent_unit','create_time','update_time','create_user','id']
     search_fields=['name','lesson__name','teacher__name','create_user__username','id']
     list_filter=['num','name','semester','lesson__name','teacher__name','info','unit_type','parent_unit','create_time','update_time','create_user__username']
 
 
 class LessonPeriodAdmin(object):
+    model_icon = 'fa fa-book'
     list_display=['name','time','desc','schedule_lesson','create_time','update_time']
     search_fields=['name','desc','schedule_lesson__lesson__name','schedule_lesson__teacher__name','schedule_lesson__teacher__id','id']
     list_filter=['time','name','desc','schedule_lesson__lesson__name','schedule_lesson__teacher__name','schedule_lesson__semester','create_time','update_time']
 
 
 class HomeworkAdmin(object):
+    model_icon = 'fa fa-book'
     list_display=['lesson_period','title','describe','timeout','limit_time','user','question_counter','total_score','create_time','update_time']
     search_fields=['title','describe','user__username','user__name','lesson_period__name','lesson_period__schedule_lesson__lesson__name','id']
     list_filter=['lesson_period__schedule_lesson__teacher__name','lesson_period__schedule_lesson__lesson__name','lesson_period__schedule_lesson__semester','title','describe','timeout','limit_time','user__username','user__name','question_counter','total_score','create_time','update_time']
 
 class QuestionAdmin(object):
+    model_icon = 'fa fa-book'
     list_display=['question','homework','question_type','number','analysis','score','image_count','if_auto_correct','if_answer_update']
     search_fields=['question','analysis','id']
     list_filter=['homework__title','question_type','number','question','analysis','score','image_count','if_auto_correct','if_answer_update','homework__lesson_period__schedule_lesson__teacher__name','homework__lesson_period__schedule_lesson__lesson__name','homework__lesson_period__schedule_lesson__semester']
 
 
 class QuestionImageAdmin(object):
+    model_icon = 'fa fa-book'
     list_display=['question','number','image','create_time','update_time']
     search_fields=['question__question','question__analysis','id']
     list_filter=['number','question__homework__title','question__question_type','question__number','question__analysis','question__score','question__image_count','question__homework__lesson_period__schedule_lesson__teacher__name','question__homework__lesson_period__schedule_lesson__lesson__name','question__homework__lesson_period__schedule_lesson__semester']
 
 class DaiMaFileAdmin(object):
+    model_icon = 'fa fa-book'
     list_display=['question','daima_type','name','create_time','update_time','id']
     search_fields=['name','id','question__question','question__analysis','question__score','question__id']
     list_filter=['question__question','question__analysis','daima_type','name','create_time','update_time']
 
 class ChoiceAdmin(object):
+    model_icon = 'fa fa-book'
     list_display=['question','choice','content','create_time','update_time','id']
     search_fields=['content','question__question','question__analysis','question__id']
     list_filter=['question__question','question__analysis','choice','content','create_time','update_time']
 
 class ChoiceTrueAnswerAdmin(object):
+    model_icon = 'fa fa-book'
     list_display=['choice','question','create_time','update_time','id']
     search_fields=['choice__content','question__question','question__analysis','question__id']
     list_filter=['choice__choice','choice__content','question__question','question__analysis','create_time','update_time']
 
 class StudentChoiceAnswerAdmin(object):
+    model_icon = 'fa fa-book'
     list_display=['student','choice','question','create_time','update_time','id']
     search_fields=['student__name','student__id','choice__content','question__question','question__analysis','question__id']
     list_filter=['student__name','choice__content','choice__choice','question__question','question__analysis','create_time','update_time']
 
 class PanDuanTrueAnswerAdmin(object):
+    model_icon = 'fa fa-book'
     list_display=['question','answer','create_time','update_time','id']
     search_fields=['question__question','question__analysis','question__id']
     list_filter=['question__question','question__analysis','answer','create_time','update_time']
 
 class StudentPanDuanAnswerAdmin(object):
+    model_icon = 'fa fa-book'
     list_display=['student','question','answer','create_time','update_time','id']
     search_fields=['student__name','student__id','question__question','question__analysis','question__id']
     list_filter=['student__name','question__question','question__analysis','answer','create_time','update_time']
 
 class TianKongBlankAdmin(object):
+    model_icon = 'fa fa-book'
     list_display=['question','number','score','if_other_answer','create_time','update_time']
     search_fields=['question__question','question__analysis','question__id']
     list_filter=['question__question','question__analysis','number','score','if_other_answer','create_time','update_time']
 
 class TianKongTrueAnswerAdmin(object):
+    model_icon = 'fa fa-book'
     list_display=['answer','blank','create_time','update_time','id']
     search_fields=['blank__question__question','blank__question__analysis','answer']
     list_filter=['answer','blank__question__question','blank__question__analysis','create_time','update_time']
 
 class TianKongOtherAnswerAdmin(object):
+    model_icon = 'fa fa-book'
     list_display=['blank','other_answer','create_time','update_time','id']
     search_fields = ['blank__question__question', 'blank__question__analysis', 'other_answer']
     list_filter = ['other_answer', 'blank__question__question', 'blank__question__analysis', 'create_time', 'update_time']
 
 class StudentTianKongAnswerAdmin(object):
+    model_icon = 'fa fa-book'
     list_display=['student','answer','blank','create_time','update_time','id']
     search_fields=['student__name','student__id','blank__question__question','blank__question__analysis','answer']
     list_filter=['student__name','answer','blank__question__question','blank__question__analysis','create_time','update_time']
 
 class JianDaAnswerAdmin(object):
+    model_icon = 'fa fa-book'
     list_display=['answer','question','create_time','update_time','id']
     search_fields=['answer','question__question','question__analysis','question__id']
     list_filter=['answer','question__question','question__analysis','create_time','update_time']
 
 class StudentJianDaAnswerAdmin(object):
+    model_icon = 'fa fa-book'
     list_display=['question','answer','student','if_auto_submit','create_time','update_time','id']
     search_fields=['question__question','question__analysis','question__id','answer','student__name','student__id']
     list_filter=['question__question','question__analysis','answer','student__name','if_auto_submit','create_time','update_time']
 
 class OtherAnswerAdmin(object):
+    model_icon = 'fa fa-book'
     list_display=['text_answer','question','create_time','update_time','image_count','id']
     search_fields=['text_answer','question__question','question__analysis','question__id']
     list_filter=['text_answer','question__question','question__analysis','create_time','update_time','image_count']
 
 class OtherAnswerImageAdmin(object):
+    model_icon = 'fa fa-book'
     list_display=['other_answer','number','image','create_time','update_time','id']
     search_fields=['other_answer__question__question','other_answer__question__analysis','other_answer__question__id','other_answer__text_answer']
     list_filter=['number','other_answer__question__question','other_answer__question__analysis','other_answer__text_answer','create_time','update_time']
 
 class StudentOtherAnswerAdmin(object):
+    model_icon = 'fa fa-book'
     list_display=['student','text_answer','question','create_time','update_time','image_count','id']
     search_fields=['student__name','student__id','text_answer','question__question','question__analysis','question__id']
     list_filter=['student__name','text_answer','question__question','question__analysis','create_time','update_time','image_count']
 
 class StudentOtherAnswerImageAdmin(object):
+    model_icon = 'fa fa-book'
     list_display=['student_other_answer','number','image','create_time','update_time','id']
     search_fields=['student_other_answer__student__name','student_other_answer__student__id',\
                    'student_other_answer__text_answer','student_other_answer__question__question',\
@@ -128,21 +150,25 @@ class StudentOtherAnswerImageAdmin(object):
 
 
 class DaiMaAnswerAdmin(object):
+    model_icon = 'fa fa-book'
     list_display=['daima_file','daima_type','answer','create_time','update_time','id']
     search_fields=['answer','daima_file__question__question','daima_file__question__analysis','daima_file__question__id']
     list_filter=['daima_file__question__question','daima_file__question__analysis','daima_type','answer','create_time','update_time']
 
 class StudentDaiMaAnswerAdmin(object):
+    model_icon = 'fa fa-book'
     list_display=['daima_file','daima_type','answer','student','if_auto_submit','create_time','update_time','id']
     search_fields=['daima_file__question__question','daima_file__question__analysis','daima_file__question__id','answer','student__name','student__id']
     list_filter=['daima_type','daima_file__question__question','daima_file__question__analysis','answer','student__name','student__id','if_auto_submit','create_time','update_time']
 
 class QuestionScoreAdmin(object):
+    model_icon = 'fa fa-book'
     list_display=['question','student','score','create_time','update_time','if_no_answer','id']
     search_fields=['student__name','student__id','question__question','question__analysis','question__id']
     list_filter=['question__question','question__analysis','student__name','score','create_time','update_time','if_no_answer']
 
 class HomeworkScoreAdmin(object):
+    model_icon = 'fa fa-book'
     list_display=['homework','student','total_score','if_submit','create_time','update_time','if_no_answer','id']
     search_fields=['homework__title','homework__describe','student__name','student__id','homework__id']
     list_filter=['homework__title','homework__describe','student__name','total_score','if_submit','create_time','update_time','if_no_answer']

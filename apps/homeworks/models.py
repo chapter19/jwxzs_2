@@ -37,11 +37,11 @@ class Unit(models.Model):
     info=models.CharField(max_length=200,verbose_name='简介',blank=True,null=True,help_text='简介')
     unit_type=models.IntegerField(choices=((1,'章'),(2,'节'),(3,'子节')),verbose_name='章节类别')
     parent_unit=models.ForeignKey('self',null=True,blank=True,verbose_name='父章节',related_name='sub_unit')
-    lesson_file = models.ManyToManyField(File, verbose_name='章节课件', related_name='unit')
+    lesson_file = models.ManyToManyField(File, verbose_name='章节课件', related_name='unit',blank=True)
     create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     update_time=models.DateTimeField(auto_now=True,verbose_name='修改时间')
     create_user=models.ForeignKey(UserProfile,verbose_name='创建人',related_name='my_create_unit')
-    knowledge_labels = models.ManyToManyField(KnowledgeLabel, verbose_name='知识点标签', related_name='unit')
+    knowledge_labels = models.ManyToManyField(KnowledgeLabel, verbose_name='知识点标签', related_name='unit',blank=True)
     class Meta:
         verbose_name='章节'
         verbose_name_plural=verbose_name
@@ -54,8 +54,8 @@ class LessonPeriod(models.Model):
     time=models.DateField(verbose_name='上课时间',auto_now_add=True)
     name=models.CharField(verbose_name='课时名',max_length=50,blank=True,null=True)
     desc=models.TextField(verbose_name='课时说明',blank=True,null=True)
-    lesson_file=models.ManyToManyField(File,verbose_name='课时课件',related_name='lesson_period')
-    unit=models.ManyToManyField(Unit,related_name='lesson_period',verbose_name='章节')
+    lesson_file=models.ManyToManyField(File,verbose_name='课时课件',related_name='lesson_period',blank=True)
+    unit=models.ManyToManyField(Unit,related_name='lesson_period',verbose_name='章节',blank=True)
     schedule_lesson=models.ForeignKey(ScheduleLesson,verbose_name='课程表课程班级',related_name='lesson_period')
     create_time = models.DateTimeField(verbose_name='创建时间',default=datetime.now)
     update_time = models.DateTimeField(auto_now=True, verbose_name='修改时间')

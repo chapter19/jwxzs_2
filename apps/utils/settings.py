@@ -1,8 +1,8 @@
 #-*- coding:utf-8 -*-
 
-import os,django
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "jwxzs_2.settings")# project_name 项目名称
-django.setup()
+# import os,django
+# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "jwxzs_2.settings")# project_name 项目名称
+# django.setup()
 
 
 from users.models import MyPassword

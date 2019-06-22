@@ -14,6 +14,94 @@ from semesters.models import Semester
 
 class ScoreSerializer(serializers.ModelSerializer):
     # student=StudentSerializer()
+    qinghua_data = serializers.SerializerMethodField()
+    def get_qinghua_data(self, obj):
+        if obj.score >= 100:
+            qinghua_data = {
+                'grade': 'A+',
+                'grade_point': 4.0,
+                'evaluation': '优秀',
+                'credit_score': 4.0 * obj.schedule_lesson.lesson.credit
+            }
+        elif obj.score >= 95:
+            qinghua_data = {
+                'grade': 'A',
+                'grade_point': 4.0,
+                'evaluation': '优秀',
+                'credit_score': 4.0 * obj.schedule_lesson.lesson.credit
+            }
+        elif obj.score >= 90:
+            qinghua_data = {
+                'grade': 'A-',
+                'grade_point': 3.7,
+                'evaluation': '优秀',
+                'credit_score': 3.7 * obj.schedule_lesson.lesson.credit
+            }
+        elif obj.score >= 85:
+            qinghua_data = {
+                'grade': 'B+',
+                'grade_point': 3.3,
+                'evaluation': '良好',
+                'credit_score': 3.3 * obj.schedule_lesson.lesson.credit
+            }
+        elif obj.score >= 80:
+            qinghua_data = {
+                'grade': 'B',
+                'grade_point': 3.0,
+                'evaluation': '良好',
+                'credit_score': 3.0 * obj.schedule_lesson.lesson.credit
+            }
+        elif obj.score >= 77:
+            qinghua_data = {
+                'grade': 'B-',
+                'grade_point': 2.7,
+                'evaluation': '良好',
+                'credit_score': 2.7 * obj.schedule_lesson.lesson.credit
+            }
+        elif obj.score >= 73:
+            qinghua_data = {
+                'grade': 'C+',
+                'grade_point': 2.3,
+                'evaluation': '一般',
+                # 'credit_score': 2.3 * obj.schedule_lesson.lesson.credit
+                'credit_score': 2.3 * obj.schedule_lesson.lesson.credit
+            }
+        elif obj.score >= 70:
+            qinghua_data = {
+                'grade': 'C',
+                'grade_point': 2.0,
+                'evaluation': '一般',
+                'credit_score': 2.0 * obj.schedule_lesson.lesson.credit
+            }
+        elif obj.score >= 67:
+            qinghua_data = {
+                'grade': 'C-',
+                'grade_point': 1.7,
+                'evaluation': '一般',
+                'credit_score': 1.7 * obj.schedule_lesson.lesson.credit
+            }
+        elif obj.score >= 63:
+            qinghua_data = {
+                'grade': 'D+',
+                'grade_point': 1.3,
+                'evaluation': '及格',
+                'credit_score': 1.3 * obj.schedule_lesson.lesson.credit
+            }
+        elif obj.score >= 60:
+            qinghua_data = {
+                'grade': 'D',
+                'grade_point': 1.0,
+                'evaluation': '及格',
+                'credit_score': 1.0 * obj.schedule_lesson.lesson.credit
+            }
+        else:
+            qinghua_data = {
+                'grade': 'F',
+                'grade_point': 0.0,
+                'evaluation': '不及格',
+                'credit_score': 0.0
+            }
+        return qinghua_data
     schedule_lesson=ScheduleLessonSerializers()
     class Meta:
         model=Score

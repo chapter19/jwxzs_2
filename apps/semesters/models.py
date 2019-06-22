@@ -36,4 +36,12 @@ class NextSemester(models.Model):
         return self.next_semester.verbose_name
 
 
+class Grade(models.Model):
+    grade=models.IntegerField(verbose_name='年级')
+    semester=models.ForeignKey(Semester,verbose_name='对应入学学期')
+    class Meta:
+        verbose_name='年级'
+        verbose_name_plural=verbose_name
+    def __str__(self):
+        return str(self.grade)
 

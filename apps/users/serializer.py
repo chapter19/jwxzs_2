@@ -86,9 +86,9 @@ class UserProfileUpdateSerializer(serializers.ModelSerializer):
         model=UserProfile
         fields=['image','email','user_id']
     def update(self, instance, validated_data):
-        user_id=validated_data.get('user_id')
-        if user_id!=instance.id:
-            raise serializers.ValidationError({'detail':'你不能修改别人的信息！'})
+        # user_id=validated_data.get('user_id')
+        # if user_id!=instance.id:
+        #     raise serializers.ValidationError({'detail':'你不能修改别人的信息！'})
         instance.email = validated_data.get('email', instance.email)
         instance.image = validated_data.get('image', instance.image)
         instance.save()

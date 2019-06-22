@@ -1,0 +1,105 @@
+一、配置环境
+1、安装python3.6
+2、给python3.6安装pip
+3、安装虚拟环境管理工具virtualenvwrapper。
+  3.1 先安装virtualenv: pip3.6 install -i https://pypi.douban.com/simple virtualenv
+  3.2 安装virtualenvwrapper: pip3.6 install -i https://pypi.douban.com/simple virtualenvwrapper
+  3.3 配置环境变量:终端输入命令vim ~/.bash_profile,按i进入编辑模式，找一空白位置，粘贴下列三条语句：
+	export WORKON_HOME=$HOME/.virtualenvs #虚拟环境存放的位置
+	export PROJECT_HOME=$HOME/workspace #工作环境
+	source /usr/local/bin/virtualenvwrapper.sh #virtualenvwrapper.sh的路径，也可能不是这个，最好自己用find命令找一下这个文件的路径并替换。
+      然后按esc退出编辑模式，然后按住shift键再按冒号键，然后输入wq后回车，保存并退出vim，然后输入命令source ~/.bash_profile，使环境变量生效。
+具体可参考https://www.cnblogs.com/asmer-stone/p/5470144.html
+4、创建虚拟环境
+  4.1 创建虚拟环境。打开终端，创建一个叫做jwxzs_3.6的环境：mkvirtualenv -p python3.6 jwxzs_3.6
+  4.2 进入虚拟环境（如果刚创建完，会自动进入环境，这不可以省去）。命令：workon jwxzs_3.6
+  4.3 给虚拟环境安装依赖包。路径/jwxzs/jwxzs_2/目录下有一个requirements.txt文件,命令：cd /jwxzs/jwxzs_2 && pip install -i https://pypi.douban.com/simple -r requirements.txt
+5、更换主数据库。为了方便传输，我把mysql换成了sqlite3（没设置密码），现在不更改也可以运行。若要更改成MySQL，先安装5.7.23 MySQL Community Server，创建mysql数据库,并用navicat将/jwxzs/jwxzs_2/db.sqlite3的数据传输至创建的数据库。打开/jwxzs/jwxzs_2/jwxzs_2/settings.py,第120行-133行找到：
+DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'jwxzs_2',
+    #     'USER':'root',
+    #     'PASSWORD':'1',
+    #     'HOST':'127.0.0.1',
+    #     'OPTIONS':{'init_command':'SET default_storage_engine=INNODB;'},
+    # }
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+改成：
+DATABASES = {
+     'default': {
+         'ENGINE': 'django.db.backends.mysql',
+         'NAME': '数据库名',
+         'USER':'数据库用户名',
+         'PASSWORD':'数据库用户对应密码',
+         'HOST':'127.0.0.1',
+         'OPTIONS':{'init_command':'SET default_storage_engine=INNODB;'},
+     }
+}
+6、配置redis
+  6.1 安装redis 5.0.3
+  6.2 开启redis服务，命令：redis-server /usr/local/etc/redis.conf
+  6.3 打开redis客户端，命令：redis-cli
+  6.4 设置redis临时密码，redis命令：CONFIG SET requirepass "要设置的密码"
+  6.5 退出客户端，redis命令：quit
+  6.6 让设置密码永久生效。找到/usr/local/etc/redis.conf 找到注释掉的#requirepass foobared这行取消注释，把foobared换成刚刚设置的临时密码。
+  6.7 验证密码。先进入redis客户端,命令：redis-cli。然后验证密码，命令：auth 刚才设置的密码
+  6.8 编辑/jwxzs/jwxzs_2/jwxzs_2/settings.py,第322行-330行找到：
+  CACHES = {
+      "default": {
+          "BACKEND": "django_redis.cache.RedisCache",
+          "LOCATION": "redis://:1@127.0.0.1:6379/1",
+          "OPTIONS": {
+          "CLIENT_CLASS": "django_redis.client.DefaultClient",
+          }
+      }
+  }
+  改成：
+ CACHES = {
+      "default": {
+          "BACKEND": "django_redis.cache.RedisCache",
+          "LOCATION": "redis://:刚才设置的redis密码@127.0.0.1:6379/1",
+          "OPTIONS": {
+          "CLIENT_CLASS": "django_redis.client.DefaultClient",
+          }
+      }
+  }
+  6.9 编辑/jwxzs/jwxzs_2/celery.py,第21行找到
+app = Celery('jwxzs_2',backend="redis://:1@127.0.0.1:6379/3")
+改成app = Celery('jwxzs_2',backend="redis://:刚才设置的redis密码@127.0.0.1:6379/3")
+
+7、配置rabbitMQ
+  7.1 安装rabbitMQ
+  7.2 开启rabbitMQ（这个可以忽略，好像只有mac上需要）
+  7.3 开启rabbitmq服务：sudo rabbitmq-server
+8、安装Neo4j。
+  8.1 安装neo4j community 3.5.3，并配置环境变量
+  8.2 设置密码。先开启服务，命令：neo4j start。然后浏览器打开http://localhost:7474,登录，初始化账号密码都是neo4j。修改密码。然后重启服务,命令：neo4j restart
+  8.3 编辑/jwxzs/jwxzs_2/jwxzs_2/settings.py，第269行，找到NEO4J_PASSWORD='1'，把1修改成刚刚设置的密码。
+  8.4 找到安装目录，将graph.db.zip解压，将解压得到的graph.db文件夹放入/neo4j/data/databases/目录
+
+
+
+二、运行项目
+1、开启mysql服务
+2、开启redis服务
+redis-server /usr/local/etc/redis.conf
+3、开启rabbitmq（这个可以忽略，好像只有mac上需要）
+4、启动服务rabbitmq
+rabbitmq-server 
+5、开启neo4j
+4、进入项目python虚拟环境
+workon jwxzs_3.6
+5、开启celery任务队列
+cd /你的路径/jwxzs/jwxzs_2/ && celery -A jwxzs_2 worker -B -l info
+6、新开一个终端，再进入虚拟环境，然后运行Django项目
+cd /你的路径/jwxzs/jwxzs_2/ && python manage.py runserver
+（注⚠️，该模式只供开发人员使用，我只有一两次部署的经验，怕出错，就没写这么多部署步骤，若要真正部署，使用Nginx代理，参考https://www.django.cn/article/show-4.html#duo）
+
+
+
+
