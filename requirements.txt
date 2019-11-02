@@ -73,7 +73,7 @@ neotime==1.7.4
 odfpy==1.4.0
 olefile==0.46
 openpyxl==2.6.1
-Pillow==4.3.0
+Pillow==6.2.0
 prompt-toolkit==2.0.9
 py2neo==4.2.0
 pyasn1==0.4.5
