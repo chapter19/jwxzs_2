@@ -63,7 +63,7 @@ jdcal==1.4
 jieba==0.39
 Jinja2==2.10.1
 kombu==4.5.0
-lxml==4.3.3
+lxml==4.6.2
 Markdown==3.1
 MarkupSafe==1.1.1
 monotonic==1.5
